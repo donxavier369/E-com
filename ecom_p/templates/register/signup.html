@@ -1,0 +1,105 @@
+{%load static%}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>signup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+   
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.css">
+
+  <link rel="stylesheet" href="{% static '/css/login.css'%}">
+</head>
+<body>
+  <div class="container">
+    <h2>Signup</h2>
+    <form method = "post" action = "{% url 'handlesignup'%}"> {% csrf_token %}
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="Enter your name">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email" class="form-control" placeholder="Enter your email">
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter your phone number">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="pass1" class="form-control" placeholder="Enter your password">
+      </div>
+      <div class="form-group">
+        <label for="confirm password">Confirm password</label>
+        <input type="password" id="" name="pass2" class="form-control" placeholder="Enter confirm password">
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary">Signup</button>
+      </div>
+    <div class="col text-right">
+      <div class="form-group">
+        Already a user ?
+        <a href="{%url 'handlelogin'%}">login</a>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  {% comment %} <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script> {% endcomment %}
+</body>
+</html>
+
+<!-- Your HTML code -->
+
+
+
+<div style="z-index: -1000; position: absolute;">
+  {% for message in messages %}
+  <div class="hidden-alert message-{{message.tags}}" data-tags="{{ message.tags }}" data-message="{{ message }}">{{message}}</div>
+  {% comment %} <div class="hidden-alert message-{{message.tags}}" data-tags="success" data-message="This is a success message" data-button-url="{%url 'handlelogin'%}">please login</div> {% endcomment %}
+  {% endfor %}
+</div>
+
+
+<!-- Remaining HTML code -->
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>
+
+<script>
+
+  const errorMessages = 
+    Array.from(document.querySelectorAll('.message-warning .message-error'))
+    .map(el => el.dataset.message);
+  
+  const successMessageEl = document.querySelector('.message-success');
+  const successMessage = successMessageEl?.dataset?.message;
+
+  const isSuccess = !!successMessageEl;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var alerts = document.querySelectorAll(".hidden-alert");
+        alerts.forEach(function(alert) {
+            var tags = alert.dataset.tags;
+            var message = alert.dataset.message;
+            var buttonUrl = alert.dataset.buttonUrl; // Add this line to retrieve the button URL
+
+            Swal.fire({
+                icon: tags,
+                title: message,
+                showConfirmButton: isSuccess,
+                showCancelButton: !isSuccess,
+                timer: 7000,
+                confirmButtonText: 'LOGIN',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = "{%url 'handlelogin'%}"
+              }
+            });
+        });
+    });
+</script>
+
