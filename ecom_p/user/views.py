@@ -1,9 +1,21 @@
 from django.shortcuts import render,redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from user.models import Account
-from django.db import IntegrityError
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
+from user.models import CustomUser
+from store.models import Product
+
 # Create your views here.
 
+def home(request):
+    products = Product.objects.all().filter(is_available=True)
+    print(products)
+    context = {
+        'products': products,
+    }
+    return render(request,'layouts/index.html',context)
 
 
 
@@ -12,43 +24,55 @@ def handlesignup(request):
         uname = request.POST.get("username")
         email = request.POST.get("email")
         phone = request.POST.get("phone")
-        pass1 = request.POST.get("pass1")
-        pass2 = request.POST.get("pass2")
-        print(phone,"1111111111111111111111")
-
-        if pass1 != pass2:
-            messages.warning(request, "Passwords do not match")
-            return redirect('handlesignup')
+        password = request.POST.get("pass1")
 
         try:
-            # Check if the username already exists
-            if Account.objects.filter(username=uname).exists():
-                messages.warning(request, "Username already exists")
+            if CustomUser.objects.get(email = email):
+                messages.info(request,"Email is Taken")
                 return redirect('handlesignup')
-            
-            # Check if the email already exists
-            if Account.objects.filter(email=email).exists():
-                messages.warning(request, "Email already exists")
-                return redirect('handlesignup')
-            
-            # Check if the phone number already exists
-            if Account.objects.filter(mobile=phone).exists():
-                messages.warning(request, "Phone number already exists")
-                return redirect('handlesignup')
-                
-            # Create the user account
-            myuser = Account.objects.create(username=uname, email=email, password=pass1, mobile=phone)
-            myuser.save()
-            messages.success(request, "Signup successful. Please login.")
-            # return redirect('handlelogin')
+        except:
+            pass
+        try:
+            if CustomUser.objects.get(phone_number = phone):
+                messages.info(request,"Phonenumber is Taken")
+        except:
+            pass        
 
-        except IntegrityError:
-            messages.error(request, "An error occurred while creating the user account")
-            return redirect('handlesignup')
+        myuser = CustomUser.objects.create_user(name=uname,email=email,phone_number=phone,password=password)  
+        myuser.save()
+        messages.success(request,"Signup Success Please Login!")
 
-    return render(request, 'register/signup.html')
-
+    return render(request,"register/signup.html")
 
 def handlelogin(request):
-    return render(request,"register/login.html")
+    if request.user.is_authenticated:
+        return redirect("/")
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("pass1")
 
+        try:
+            user = CustomUser.objects.get(email = email)
+        except:
+            messages.error(request,"Invalid Credentials")
+            return redirect("handlelogin") 
+        myuser = authenticate(request,email=email, password=password)
+        print(myuser,"111111111111111111111111111111111111")
+        if myuser:
+               login(request,myuser)
+               messages.success(request,"Login Success")
+               return redirect("handlesignup")
+        else:
+            messages.error(request,"Account is blocked or Not a user!")
+            return redirect("handlelogin")
+    
+    return render(request,'register/login.html')
+
+def handlelogout(request):
+    logout(request)
+    messages.info(request,"Logout Success!")
+    return redirect('home') 
+
+
+
+    

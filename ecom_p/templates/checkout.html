@@ -1,536 +1,341 @@
-{% extends 'main.html' %}
-{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Winkel - Free Bootstrap 4 Template by Colorlib</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
 
+    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
 
-	{% block title %}
-	checkout
-	{% endblock title %}
-	{% block head %}
-	<!-- Owl-carousel-CSS -->
-	<link rel="stylesheet" type="text/css" href="{%static 'css/checkout.css'%}">
-	<link href="{%static 'css/style.css'%}" rel="stylesheet" type="text/css" media="all" />
-	<!-- font-awesome-icons -->
+    <link rel="stylesheet" href="css/aos.css">
 
-{% endblock head %}
+    <link rel="stylesheet" href="css/ionicons.min.css">
 
+    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="css/jquery.timepicker.css">
 
-{% block body %}
-<body>
-	<!-- banner -->
-	<div class="banner_top innerpage" id="home">
-		<div class="wrapper_top_w3layouts">
-			<div class="header_agileits">
-				<div class="logo inner_page_log">
-					<h1><a class="navbar-brand" href="index.html"><span>Downy</span> <i>Shoes</i></a></h1>
-				</div>
-				<div class="overlay overlay-contentpush">
-					<button type="button" class="overlay-close"><i class="fa fa-times" aria-hidden="true"></i></button>
+    
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/icomoon.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body class="goto-here">
+		<div class="py-1 bg-black">
+    	<div class="container">
+    		<div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
+	    		<div class="col-lg-12 d-block">
+		    		<div class="row d-flex">
+		    			<div class="col-md pr-4 d-flex topper align-items-center">
+					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
+						    <span class="text">+ 1235 2355 98</span>
+					    </div>
+					    <div class="col-md pr-4 d-flex topper align-items-center">
+					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
+						    <span class="text">youremail@email.com</span>
+					    </div>
+					    <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
+						    <span class="text">3-5 Business days delivery &amp; Free Returns</span>
+					    </div>
+				    </div>
+			    </div>
+		    </div>
+		  </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	    <div class="container">
+	      <a class="navbar-brand" href="index.html">Winkel</a>
+	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="oi oi-menu"></span> Menu
+	      </button>
 
-					<nav>
-						<ul>
-							<li><a href="index.html" class="active">Home</a></li>
-							<li><a href="about.html">About</a></li>
-							<li><a href="404.html">Team</a></li>
-							<li><a href="shop.html">Shop Now</a></li>
-							<li><a href="contact.html">Contact</a></li>
-						</ul>
-					</nav>
-				</div>
-				<div class="mobile-nav-button">
-					<button id="trigger-overlay" type="button"><i class="fa fa-bars" aria-hidden="true"></i></button>
-				</div>
-				<!-- cart details -->
-				<div class="top_nav_right">
-					<div class="shoecart shoecart2 cart cart box_1">
-						<form action="#" method="post" class="last">
-							<input type="hidden" name="cmd" value="_cart">
-							<input type="hidden" name="display" value="1">
-							<button class="top_shoe_cart" type="submit" name="submit" value=""><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></button>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- //cart details -->
-		<!-- search -->
-		<div class="search_w3ls_agileinfo">
-			<div class="cd-main-header">
-				<ul class="cd-header-buttons">
-					<li><a class="cd-search-trigger" href="#cd-search"> <span></span></a></li>
-				</ul>
-			</div>
-			<div id="cd-search" class="cd-search">
-				<form action="#" method="post">
-					<input name="Search" type="search" placeholder="Click enter after typing...">
-				</form>
-			</div>
-		</div>
-		<!-- //search -->
-		<div class="clearfix"></div>
-		<!-- /banner_inner -->
-		<div class="services-breadcrumb_w3ls_agileinfo">
-			<div class="inner_breadcrumb_agileits_w3">
+	      <div class="collapse navbar-collapse" id="ftco-nav">
+	        <ul class="navbar-nav ml-auto">
+	          <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+	          <li class="nav-item dropdown active">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
+              <div class="dropdown-menu" aria-labelledby="dropdown04">
+              	<a class="dropdown-item" href="shop.html">Shop</a>
+                <a class="dropdown-item" href="product-single.html">Single Product</a>
+                <a class="dropdown-item" href="cart.html">Cart</a>
+                <a class="dropdown-item" href="checkout.html">Checkout</a>
+              </div>
+            </li>
+	          <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+	          <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+	          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+	          <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
 
-				<ul class="short">
-					<li><a href="index.html">Home</a><i>|</i></li>
-					<li>Check Out</li>
-				</ul>
-			</div>
-		</div>
-		<!-- //banner_inner -->
-	</div>
+	        </ul>
+	      </div>
+	    </div>
+	  </nav>
+    <!-- END nav -->
 
-	<!-- //banner -->
-	<!-- top Products -->
-	<div class="ads-grid_shop">
-		<div class="shop_inner_inf">
-			<div class="privacy about">
-				<h3>Chec<span>kout</span></h3>
+    <div class="hero-wrap hero-bread" style="background-image: url('images/bg_6.jpg');">
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+          <div class="col-md-9 ftco-animate text-center">
+          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Checkout</span></p>
+            <h1 class="mb-0 bread">Checkout</h1>
+          </div>
+        </div>
+      </div>
+    </div>
 
-				<div class="checkout-right">
-					<h4>Your shopping cart contains: <span>3 Products</span></h4>
-					<table class="timetable_sub">
-						<thead>
-							<tr>
-								<th>SL No.</th>
-								<th>Product</th>
-								<th>Quality</th>
-								<th>Product Name</th>
-
-								<th>Price</th>
-								<th>Remove</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr class="rem1">
-								<td class="invert">1</td>
-								<td class="invert-image"><a href="single.html"><img src="{%static 'images/s1.jpg'%}" alt=" " class="img-responsive"></a></td>
-								<td class="invert">
-									<div class="quantity">
-										<div class="quantity-select">
-											<div class="entry value-minus">&nbsp;</div>
-											<div class="entry value"><span>1</span></div>
-											<div class="entry value-plus active">&nbsp;</div>
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-xl-8 ftco-animate">
+						<form action="#" class="billing-form">
+							<h3 class="mb-4 billing-heading">Billing Details</h3>
+	          	<div class="row align-items-end">
+	          		<div class="col-md-6">
+	                <div class="form-group">
+	                	<label for="firstname">Firt Name</label>
+	                  <input type="text" class="form-control" placeholder="">
+	                </div>
+	              </div>
+	              <div class="col-md-6">
+	                <div class="form-group">
+	                	<label for="lastname">Last Name</label>
+	                  <input type="text" class="form-control" placeholder="">
+	                </div>
+                </div>
+                <div class="w-100"></div>
+		            <div class="col-md-12">
+		            	<div class="form-group">
+		            		<label for="country">State / Country</label>
+		            		<div class="select-wrap">
+		                  <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+		                  <select name="" id="" class="form-control">
+		                  	<option value="">France</option>
+		                    <option value="">Italy</option>
+		                    <option value="">Philippines</option>
+		                    <option value="">South Korea</option>
+		                    <option value="">Hongkong</option>
+		                    <option value="">Japan</option>
+		                  </select>
+		                </div>
+		            	</div>
+		            </div>
+		            <div class="w-100"></div>
+		            <div class="col-md-6">
+		            	<div class="form-group">
+	                	<label for="streetaddress">Street Address</label>
+	                  <input type="text" class="form-control" placeholder="House number and street name">
+	                </div>
+		            </div>
+		            <div class="col-md-6">
+		            	<div class="form-group">
+	                  <input type="text" class="form-control" placeholder="Appartment, suite, unit etc: (optional)">
+	                </div>
+		            </div>
+		            <div class="w-100"></div>
+		            <div class="col-md-6">
+		            	<div class="form-group">
+	                	<label for="towncity">Town / City</label>
+	                  <input type="text" class="form-control" placeholder="">
+	                </div>
+		            </div>
+		            <div class="col-md-6">
+		            	<div class="form-group">
+		            		<label for="postcodezip">Postcode / ZIP *</label>
+	                  <input type="text" class="form-control" placeholder="">
+	                </div>
+		            </div>
+		            <div class="w-100"></div>
+		            <div class="col-md-6">
+	                <div class="form-group">
+	                	<label for="phone">Phone</label>
+	                  <input type="text" class="form-control" placeholder="">
+	                </div>
+	              </div>
+	              <div class="col-md-6">
+	                <div class="form-group">
+	                	<label for="emailaddress">Email Address</label>
+	                  <input type="text" class="form-control" placeholder="">
+	                </div>
+                </div>
+                <div class="w-100"></div>
+                <div class="col-md-12">
+                	<div class="form-group mt-4">
+										<div class="radio">
+										  <label class="mr-3"><input type="radio" name="optradio"> Create an Account? </label>
+										  <label><input type="radio" name="optradio"> Ship to different address</label>
 										</div>
 									</div>
-								</td>
-								<td class="invert">Bella Toes</td>
+                </div>
+	            </div>
+	          </form><!-- END -->
 
-								<td class="invert">$675.00</td>
-								<td class="invert">
-									<div class="rem">
-										<div class="close1"> </div>
-									</div>
 
-								</td>
-							</tr>
-							<tr class="rem2">
-								<td class="invert">2</td>
-								<td class="invert-image"><a href="single.html"><img src="{%static 'images/s5.jpg'%}" alt=" " class="img-responsive"></a></td>
-								<td class="invert">
-									<div class="quantity">
-										<div class="quantity-select">
-											<div class="entry value-minus">&nbsp;</div>
-											<div class="entry value"><span>1</span></div>
-											<div class="entry value-plus active">&nbsp;</div>
-										</div>
-									</div>
-								</td>
-								<td class="invert">Red Bellies</td>
 
-								<td class="invert">$325.00</td>
-								<td class="invert">
-									<div class="rem">
-										<div class="close2"> </div>
-									</div>
-
-								</td>
-							</tr>
-							<tr class="rem3">
-								<td class="invert">3</td>
-								<td class="invert-image"><a href="single.html"><img src="{%static 'images/s2.jpg'%}" alt=" " class="img-responsive"></a></td>
-								<td class="invert">
-									<div class="quantity">
-										<div class="quantity-select">
-											<div class="entry value-minus">&nbsp;</div>
-											<div class="entry value"><span>1</span></div>
-											<div class="entry value-plus active">&nbsp;</div>
-										</div>
-									</div>
-								</td>
-								<td class="invert">Chikku Loafers</td>
-
-								<td class="invert">$405.00</td>
-								<td class="invert">
-									<div class="rem">
-										<div class="close3"> </div>
-									</div>
-
-								</td>
-							</tr>
-
-						</tbody>
-					</table>
-				</div>
-				<div class="checkout-left">
-					<div class="col-md-4 checkout-left-basket">
-						<h4>Continue to basket</h4>
-						<ul>
-							<li>Product1 <i>-</i> <span>$675.00 </span></li>
-							<li>Product2 <i>-</i> <span>$325.00 </span></li>
-							<li>Product3 <i>-</i> <span>$405.00 </span></li>
-							<li>Total Service Charges <i>-</i> <span>$55.00</span></li>
-							<li>Total <i>-</i> <span>$1405.00</span></li>
-						</ul>
-					</div>
-					<div class="col-md-8 address_form">
-						<h4>Add a new Details</h4>
-						<form action="payment.html" method="post" class="creditly-card-form agileinfo_form">
-							<section class="creditly-wrapper wrapper">
-								<div class="information-wrapper">
-									<div class="first-row form-group">
-										<div class="controls">
-											<label class="control-label">Full name: </label>
-											<input class="billing-address-name form-control" type="text" name="name" placeholder="Full name">
-										</div>
-										<div class="card_number_grids">
-											<div class="card_number_grid_left">
-												<div class="controls">
-													<label class="control-label">Mobile number:</label>
-													<input class="form-control" type="text" placeholder="Mobile number">
-												</div>
+	          <div class="row mt-5 pt-3 d-flex">
+	          	<div class="col-md-6 d-flex">
+	          		<div class="cart-detail cart-total bg-light p-3 p-md-4">
+	          			<h3 class="billing-heading mb-4">Cart Total</h3>
+	          			<p class="d-flex">
+		    						<span>Subtotal</span>
+		    						<span>$20.60</span>
+		    					</p>
+		    					<p class="d-flex">
+		    						<span>Delivery</span>
+		    						<span>$0.00</span>
+		    					</p>
+		    					<p class="d-flex">
+		    						<span>Discount</span>
+		    						<span>$3.00</span>
+		    					</p>
+		    					<hr>
+		    					<p class="d-flex total-price">
+		    						<span>Total</span>
+		    						<span>$17.60</span>
+		    					</p>
+								</div>
+	          	</div>
+	          	<div class="col-md-6">
+	          		<div class="cart-detail bg-light p-3 p-md-4">
+	          			<h3 class="billing-heading mb-4">Payment Method</h3>
+									<div class="form-group">
+										<div class="col-md-12">
+											<div class="radio">
+											   <label><input type="radio" name="optradio" class="mr-2"> Direct Bank Tranfer</label>
 											</div>
-											<div class="card_number_grid_right">
-												<div class="controls">
-													<label class="control-label">Landmark: </label>
-													<input class="form-control" type="text" placeholder="Landmark">
-												</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-md-12">
+											<div class="radio">
+											   <label><input type="radio" name="optradio" class="mr-2"> Check Payment</label>
 											</div>
-											<div class="clear"> </div>
-										</div>
-										<div class="controls">
-											<label class="control-label">Town/City: </label>
-											<input class="form-control" type="text" placeholder="Town/City">
-										</div>
-										<div class="controls">
-											<label class="control-label">Address type: </label>
-											<select class="form-control option-w3ls">
-																							<option>Office</option>
-																							<option>Home</option>
-																							<option>Commercial</option>
-							
-																					</select>
 										</div>
 									</div>
-									<button class="submit check_out">Delivery to this Address</button>
+									<div class="form-group">
+										<div class="col-md-12">
+											<div class="radio">
+											   <label><input type="radio" name="optradio" class="mr-2"> Paypal</label>
+											</div>
+										</div>
+									</div>
+									<div class="form-group">
+										<div class="col-md-12">
+											<div class="checkbox">
+											   <label><input type="checkbox" value="" class="mr-2"> I have read and accept the terms and conditions</label>
+											</div>
+										</div>
+									</div>
+									<p><a href="#"class="btn btn-primary py-3 px-4">Place an order</a></p>
 								</div>
-							</section>
-						</form>
-						<div class="checkout-right-basket">
-							<a href="payment.html">Make a Payment </a>
-						</div>
+	          	</div>
+	          </div>
+          </div> <!-- .col-md-8 -->
+        </div>
+      </div>
+    </section> <!-- .section -->
+
+    <footer class="ftco-footer bg-light ftco-section">
+      <div class="container">
+      	<div class="row">
+      		<div class="mouse">
+						<a href="#" class="mouse-icon">
+							<div class="mouse-wheel"><span class="ion-ios-arrow-up"></span></div>
+						</a>
 					</div>
+      	</div>
+        <div class="row mb-5">
+          <div class="col-md">
+            <div class="ftco-footer-widget mb-4">
+              <h2 class="ftco-heading-2">Winkel</h2>
+              <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p>
+              <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="ftco-footer-widget mb-4 ml-md-5">
+              <h2 class="ftco-heading-2">Menu</h2>
+              <ul class="list-unstyled">
+                <li><a href="#" class="py-2 d-block">Shop</a></li>
+                <li><a href="#" class="py-2 d-block">About</a></li>
+                <li><a href="#" class="py-2 d-block">Journal</a></li>
+                <li><a href="#" class="py-2 d-block">Contact Us</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-4">
+             <div class="ftco-footer-widget mb-4">
+              <h2 class="ftco-heading-2">Help</h2>
+              <div class="d-flex">
+	              <ul class="list-unstyled mr-l-5 pr-l-3 mr-4">
+	                <li><a href="#" class="py-2 d-block">Shipping Information</a></li>
+	                <li><a href="#" class="py-2 d-block">Returns &amp; Exchange</a></li>
+	                <li><a href="#" class="py-2 d-block">Terms &amp; Conditions</a></li>
+	                <li><a href="#" class="py-2 d-block">Privacy Policy</a></li>
+	              </ul>
+	              <ul class="list-unstyled">
+	                <li><a href="#" class="py-2 d-block">FAQs</a></li>
+	                <li><a href="#" class="py-2 d-block">Contact</a></li>
+	              </ul>
+	            </div>
+            </div>
+          </div>
+          <div class="col-md">
+            <div class="ftco-footer-widget mb-4">
+            	<h2 class="ftco-heading-2">Have a Questions?</h2>
+            	<div class="block-23 mb-3">
+	              <ul>
+	                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+	              </ul>
+	            </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 text-center">
 
-					<div class="clearfix"> </div>
+            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+						  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+						  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+						</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    
+  
 
-
-					<div class="clearfix"></div>
-				</div>
-			</div>
-		</div>
-		<!-- //top products -->
-		<div class="mid_slider_w3lsagile">
-			<div class="col-md-3 mid_slider_text">
-				<h5>Some More Shoes</h5>
-			</div>
-			<div class="col-md-9 mid_slider_info">
-				<div id="myCarousel" class="carousel slide" data-ride="carousel">
-					<!-- Indicators -->
-					<ol class="carousel-indicators">
-						<li data-target="#myCarousel" data-slide-to="0" class=""></li>
-						<li data-target="#myCarousel" data-slide-to="1" class="active"></li>
-						<li data-target="#myCarousel" data-slide-to="2" class=""></li>
-						<li data-target="#myCarousel" data-slide-to="3" class=""></li>
-					</ol>
-					<div class="carousel-inner" role="listbox">
-						<div class="item">
-							<div class="row">
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g1.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g2.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g3.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g4.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-							</div>
-						</div>
-						<div class="item active">
-							<div class="row">
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g5.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g6.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g2.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g1.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-							</div>
-						</div>
-						<div class="item">
-							<div class="row">
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g1.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g2.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g3.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g4.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-							</div>
-						</div>
-						<div class="item">
-							<div class="row">
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g1.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g2.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g3.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-3 slidering">
-									<div class="thumbnail"><img src="{%static 'images/g4.jpg'%}" alt="Image" style="max-width:100%;"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-			<span class="fa fa-chevron-left" aria-hidden="true"></span>
-			<span class="sr-only">Previous</span>
-		</a>
-					<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-			<span class="fa fa-chevron-right" aria-hidden="true"></span>
-			<span class="sr-only">Next</span>
-		</a>
-					<!-- The Modal -->
-
-				</div>
-			</div>
-
-			<div class="clearfix"> </div>
-		</div>
-		<!-- /newsletter-->
-		<div class="newsletter_w3layouts_agile">
-			<div class="col-sm-6 newsleft">
-				<h3>Sign up for Newsletter !</h3>
-			</div>
-			<div class="col-sm-6 newsright">
-				<form action="#" method="post">
-					<input type="email" placeholder="Enter your email..." name="email" required="">
-					<input type="submit" value="Submit">
-				</form>
-			</div>
-
-			<div class="clearfix"></div>
-		</div>
-		<!-- //newsletter-->
-		<!-- footer -->
-		<div class="footer_agileinfo_w3">
-			<div class="footer_inner_info_w3ls_agileits">
-				<div class="col-md-3 footer-left">
-					<h2><a href="index.html"><span>D</span>owny Shoes </a></h2>
-					<p>Lorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora.</p>
-					<ul class="social-nav model-3d-0 footer-social social two">
-						<li>
-							<a href="#" class="facebook">
-								<div class="front"><i class="fa fa-facebook" aria-hidden="true"></i></div>
-								<div class="back"><i class="fa fa-facebook" aria-hidden="true"></i></div>
-							</a>
-						</li>
-						<li>
-							<a href="#" class="twitter">
-								<div class="front"><i class="fa fa-twitter" aria-hidden="true"></i></div>
-								<div class="back"><i class="fa fa-twitter" aria-hidden="true"></i></div>
-							</a>
-						</li>
-						<li>
-							<a href="#" class="instagram">
-								<div class="front"><i class="fa fa-instagram" aria-hidden="true"></i></div>
-								<div class="back"><i class="fa fa-instagram" aria-hidden="true"></i></div>
-							</a>
-						</li>
-						<li>
-							<a href="#" class="pinterest">
-								<div class="front"><i class="fa fa-linkedin" aria-hidden="true"></i></div>
-								<div class="back"><i class="fa fa-linkedin" aria-hidden="true"></i></div>
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div class="col-md-9 footer-right">
-					<div class="sign-grds">
-						<div class="col-md-4 sign-gd">
-							<h4>Our <span>Information</span> </h4>
-							<ul>
-								<li><a href="index.html">Home</a></li>
-								<li><a href="about.html">About</a></li>
-								<li><a href="404.html">Services</a></li>
-								<li><a href="404.html">Short Codes</a></li>
-								<li><a href="contact.html">Contact</a></li>
-							</ul>
-						</div>
-
-						<div class="col-md-5 sign-gd-two">
-							<h4>Store <span>Information</span></h4>
-							<div class="address">
-								<div class="address-grid">
-									<div class="address-left">
-										<i class="fa fa-phone" aria-hidden="true"></i>
-									</div>
-									<div class="address-right">
-										<h6>Phone Number</h6>
-										<p>+1 234 567 8901</p>
-									</div>
-									<div class="clearfix"> </div>
-								</div>
-								<div class="address-grid">
-									<div class="address-left">
-										<i class="fa fa-envelope" aria-hidden="true"></i>
-									</div>
-									<div class="address-right">
-										<h6>Email Address</h6>
-										<p>Email :<a href="mailto:example@email.com"> mail@example.com</a></p>
-									</div>
-									<div class="clearfix"> </div>
-								</div>
-								<div class="address-grid">
-									<div class="address-left">
-										<i class="fa fa-map-marker" aria-hidden="true"></i>
-									</div>
-									<div class="address-right">
-										<h6>Location</h6>
-										<p>Broome St, NY 10002,California, USA.
-
-										</p>
-									</div>
-									<div class="clearfix"> </div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-3 sign-gd flickr-post">
-							<h4>Flickr <span>Posts</span></h4>
-							<ul>
-								<li><a href="single.html"><img src="images/t1.jpg" alt=" " class="img-responsive" /></a></li>
-								<li><a href="single.html"><img src="images/t2.jpg" alt=" " class="img-responsive" /></a></li>
-								<li><a href="single.html"><img src="images/t3.jpg" alt=" " class="img-responsive" /></a></li>
-								<li><a href="single.html"><img src="images/t4.jpg" alt=" " class="img-responsive" /></a></li>
-								<li><a href="single.html"><img src="images/t1.jpg" alt=" " class="img-responsive" /></a></li>
-								<li><a href="single.html"><img src="images/t2.jpg" alt=" " class="img-responsive" /></a></li>
-								<li><a href="single.html"><img src="images/t3.jpg" alt=" " class="img-responsive" /></a></li>
-								<li><a href="single.html"><img src="images/t2.jpg" alt=" " class="img-responsive" /></a></li>
-								<li><a href="single.html"><img src="images/t4.jpg" alt=" " class="img-responsive" /></a></li>
-							</ul>
-						</div>
-						<div class="clearfix"></div>
-					</div>
-				</div>
-				<div class="clearfix"></div>
-
-				<p class="copy-right-w3ls-agileits">&copy 2018 Downy Shoes. All rights reserved | Design by <a href="http://w3layouts.com/">w3layouts</a></p>
-			</div>
-		</div>
-	</div>
-	<!-- //footer -->
-    <a href="#home" id="toTop" class="scroll" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
-	<!-- js -->
-	<script type="text/javascript" src="{%static 'js/jquery-2.1.4.min.js'%}"></script>
-	<!-- //js -->
-	<!-- cart-js -->
-	<script src="{%static 'js/minicart.js'%}"></script>
-	<script>
-		shoe.render();
-
-		shoe.cart.on('shoe_checkout', function (evt) {
-			var items, len, i;
-
-			if (this.subtotal() > 0) {
-				items = this.items();
-
-				for (i = 0, len = items.length; i < len; i++) {}
-			}
-		});
-	</script>
-	<!-- //cart-js -->
-	<!-- /nav -->
-	<script src="{%static 'js/modernizr-2.6.2.min.js'%}"></script>
-	<script src="{%static 'js/classie.js'%}"></script>
-	<script src="{%static 'js/demo1.js'%}"></script>
-	<!-- //nav -->
-	<!--search-bar-->
-	<script src="{%static 'js/search.js'%}"></script>
-	<!--//search-bar-->
-	<!--quantity-->
-	<script>
-		$('.value-plus').on('click', function () {
-			var divUpd = $(this).parent().find('.value'),
-				newVal = parseInt(divUpd.text(), 10) + 1;
-			divUpd.text(newVal);
-		});
-
-		$('.value-minus').on('click', function () {
-			var divUpd = $(this).parent().find('.value'),
-				newVal = parseInt(divUpd.text(), 10) - 1;
-			if (newVal >= 1) divUpd.text(newVal);
-		});
-	</script>
-	<!--quantity-->
-	<script>
-		$(document).ready(function (c) {
-			$('.close1').on('click', function (c) {
-				$('.rem1').fadeOut('slow', function (c) {
-					$('.rem1').remove();
-				});
-			});
-		});
-	</script>
-	<script>
-		$(document).ready(function (c) {
-			$('.close2').on('click', function (c) {
-				$('.rem2').fadeOut('slow', function (c) {
-					$('.rem2').remove();
-				});
-			});
-		});
-	</script>
-	<script>
-		$(document).ready(function (c) {
-			$('.close3').on('click', function (c) {
-				$('.rem3').fadeOut('slow', function (c) {
-					$('.rem3').remove();
-				});
-			});
-		});
-	</script>
-
-	<!-- start-smoth-scrolling -->
-
-	<!-- //end-smoth-scrolling -->
-	
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
 
-</body>
-{% endblock body %}
+  <script src="js/jquery.min.js"></script>
+  <script src="js/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/jquery.easing.1.3.js"></script>
+  <script src="js/jquery.waypoints.min.js"></script>
+  <script src="js/jquery.stellar.min.js"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="js/jquery.magnific-popup.min.js"></script>
+  <script src="js/aos.js"></script>
+  <script src="js/jquery.animateNumber.min.js"></script>
+  <script src="js/bootstrap-datepicker.js"></script>
+  <script src="js/scrollax.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="js/google-map.js"></script>
+  <script src="js/main.js"></script>
+    
+  </body>
+</html>

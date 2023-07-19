@@ -12,40 +12,49 @@
   <link rel="stylesheet" href="{% static '/css/login.css'%}">
 </head>
 <body>
-  <div class="container">
+
+   <div class="container">
     <h2>Signup</h2>
-    <form method = "post" action = "{% url 'handlesignup'%}"> {% csrf_token %}
+    <form method="post" action="{% url 'handlesignup'%}" onsubmit="return validateForm();">
+      {% csrf_token %}
       <div class="form-group">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" class="form-control" placeholder="Enter your name">
+        <input type="text" id="username" name="username" class="form-control" placeholder="Enter your name" required>
       </div>
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="text" id="email" name="email" class="form-control" placeholder="Enter your email">
+        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+        <p id="email_error" style="display: none;"></p>
       </div>
       <div class="form-group">
         <label for="phone">Phone</label>
-        <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter your phone number">
+        <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter your phone number" required>
+        <p id="phone_error" style="display: none;"></p>
       </div>
+
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" id="password" name="pass1" class="form-control" placeholder="Enter your password">
+        <input type="password" id="password" name="pass1" class="form-control" placeholder="Enter your password" required>
+        <p id="password_error" style="display: none;"></p>
       </div>
       <div class="form-group">
         <label for="confirm password">Confirm password</label>
-        <input type="password" id="" name="pass2" class="form-control" placeholder="Enter confirm password">
+        <input type="password" id="confirm_password" name="pass2" class="form-control" placeholder="Enter confirm password" required>
+        <p id="confirm_password_error" style="display: none;"></p>
       </div>
 
       <div class="form-group">
         <button type="submit" class="btn btn-primary">Signup</button>
       </div>
-    <div class="col text-right">
-      <div class="form-group">
-        Already a user ?
-        <a href="{%url 'handlelogin'%}">login</a>
+      <div class="col text-right">
+        <div class="form-group">
+          Already a user ?
+          <a href="{% url 'handlelogin'%}">login</a>
+        </div>
       </div>
     </form>
   </div>
+
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
   {% comment %} <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script> {% endcomment %}
@@ -101,5 +110,49 @@
             });
         });
     });
+
+  // form validation
+    function validateForm() {
+      var email = document.getElementById("email").value;
+      var password = document.getElementById("password").value;
+      var confirm_password = document.getElementById("confirm_password").value;
+      var phone = document.getElementById("phone").value;
+
+      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email.match(emailRegex)) {
+        showError("email_error", "Please enter a valid email address");
+        return false;
+      }
+
+      var phoneRegex = /^\d{10}$/;
+      if (!phone.match(phoneRegex)) {
+       showError("phone_error", "Please enter a valid 10-digit mobile number");
+       return false;
+      }
+
+
+      var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
+      if (!password.match(passwordRegex)) {
+        showError("password_error", "Password must be at least 6 characters combination of numbers and special characters.");
+        return false;
+      }
+      if (password !== confirm_password) {
+        showError("confirm_password_error", "Passwords do not match.");
+        return false;
+      }
+      return true;
+    }
+
+    function showError(elementId, errorMessage) {
+      var errorElement = document.getElementById(elementId);
+      errorElement.innerHTML = errorMessage;
+      errorElement.style.display = "block";
+
+      setTimeout(function () {
+        errorElement.innerHTML = "";
+        errorElement.style.display = "none";
+      }, 3000); // Display the error message for 3 seconds
+    }
+
 </script>
 
