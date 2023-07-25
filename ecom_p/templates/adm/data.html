@@ -62,7 +62,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-md">
       <a class="navbar-brand" href="{% url 'manageuser'%}">FAN TASTIC</a>
-      <a class="btn btn-success text-decoration-none" href="{%url 'admin_logout'%}">LogOut</a>
+      {% comment %} <a class="btn btn-success text-decoration-none" href="{%url 'admin_logout'%}">LogOut</a> {% endcomment %}
     </div>
   </nav>
 
@@ -115,11 +115,18 @@
                 <th scope="row">{{d.id}}</th>
                 <td>{{d.name}}</td>
                 <td>{{d.email}}</td>
-                <td>
+                {% comment %} <td>
                   {% if d.is_active %}
                     <a href="/block/{{d.id}}" class="btn btn-outline-danger mx-1">Block</a>
                   {% else %} 
                     <a href="/unblock/{{d.id}}" class="btn btn-outline-success mx-1">Unblock</a>
+                  {% endif %}
+                </td> {% endcomment %}
+                <td>
+                  {% if d.is_active %}
+                    <a href="{% url 'block' d.id %}" class="btn btn-outline-danger mx-1">Block</a>
+                  {% else %} 
+                    <a href="{% url 'unblock' d.id %}"  class="btn btn-outline-success mx-1">Unblock</a>
                   {% endif %}
                 </td>
               </tr>

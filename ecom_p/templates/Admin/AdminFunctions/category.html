@@ -1,0 +1,144 @@
+{% extends 'Admin/adminlayouts/main.html' %}
+{% block title %}Category{% endblock title %}
+{% load static %}
+
+
+{% block body %}
+
+
+<!-- Table Start -->
+<div class="col-sm-12 col-xl-6" style="width: auto;">
+    <div class="bg-light rounded h-100 p-4 mt-5">
+        <button class="btn btn-primary float-end align" data-bs-toggle="modal" data-bs-target="#addProductModal">Add New Category</button>
+        <h6 class="mb-4">category Table</h6>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Category_name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Is_available</th>
+                    <th scope="col">Actions</th><!-- Add a new column for Actions -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr>
+                    <th scope="row">{{ category.category_name }}</th>
+                    <td>{{ category.description }}</td>
+                    <td class="align-middle"><img src="/media/{{ category.cat_image }}" alt="{{ category.cat_image }}" width="70px" height="70px"></td>
+                    <td>{{ category.is_available }}</td>
+
+
+                    <!-- Actions column with flexbox utility classes -->
+                    <td class="d-flex align-items-center justify-content-center">
+                        {% if category.is_available %}
+                            <a href="{% url 'category_block' category.id %}" class="btn btn-outline-danger mx-2 mt-2">Block</a>
+                        {% else %}
+                            <a href="{% url 'category_unblock' category.id %}" class="btn btn-outline-success mx-1">Unblock</a>
+                        {% endif %}
+                        <a href="#" class="btn btn-outline-dark mt-2" data-bs-toggle="modal" data-bs-target="#editProductModal{{ category.id }}">Edit</a>
+
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Table End -->
+
+
+<!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <h5 class="modal-title" id="addProductModalLabel">Add New Category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Add form fields here -->
+        <form method="POST" action="{% url 'add_category' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="category_name">Category Name</label>
+            <input type="text" class="form-control" id="category_name" name="category_name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editProductDescription" class="form-label">Category Description</label>
+            <textarea class="form-control" id="editProductDescription" name="category_description" rows="4" required></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="Is_available">Is_available</label>
+            <select class="form-control" id="Is_available" name="Is_available" required>
+              <option value="1">Yes</option>
+              <option value="0">No</option>
+            </select> 
+          </div>
+
+            <div class="form-group">
+                <label for="productImage" class="form-label">Product Image</label>
+                <input type="file" class="form-control" id="productImage" name="productImage">
+            </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% for category in categories %}
+<!-- Edit Product Modal -->
+<div class="modal fade" id="editProductModal{{ category.id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ category.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProductModalLabel{{ category.id }}">Edit Category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'edit_category' category.id %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" name="product_id" value="{{ category.id }}">
+          <div class="form-group">
+            <label for="editProductName{{ pcategoryid }}" class="form-label">Category Name</label>
+            <input type="text" class="form-control" id="editProductName{{ category.id }}" name="category_name" value="{{ category.category_name }}" style="margin-bottom:10px;" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editProductDescription{{ category.id }}" class="form-label">Category Description</label>
+            <textarea class="form-control" id="editProductDescription{{ category.id }}" name="category_description" rows="4" required>{{ category.description }}</textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="editProductImages{{ category.id }}" class="form-label">Images</label>
+            <input type="file" class="form-control" id="editProductImages{{ category.id }}" name="category_images" accept="image/*">
+            <div class="mt-2">
+              <img src="/media/{{ category.cat_image }}" alt="{{ category.cat_image }}" width="100" height="100">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+
+
+{% endblock body %}

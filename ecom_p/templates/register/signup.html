@@ -1,4 +1,4 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,61 +9,72 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.css">
 
-  <link rel="stylesheet" href="{% static '/css/login.css'%}">
+  <link rel="stylesheet" href="{% static '/css/login.css' %}">
 </head>
 <body>
+<section class="vh-100">
+  <div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-9 col-lg-6 col-xl-5">
+        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+          class="img-fluid" alt="Sample image">
+      </div>
+      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
 
-   <div class="container">
-    <h2>Signup</h2>
-    <form method="post" action="{% url 'handlesignup'%}" onsubmit="return validateForm();">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" class="form-control" placeholder="Enter your name" required>
-      </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
-        <p id="email_error" style="display: none;"></p>
-      </div>
-      <div class="form-group">
-        <label for="phone">Phone</label>
-        <input type="text" id="phone" name="phone" class="form-control" placeholder="Enter your phone number" required>
-        <p id="phone_error" style="display: none;"></p>
-      </div>
+        <form class="mt-3" method="post" action="{% url 'handlesignup' %}" onsubmit="return validateForm();">
+          {% csrf_token %}
+          <!-- Username input -->
+          <div class="form-outline mb-4">
+            <input type="text" id="username" name="username" class="form-control form-control-lg"
+              placeholder="Enter your name" required/>
+            <label class="form-label" for="username">Username</label>
+          </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="pass1" class="form-control" placeholder="Enter your password" required>
-        <p id="password_error" style="display: none;"></p>
-      </div>
-      <div class="form-group">
-        <label for="confirm password">Confirm password</label>
-        <input type="password" id="confirm_password" name="pass2" class="form-control" placeholder="Enter confirm password" required>
-        <p id="confirm_password_error" style="display: none;"></p>
-      </div>
+          <!-- Email input -->
+          <div class="form-outline mb-4">
+            <input type="email" id="email" name="email" class="form-control form-control-lg"
+              placeholder="Enter your email address" required/>
+            <label class="form-label" for="email">Email address</label>
+            <p id="email_error" style="display: none;"></p>
+          </div>
 
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary">Signup</button>
+          <!-- Phone input -->
+          <div class="form-outline mb-4">
+            <input type="tel" id="phone" name="phone" class="form-control form-control-lg"
+              placeholder="Enter your phone number" required/>
+            <label class="form-label" for="phone">Phone Number</label>
+            <p id="phone_error" style="display: none;"></p>
+          </div>
+
+          <!-- Password input -->
+          <div class="form-outline mb-3">
+            <input type="password" id="password" name="pass1" class="form-control form-control-lg"
+              placeholder="Enter password" required/>
+            <label class="form-label" for="password">Password</label>
+            <p id="password_error" style="display: none;"></p>
+          </div>
+
+          <!-- Confirm password input -->
+          <div class="form-outline mb-3">
+            <input type="password" id="confirm_password" name="pass2" class="form-control form-control-lg"
+              placeholder="Confirm password" required/>
+            <label class="form-label" for="confirm_password">Confirm Password</label>
+            <p id="confirm_password_error" style="display: none;"></p>
+          </div>
+
+          <div class="text-center text-lg-start mt-4 pt-2">
+            <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">SignUp</button>
+            <p class="small fw-bold mt-2 pt-1 mb-0">Already a user? <a href="{% url 'handlelogin' %}" class="link-danger">SignIn</a></p>
+          </div>
+
+        </form>
       </div>
-      <div class="col text-right">
-        <div class="form-group">
-          Already a user ?
-          <a href="{% url 'handlelogin'%}">login</a>
-        </div>
-      </div>
-    </form>
+    </div>
   </div>
+  
+</section>
 
-
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-  {% comment %} <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script> {% endcomment %}
-</body>
-</html>
-
-<!-- Your HTML code -->
-
-
+<!-- Your other HTML code -->
 
 <div style="z-index: -1000; position: absolute;">
   {% for message in messages %}
@@ -79,7 +90,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>
 
 <script>
-
   const errorMessages = 
     Array.from(document.querySelectorAll('.message-warning .message-error'))
     .map(el => el.dataset.message);
@@ -111,48 +121,49 @@
         });
     });
 
-  // form validation
-    function validateForm() {
-      var email = document.getElementById("email").value;
-      var password = document.getElementById("password").value;
-      var confirm_password = document.getElementById("confirm_password").value;
-      var phone = document.getElementById("phone").value;
+  // Form validation
+  function validateForm() {
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var confirm_password = document.getElementById("confirm_password").value;
+    var phone = document.getElementById("phone").value;
 
-      var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!email.match(emailRegex)) {
-        showError("email_error", "Please enter a valid email address");
-        return false;
-      }
-
-      var phoneRegex = /^\d{10}$/;
-      if (!phone.match(phoneRegex)) {
-       showError("phone_error", "Please enter a valid 10-digit mobile number");
-       return false;
-      }
-
-
-      var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
-      if (!password.match(passwordRegex)) {
-        showError("password_error", "Password must be at least 6 characters combination of numbers and special characters.");
-        return false;
-      }
-      if (password !== confirm_password) {
-        showError("confirm_password_error", "Passwords do not match.");
-        return false;
-      }
-      return true;
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.match(emailRegex)) {
+      showError("email_error", "Please enter a valid email address");
+      return false;
     }
 
-    function showError(elementId, errorMessage) {
-      var errorElement = document.getElementById(elementId);
-      errorElement.innerHTML = errorMessage;
-      errorElement.style.display = "block";
-
-      setTimeout(function () {
-        errorElement.innerHTML = "";
-        errorElement.style.display = "none";
-      }, 3000); // Display the error message for 3 seconds
+    var phoneRegex = /^\d{10}$/;
+    if (!phone.match(phoneRegex)) {
+      showError("phone_error", "Please enter a valid 10-digit mobile number");
+      return false;
     }
 
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
+    if (!password.match(passwordRegex)) {
+      showError("password_error", "Password must be at least 6 characters combination of numbers and special characters.");
+      return false;
+    }
+
+    if (password !== confirm_password) {
+      showError("confirm_password_error", "Passwords do not match.");
+      return false;
+    }
+
+    return true;
+  }
+
+  function showError(elementId, errorMessage) {
+    var errorElement = document.getElementById(elementId);
+    errorElement.innerHTML = errorMessage;
+    errorElement.style.display = "block";
+
+    setTimeout(function () {
+      errorElement.innerHTML = "";
+      errorElement.style.display = "none";
+    }, 3000); // Display the error message for 3 seconds
+  }
 </script>
-
+</body>
+</html>

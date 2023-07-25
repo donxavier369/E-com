@@ -46,7 +46,10 @@ def handlesignup(request):
 
 def handlelogin(request):
     if request.user.is_authenticated:
-        return redirect("/")
+        if request.user.is_superuser:
+            return redirect("admin_page")
+        else:
+            return redirect("/")
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("pass1")
@@ -57,15 +60,19 @@ def handlelogin(request):
             messages.error(request,"Invalid Credentials")
             return redirect("handlelogin") 
         myuser = authenticate(request,email=email, password=password)
-        print(myuser,"111111111111111111111111111111111111")
         if myuser:
-               login(request,myuser)
-               messages.success(request,"Login Success")
-               return redirect("handlesignup")
+               if myuser.is_superuser:
+                    # login(request,myuser)
+                    messages.success(request,"Login Success")
+                    return redirect("admin_page")
+               else:
+                   login(request,myuser)
+                   messages.success(request,"Login success")
+                   return redirect("home")
+                   
         else:
             messages.error(request,"Account is blocked or Not a user!")
             return redirect("handlelogin")
-    
     return render(request,'register/login.html')
 
 def handlelogout(request):

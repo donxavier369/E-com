@@ -12,54 +12,40 @@
   <link rel="stylesheet" href="{% static '/css/login.css'%}">
 </head>
 <body>
-<section class="vh-100">
-  <div class="container py-5 h-100">
-    <div class="row d-flex align-items-center justify-content-center h-100">
-      <div class="col-md-8 col-lg-7 col-xl-6">
-        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
-          class="img-fluid" alt="Phone image">
-      </div>
-      <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+  <div class="container mt-5"><br><br><br><br>
+        <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <h2 class="text-center">Login</h2>
         <form method="post" action="{% url 'handlelogin'%}" onsubmit="return validateForm();">
           {% csrf_token %}
-          <!-- Email input -->
-          <div class="form-outline mb-4">
-            <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Enter your email" required />
-            <label class="form-label" for="email">Email address</label>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" id="email" name="email" class="form-control" placeholder="Enter your email" required>
             <p id="email_error" style="display: none;"></p>
           </div>
-
-          <!-- Password input -->
-          <div class="form-outline mb-4">
-            <input type="password" id="password" name="pass1" class="form-control form-control-lg" placeholder="Enter your password" required />
-            <label class="form-label" for="password">Password</label>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="pass1" class="form-control" placeholder="Enter your password" required>
             <p id="password_error" style="display: none;"></p>
           </div>
-
-          <div class="d-flex justify-content-start align-items-start mb-4">
-            <!-- Checkbox -->
-
-              <div> 
-                  <div>Not a user? <a href="{% url 'handlesignup'%}">Sign up</a></div>
-                  <div>Forgot password? <a href="{% url 'handlesignup'%}">Change Password</a></div>
-                  <div>Login with OTP <a href="{% url 'handlesignup'%}">Click here</a></div>
-                  <div>Forgot Password? <a href="{% url 'handlesignup'%}">Change password</a></div>
-
-                
-              </div>
+          <div class="text-center">
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+            <div class="form-group">
+              Not a user? <a href="{%url 'handlesignup'%}">Sign up</a>
+            </div>
+            <div class="form-group">
+              Login with OTP <a href="{%url 'handlesignup'%}">Click here</a>
+            </div>
+            <div class="form-group">
+              Forgot Password? <a href="{%url 'handlesignup'%}">Change Password</a>
+            </div>
           </div>
-
-
-          <!-- Submit button -->
-          <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
-
-          
         </form>
       </div>
     </div>
   </div>
-</section>
-
 
   <div style="z-index: -1000; position: absolute;">
     {% for message in messages %}

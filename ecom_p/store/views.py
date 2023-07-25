@@ -3,6 +3,7 @@ from store.models import Product,Banner
 from category.models import Category
 from django.urls import reverse
 from django.http import Http404
+from .models import Product, Category
 
 # Create your views here.
 
@@ -28,46 +29,6 @@ def about(request):
 
 
 
-def shop(request):
-    products = Product.objects.all().filter(is_available=True)
-    context={
-        'products':products
-    }
-    return render(request,'store/shop.html',context)
-
-
-
-def product_details(request,category_slug,product_slug):
-    try:
-        single_product = Product.objects.get(category__slug=category_slug)
-    except Exception as e:
-        raise e
-
-    context={
-        'single_product': single_product
-    }    
-    return render(request,'store/product_detail.html',context)
-
-
-
-
-def store(request, category_slug=None):
-    categories = None
-    product = None
-
-    if  category_slug != None:
-        categories = get_object_or_404(Category,slug=category_slug)
-        product = Product.objects.all().filter(category = categories, is_available = True)
-        product_count = products.count()
-    else:    
-        products = Product.objects.all().filter(is_available=True)
-        product_count = products.count()
-
-    context = {
-        'products': products,
-        'product_count' : product_count,
-    }    
-    return render(request, 'store/shop.html', context)
 
 
 def banner(request):
@@ -77,3 +38,38 @@ def banner(request):
         'banners':banners
     }
     return render(request,'layouts/index.html',context)
+
+
+
+def shop(request):
+    products = Product.objects.filter(is_available=True)
+    context = {
+        'products': products
+    }
+    return render(request, 'store/shop.html', context)
+
+def product_details(request, category_pk, product_pk):
+    single_product = get_object_or_404(Product, category__pk=category_pk, pk=product_pk)
+    
+    context = {
+        'single_product': single_product
+    }
+    return render(request, 'store/product_detail.html', context)
+
+def store(request, category_pk=None):
+    categories = None
+    products = Product.objects.filter(is_available=True)
+
+    if category_pk:
+        categories = get_object_or_404(Category, pk=category_pk)
+        products = products.filter(category=categories)
+
+    product_count = products.count()
+    context = {
+        'products': products,
+        'product_count': product_count,
+    }
+    return render(request, 'store/shop.html', context)
+
+
+

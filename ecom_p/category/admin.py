@@ -1,9 +1,19 @@
 from django.contrib import admin
-from.models import Category
+from .models import Category,Brand,Variant
+
 # Register your models here.
 
 class CategoryAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('category_name',)}
-    list_display = ('category_name','slug')
+    list_display = ('category_name',)
 
-admin.site.register(Category,CategoryAdmin)
+admin.site.register(Category, CategoryAdmin)
+
+class BrandAdmin(admin.ModelAdmin):
+    list_display = ('brand_name',)
+
+admin.site.register(Brand,BrandAdmin)   
+
+class VariantAdmin(admin.ModelAdmin):
+    list_display = ('variant_name',)
+
+admin.site.register(Variant,VariantAdmin)    

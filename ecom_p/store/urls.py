@@ -11,9 +11,7 @@ urlpatterns = [
     path('banner',views.banner,name="banner"),
     path('shop',views.shop,name="shop"),
     path('about',views.about,name="about"),
-    path('<slug:category_slug>/',views.store,name="products_by_category"),
-    path('<slug:category_slug>/<slug:product_slug>',views.product_details,name="product_details"),
-
-
-
+    path('<int:category_pk>/',views.store,name="products_by_category"),
+    path('<int:category_pk>/<int:product_pk>',views.product_details,name="product_details"),
+    
 ]
