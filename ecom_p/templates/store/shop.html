@@ -57,20 +57,43 @@
                                 </div>
                             </div>
                             <p class="bottom-area d-flex px-3">
-                                <a href="#" class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
-                                <a href="#" class="buy-now text-center py-2">Buy now<span><i class="ion-ios-cart ml-1"></i></span></a>
+                                <a href="{% url 'add_cart' product.id %}" class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
+                                <a href="#" class="buy-now text-center py-2">WishList<span><i class="ion-ios-heart ml-1"></i></span></a>
                             </p>
                         </div>
-                    </div>
+                    </div> 
                 </div>
             {% endfor %}
         </div>
     </div>
+    <div class="col text-center">
+        <div class="block-27 mb-2 mt-5">
+            {% if products.has_other_pages %}
+                <ul>
+                    {% if products.has_previous %}
+                        <li><a href="?page={{products.previous_page_number}}">&lt;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><a href="#">&lt;</a></li>
+                    {% endif %}
+    
+                    {% for i  in products.paginator.page_range %}
+                        {% if products.number == i %}
+                            <li class="page-item active"><a href="#">{{i}}</a></li>
+                        {% else %}
+                            <li><a href="?page={{i}}">{{i}}</a></li>
+                        {% endif %}    
+                    {% endfor %}
+    
+                    {% if products.has_next %}     
+                        <li><a href="?page={{products.next_page_number}}">&gt;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><a href="#">&gt;</a></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>    
+    
 </section>
 
-
-   
-  </body>
-</html>
-
-{% endblock  %}
+{% endblock body %}

@@ -131,6 +131,7 @@ def edit_product(request, id):
         brand_id = request.POST.get('brand')  # Use 'brand' instead of 'product_brand'
         category_id = request.POST.get('category')  # Use 'category' instead of 'product_category'
         product_price = request.POST.get('product_mrp')
+        product_stock = request.POST.get('product_stock')
         product_description = request.POST.get('product_description')
 
         # Retrieve the updated 'images' field value
@@ -141,7 +142,9 @@ def edit_product(request, id):
         product.brand = get_object_or_404(Brand, id=brand_id)
         product.category = get_object_or_404(Category, id=category_id)
         product.price = product_price
+        product.stock = product_stock
         product.description = product_description
+
 
         # Only update 'images' if a new file was provided
         if product_thumbnail:

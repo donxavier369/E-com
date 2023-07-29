@@ -31,10 +31,3 @@ class Banner(models.Model):
     banner_image = models.ImageField(upload_to='photos/products')
 
 
-class Cart(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE) 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    product_qty = models.IntegerField(null=False,blank=False)
-    create_at = models.DateTimeField(auto_now_add=True)
-
-

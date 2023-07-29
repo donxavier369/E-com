@@ -1,8 +1,11 @@
 {% extends 'layouts/main.html' %}
 {% load static %}
+{% block head %}
+
+{% endblock head %}
+
 
 {% block body %}
-
 
 
     <div class="hero-wrap hero-bread" style="background-image: url('images/bg_6.jpg');">
@@ -22,7 +25,9 @@
     			<div class="col-lg-6 mb-5 ftco-animate">
     				<a href="images/menu-2.jpg" class="image-popup"><img src="/media/{{ single_product.images }}" class="img-fluid" alt="Colorlib Template"></a>
     			</div>
+				
     			<div class="col-lg-6 product-details pl-md-5 ftco-animate">
+					<form action="">
     				<h3>{{ single_product.product_name }}</h3>
     				<div class="rating d-flex">
 							<p class="text-left mr-4">
@@ -42,8 +47,7 @@
 						</div>
     				<p class="price"><span>{{ single_product.product_price}}</span></p>
     				<p>{{ single_product.product_name }} {{ single_product.description }}</p>
-    				{% comment %} <p>On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country. But nothing the copy said could convince her and so it didn’t take long until a few insidious Copy Writers ambushed her, made her drunk with Longe and Parole and dragged her into their agency, where they abused her for their. {% endcomment %}
-						</p>
+
 						<div class="row mt-4">
 							<div class="col-md-6">
 								<div class="form-group d-flex">
@@ -55,162 +59,72 @@
 							<option value="">Large</option>
 							<option value="">Extra Large</option>
 						</select>
+						
 						</div>
 						
 
 		            </div>
 						</div>
 
-							<div class="input-group text-center mb-3 " style="width: 200px;">
+							{% comment %} <div class="input-group text-center mb-3 " style="width: 200px;">
 								<button class="input-group-text decrement-btn mx-2">-</button>
 								<input type="text" name="quantity" class="form-control text-center" value="1">
 								<button class="input-group-text increment-btn mx-2">+</button>
-							</div>
-							</div>
-	          	<div class="w-100"></div>
-	          	<div class="col-md-12">
-	          		<p style="color: #000;">{{single_product.stock}} pieces available</p>
-	          	</div>
+							</div> {% endcomment %}
+							
+								<p style="color: #000;">{{single_product.stock}} pieces available</p>
+							
+		                </div>
+
+				{% if single_product.stock <= 0 %}
+					<h3 class="text-danger">Out Of Stock!</h3>
+			    {% else %}
+					{% if in_cart %}
+					<div style='display:flex; gap:7rem'>
+						<p class="mt-3">Item Already In Cart</p>
+						<a href="{% url 'cart'%}" class="btn btn-black py-3 px-5"style="background-color: #e5893d;">View Cart</a>
+					</div>
+					{% else %}		
+						<p><a href="{% url 'add_cart' single_product.id %}" class="btn btn-black py-3 px-5">Add to Cart</a></p>
+				    {% endif %}	
+				{% endif %}	
+			</form>		
           	</div>
-          	<p><a href="cart.html" class="btn btn-black py-3 px-5">Add to Cart</a></p>
     			</div>
     		</div>
     	</div>
     </section>
+
 {% comment %} 
-    <section class="ftco-section bg-light">
-    	<div class="container">
-				<div class="row justify-content-center mb-3 pb-3">
-          <div class="col-md-12 heading-section text-center ftco-animate">
-            <h2 class="mb-4">Ralated Products</h2>
-            <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia</p>
-          </div>
-        </div>   		
-    	</div>
-    	<div class="container">
-    		<div class="row">
-    			<div class="col-sm col-md-6 col-lg ftco-animate">
-    				<div class="product">
-    					<a href="#" class="img-prod"><img class="img-fluid" src="images/product-1.jpg" alt="Colorlib Template">
-    						<span class="status">30%</span>
-    						<div class="overlay"></div>
-    					</a>
-    					<div class="text py-3 px-3">
-    						<h3><a href="#">Floral Jackquard Pullover</a></h3>
-    						<div class="d-flex">
-    							<div class="pricing">
-		    						<p class="price"><span class="mr-2 price-dc">$120.00</span><span class="price-sale">$80.00</span></p>
-		    					</div>
-		    					<div class="rating">
-	    							<p class="text-right">
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    							</p>
-	    						</div>
-	    					</div>
-	    					<p class="bottom-area d-flex px-3">
-    							<a href="#" class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
-    							<a href="#" class="buy-now text-center py-2">Buy now<span><i class="ion-ios-cart ml-1"></i></span></a>
-    						</p>
-    					</div>
-    				</div>
-    			</div>
-    			<div class="col-sm col-md-6 col-lg ftco-animate">
-    				<div class="product">
-    					<a href="#" class="img-prod"><img class="img-fluid" src="images/product-2.jpg" alt="Colorlib Template">
-    						<div class="overlay"></div>
-    					</a>
-    					<div class="text py-3 px-3">
-    						<h3><a href="#">Floral Jackquard Pullover</a></h3>
-    						<div class="d-flex">
-    							<div class="pricing">
-		    						<p class="price"><span>$120.00</span></p>
-		    					</div>
-		    					<div class="rating">
-	    							<p class="text-right">
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    							</p>
-	    						</div>
-	    					</div>
-    						<p class="bottom-area d-flex px-3">
-    							<a href="#" class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
-    							<a href="#" class="buy-now text-center py-2">Buy now<span><i class="ion-ios-cart ml-1"></i></span></a>
-    						</p>
-    					</div>
-    				</div>
-    			</div>
-    			<div class="col-sm col-md-6 col-lg ftco-animate">
-    				<div class="product">
-    					<a href="#" class="img-prod"><img class="img-fluid" src="images/product-3.jpg" alt="Colorlib Template">
-	    					<div class="overlay"></div>
-	    				</a>
-    					<div class="text py-3 px-3">
-    						<h3><a href="#">Floral Jackquard Pullover</a></h3>
-    						<div class="d-flex">
-    							<div class="pricing">
-		    						<p class="price"><span>$120.00</span></p>
-		    					</div>
-		    					<div class="rating">
-	    							<p class="text-right">
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    							</p>
-	    						</div>
-	    					</div>
-    						<p class="bottom-area d-flex px-3">
-    							<a href="#" class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
-    							<a href="#" class="buy-now text-center py-2">Buy now<span><i class="ion-ios-cart ml-1"></i></span></a>
-    						</p>
-    					</div>
-    				</div>
-    			</div>
-    			<div class="col-sm col-md-6 col-lg ftco-animate">
-    				<div class="product">
-    					<a href="#" class="img-prod"><img class="img-fluid" src="images/product-4.jpg" alt="Colorlib Template">
-    						<div class="overlay"></div>
-    					</a>
-    					<div class="text py-3 px-3">
-    						<h3><a href="#">Floral Jackquard Pullover</a></h3>
-    						<div class="d-flex">
-    							<div class="pricing">
-		    						<p class="price"><span>$120.00</span></p>
-		    					</div>
-		    					<div class="rating">
-	    							<p class="text-right">
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    								<a href="#"><span class="ion-ios-star-outline"></span></a>
-	    							</p>
-	    						</div>
-	    					</div>
-    						<p class="bottom-area d-flex px-3">
-    							<a href="#" class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
-    							<a href="#" class="buy-now text-center py-2">Buy now<span><i class="ion-ios-cart ml-1"></i></span></a>
-    						</p>
-    					</div>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-    </section> {% endcomment %}
 
+	<script>
+		// Function to refresh the cart page
+		function refreshCartPage() {
+			// Check if the page has been refreshed before
+			if (!localStorage.getItem('cartPageRefreshed')) {
+				// If not refreshed before, reload the page
+				localStorage.setItem('cartPageRefreshed', 'true');
+				location.reload();
+			} else {
+				// Remove the localStorage flag so that the page can be refreshed again on the next visit
+				localStorage.removeItem('cartPageRefreshed');
+			}
+		}
+	
+		// Attach the event handler to the onpageshow event
+		window.addEventListener('pageshow', refreshCartPage);
+	</script> {% endcomment %}
+	
 
-  
-
-<script src="{% static '/js/jquery-3.2.1.min.js'%}"></script>
-
+	{% comment %} <script>
+		// Function to refresh the page
+		function refreshPage() {
+			location.reload();
+		}
+	
+		// Attach the event handler to the onpageshow event
+		window.addEventListener('pageshow', refreshPage);
+	</script> {% endcomment %}
   <script>
 		$(document).ready(function(){
 

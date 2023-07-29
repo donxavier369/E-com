@@ -48,7 +48,10 @@
 			  <li class="nav-item"><a href={% url 'handlelogin' %} class="nav-link">Login</a></li>
 			  {% endif %}
 
-	          <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+	          <li class="nav-item cta cta-colored"><a href="{% url 'cart' %}" class="nav-link"><span class="icon-shopping_cart"></span>[{{cart_count}}]</a></li>
+			  <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-heart color-danger" aria-hidden="true"></span>[0]</a></li>
+
+			  
 
 	        </ul>
 	      </div>

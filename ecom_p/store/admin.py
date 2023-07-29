@@ -23,9 +23,9 @@ class ProductAdmin(admin.ModelAdmin):
 class BannerAdmin(admin.ModelAdmin):
     list_display = ('banner_image',)
 
-class CartAdmin(admin.ModelAdmin):
-    list_display = ('product',)
+# class CartAdmin(admin.ModelAdmin):
+#     list_display = ('product',)
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Banner, BannerAdmin)
-admin.site.register(Cart, CartAdmin)
+# admin.site.register(Cart, CartAdmin)

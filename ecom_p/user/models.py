@@ -41,7 +41,8 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), unique=True)   #(in default implemenation email can be blank, here we are customizing the EMAIL Authentication that is why we are 
-    phone_number = models.CharField(max_length=20)  
+    phone = models.TextField(max_length=20, blank=False)
+    is_verified = models.BooleanField(default=False) 
     name = models.CharField(max_length=255)
     otp = models.CharField(max_length=6, blank=True, null=True)                                                         # mentioning the email as unique here we are overriding the parent class functionality)
     is_active = models.BooleanField(default=True)
