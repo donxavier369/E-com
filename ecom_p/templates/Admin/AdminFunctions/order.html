@@ -1,0 +1,83 @@
+{% extends 'Admin/adminlayouts/main.html' %}
+{% block title %}Product{% endblock title %}
+{% block body %}
+
+
+<div class="card">
+  <div class="card-header">
+    <h4>Order List</h4>
+  </div>
+  <div class="card-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Order_number</th>
+          <th scope="col">User Name</th>
+          <th scope="col">Phone</th>
+          <th scope="col">Address</th>
+          <th scope="col">Order_Total</th>
+          <th scope="col">Total_Tax</th>
+          <th scope="col">Status</th>
+         
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td>{{ order.order_number }}</td>
+
+          <td>{{ order.first_name }} {{ order.last_name }}</td>
+          <td>{{ order.phone }}</td>
+          <td>{{ order.address_line_1 }}</td>
+          <td>{{ order.order_total }}</td>
+          <td>{{ order.tax }}</td>
+          <td>{{ order.status}}</td>
+
+
+          {% comment %} <a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProductModal" onclick="editProductModal({{ product.id }})">Edit</a> {% endcomment %}
+          <td><a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProductModal{{ order.id }}">Edit Status</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+{% for order in orders %}
+<!-- Edit Product Modal -->
+<div class="modal fade" id="editProductModal{{ order.id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ order.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProductModalLabel{{ order.id }}">Change Status</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'manage_orderstatus' order.id %}" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+     
+          <div class="form-group">
+            <label for="editProductStatus">Status</label>
+            <select class="form-control" id="editProductStatus" name="status">
+              <option value="">Select Status</option>
+              {% for status in statuses %}
+              <option value="{{ status.0 }}" {% if order.id == order.id %}selected{% endif %}>{{ status.1 }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+{% endfor %}
+{% endblock body %} 
+
+

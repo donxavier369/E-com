@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category,Brand,Variant
+from .models import Category,Brand
 
 # Register your models here.
 
@@ -13,7 +13,7 @@ class BrandAdmin(admin.ModelAdmin):
 
 admin.site.register(Brand,BrandAdmin)   
 
-class VariantAdmin(admin.ModelAdmin):
-    list_display = ('variant_name',)
+# class VariantAdmin(admin.ModelAdmin):
+#     list_display = ('variant_name',)
 
-admin.site.register(Variant,VariantAdmin)    
+# admin.site.register(Variant,VariantAdmin)    

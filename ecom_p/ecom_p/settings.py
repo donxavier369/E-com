@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'adminpage',
     'category',
     'carts',
+    'orders',
 ]
 
 MIDDLEWARE = [

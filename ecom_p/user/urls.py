@@ -12,5 +12,9 @@ urlpatterns = [
     path('verify_phone',views.verify_phone,name='verify_phone'),
     # path('verify_otp',views.verify_otp,name="verify_otp"),
 
+    # user profile
+    path('user_profile/',views.user_profile,name='user_profile'),
+
+
 
 ]

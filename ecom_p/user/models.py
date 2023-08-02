@@ -40,21 +40,41 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     username = None
-    email = models.EmailField(_('email address'), unique=True)   #(in default implemenation email can be blank, here we are customizing the EMAIL Authentication that is why we are 
+    email = models.EmailField(_('email address'), unique=True)#(in default implemenation email can be blank, here we are customizing the EMAIL Authentication that is why we are 
     phone = models.TextField(max_length=20, blank=False)
     is_verified = models.BooleanField(default=False) 
     name = models.CharField(max_length=255)
-    otp = models.CharField(max_length=6, blank=True, null=True)                                                         # mentioning the email as unique here we are overriding the parent class functionality)
+    otp = models.CharField(max_length=6, blank=True, null=True)# mentioning the email as unique here we are overriding the parent class functionality)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
 
 
     USERNAME_FIELD = 'email'   # The username filed is used when login the django automatically checks with the field which is mention in USERNAME_FIELD  here dajngo checks with email
-    REQUIRED_FIELDS = ['phone_number']  # Other than the USERNAME_FIELD (email) which one is required we have to mention here
+    REQUIRED_FIELDS = ['phone']  # Other than the USERNAME_FIELD (email) which one is required we have to mention here
 
     objects = CustomUserManager() # USER MANAGER id the default usernmanager
                                   # but here we want more spec than the default therefore we created a CUSTOMUSER MANAGER and the  class CUSTOMUSER MANAGER extends the default base user manager 
 
     def __str__(self) -> str:
         return self.email
+    
+
+
+class Profile(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
+    order_number = models.CharField(max_length=20)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    phone = models.CharField(max_length=15)
+    email = models.EmailField(max_length=50)
+    address_line_1 = models.CharField(max_length=50)
+    address_line_2 = models.CharField(max_length=50, blank=True)
+    country = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+
+    
+    def __str__ (self):
+        return self.first_name
+    

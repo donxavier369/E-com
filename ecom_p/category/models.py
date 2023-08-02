@@ -1,7 +1,4 @@
 
-    
-
-
 from django.db import models
 from django.urls import reverse
 
@@ -29,8 +26,8 @@ class Brand(models.Model):
     def __str__(self) -> str:
         return self.brand_name
     
-class Variant(models.Model):
-    variant_name = models.CharField(max_length=50)
+# class Variant(models.Model):
+#     variant_name = models.CharField(max_length=50)
 
-    def __str__(self) -> str:
-        return self.variant_name    
+#     def __str__(self) -> str:
+#         return self.variant_name    

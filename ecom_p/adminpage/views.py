@@ -7,8 +7,9 @@ from django.db.models import Q
 from django.urls import reverse
 from user.models import CustomUser
 from django.contrib.auth import authenticate,login,logout
-from store.models import Product, Category, Brand, Variant
+from store.models import Product, Category, Brand
 from django.shortcuts import get_object_or_404
+from orders.models import Order
 # Create your views here.
 
 
@@ -66,7 +67,10 @@ def admin_logout(request):
 
 
 def admin_page(request):
-    return render(request,"Admin/adminindex.html")
+    if request.user.is_authenticated and request.user.is_superuser==True:
+        return render(request,"Admin/adminindex.html")
+    else:
+        return render(request, "adm/add.html")
 
 # product management
 
@@ -75,13 +79,13 @@ def product(request):
         categories = Category.objects.filter(is_available=True)
         product_count = products.count()
         brands = Brand.objects.all()
-        variants = Variant.objects.all()
+        # variants = Variant.objects.all()
         context = {
             "products" : products,
             "product_count" : product_count,
             "categories" : categories,
             "brands" : brands,
-            "variants" : variants
+            # "variants" : variants
         }
         return render(request, "Admin/AdminFunctions/product.html",context)
 
@@ -100,7 +104,7 @@ def add_product(request):
         product_image = request.FILES.get('product_image')
 
         category = get_object_or_404(Category, id=category_id)
-        variant = get_object_or_404(Variant, id=variant_id)
+        # variant = get_object_or_404(Variant, id=variant_id)
         brand = get_object_or_404(Brand, id=brand_id)
 
         product = Product(
@@ -166,6 +170,7 @@ def product_block(request,id):
 
 def product_unblock(request,id):
     un_block = Product.objects.filter(id=id).update(is_available=True)
+    return redirect("product")
 
 
 
@@ -227,3 +232,23 @@ def edit_category(request, id):
 def variant(request):
     variants = Variant.objects.all()
     return render(request,"Admin/AdminFunctions/category.html",{'variants':variants})
+
+
+def manage_order(request):
+    orders = Order.objects.all()
+    statuses = Order.STATUS
+    
+    context = {
+        'orders' : orders,
+        'statuses' : statuses,
+    }
+    return render(request, "Admin/AdminFunctions/order.html",context)
+
+def manage_orderstatus(request, id):
+    order = get_object_or_404(Order,id=id)
+    if request.method == 'POST':
+        order_status = request.POST.get('status')
+        order.status = order_status
+        order.save()
+        return redirect('manage_order')
+    return render(request, "Admin/AdminFunctions/order.html")
