@@ -40,8 +40,8 @@ def user_unblock(request,id):
     messages.success(request,"Unblock Successfully")
     return redirect("manageuser")
 
-def add(request):
-    if request.user.is_authenticated:
+def admin_login(request):
+    if request.user.is_authenticated and  request.user.is_superuser==True:
         return redirect('admin_page')
     if request.method=="POST":
         email=request.POST.get("email")
@@ -54,23 +54,23 @@ def add(request):
                 return redirect('admin_page')
             elif myuser is not myuser.is_superuser:
                 messages.error(request,"You are not an Admin")
-                return redirect('add')
+                return redirect('admin_login')
         else:
             messages.error(request,"Invalid Credentials")
 
-    return render(request,"adm/add.html")             
+    return render(request,"adm/admin_login.html")             
             
 def admin_logout(request):
     logout(request)
     messages.info(request,"Logout Success")
-    return redirect('add')
+    return redirect('admin_login')
 
 
 def admin_page(request):
     if request.user.is_authenticated and request.user.is_superuser==True:
         return render(request,"Admin/adminindex.html")
     else:
-        return render(request, "adm/add.html")
+        return render(request, "adm/admin_login.html")
 
 # product management
 
@@ -95,7 +95,7 @@ def add_product(request):
     if request.method == 'POST':
         product_name = request.POST.get('product_name')
         category_id = request.POST.get('product_category')
-        variant_id = request.POST.get('product_variant')
+        # variant_id = request.POST.get('product_variant')
         new_arrival = request.POST.get('product_new_arrival')
         brand_id = request.POST.get('product_brand')
         product_description = request.POST.get('product_description')
@@ -110,7 +110,7 @@ def add_product(request):
         product = Product(
             product_name=product_name,
             category=category,
-            variant=variant,
+            # variant=variant,
             new_arrival=(new_arrival == '1'),  # Convert to boolean
             brand=brand,
             description=product_description,

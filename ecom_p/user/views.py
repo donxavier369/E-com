@@ -15,6 +15,8 @@ from twilio.base.exceptions import TwilioRestException
 from carts.views import _cart_id,CartItem
 from carts.models import Cart, CartItem
 import requests
+from .models import Profile
+from django.shortcuts import get_object_or_404
 # Load environment variables from .env file in the current directory
 load_dotenv()
 
@@ -36,16 +38,13 @@ def home(request):
         print(products)
         context = {
             'products': products,
+           
         }
         return render(request,'layouts/index.html',context)
     else:
-        products = Product.objects.all().filter(is_available=True)
-        print(products)
-        context = {
-            'products': products,
-        }
-        return render(request,'layouts/index.html',context)
-        
+        logout(request)
+        request.session.flush()
+        return render(request,'layouts/index.html')        
 
 @never_cache
 def handlesignup(request):
@@ -83,6 +82,7 @@ def handlesignup(request):
         return render(request,"register/otp_phone.html",{"id":myuser.id, "phone":myuser.phone},)
     return render(request,"register/signup.html")
 
+@ never_cache
 def handlelogin(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
@@ -243,6 +243,7 @@ def verify_phone(request):
 #     return render(request,"register/verify_otp.html")
 
 
+# profile management
 
 @login_required(login_url='handlelogin')
 def user_profile(request):
@@ -250,4 +251,108 @@ def user_profile(request):
     context = {
         'user': user
     }
-    return render(request, 'register/user_profile.html', context)
+    return render(request, 'Profile/user_profile.html', context)
+
+
+def address(request):
+    bool = True
+
+    addresses = Profile.objects.filter(user=request.user)
+    context = {
+        'show_footer': bool,
+        'addresses':addresses
+    }
+    
+    return render(request, 'Profile/address.html',context)
+
+
+def add_address(request):
+    if request.method == 'POST':
+        name = request.POST.get('user_name')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        address = request.POST.get('address')
+        pincode = request.POST.get('pincode')
+        state = request.POST.get('state')
+        city = request.POST.get('city')
+        user = CustomUser.objects.get(id = request.user.id)
+        profile = Profile(
+            full_name = name,
+            phone = phone,
+            email = email,
+            address_line_1 = address,
+            pincode = pincode,
+            state = state,
+            city = city,
+            user = user,
+        )
+        check_address = Profile.objects.filter(user=request.user)
+        if check_address:
+            profile.save()
+        else:
+            profile.set_default = True
+            profile.save()    
+
+        return redirect('address')
+
+    return render(request,'Profile/address.html')
+
+@login_required(login_url='handlelogin')
+def edit_address(request,id):
+    address = get_object_or_404(Profile, id=id)
+    
+    if request.method == 'POST':
+        address_name = request.POST.get('name')
+        address_phone = request.POST.get('phone')
+        address_email = request.POST.get('email')
+        address_address = request.POST.get('address')
+        address_pincode = request.POST.get('pincode')
+        address_state = request.POST.get('state')
+        address_city = request.POST.get('city')
+
+        address.full_name = address_name
+        address.phone = address_phone
+        address.email = address_email
+        address.address_line_1 = address_address
+        address.country = address_pincode
+        address.state = address_state
+        address.city = address_city
+        print(address_city)
+        address.save()
+        return redirect('address')
+
+    return render(request,'Profile/address.html')
+
+
+def delete_address(request, id):
+    if request.method == 'POST':
+        del_address = Profile.objects.get(id=id, user=request.user)
+        if del_address.set_default == True:
+            del_address.delete()
+            set_another_default = Profile.objects.filter(user=request.user)
+            print(address)
+            if set_another_default:
+                set_another_default[0].set_default = True
+                set_another_default[0].save()
+        else:
+            del_address.delete()
+           
+        return redirect('address')
+ 
+
+def set_default(request, id):
+    if request.method == 'POST':
+        address = Profile.objects.get(user=request.user,id=id)
+        address.set_default = True
+        address.save()
+        
+        try:
+            defaults_to_reset = Profile.objects.filter(set_default=True).exclude(user=request.user, id=id)
+            for default_address in defaults_to_reset:
+                default_address.set_default = False
+                default_address.save()
+        except Profile.DoesNotExist:
+            pass
+      
+        return redirect('address')
+    return render(request,'profile/address.html' )

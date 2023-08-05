@@ -1,74 +1,81 @@
 {% extends 'layouts/main.html' %}
 {% load static %}
 {% block body %} 
+
+ <style>
+
+    .billing-form .form-control {
+        border-color: rgba(24, 26, 27, 0.1) !important;
+        background-color: transparent !important;
+        background-image: none !important;
+        color: rgb(0, 2, 2) !important;
+        box-shadow: none !important;
+    }
+</style>
+
 <section class="ftco-section">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10 ftco-animate">
+            </div>
+            <div class="col-md-2">
+                <a href="{% url 'change_address' %}" class="btn btn-primary" method="POST">Change</a>
+                {% csrf_token %}
+            </div>
+                
                 <form action="{% url 'place_order' %}" class="billing-form" method="post">
                     {% csrf_token %}
+                  
                     <h3 class="mb-4 billing-heading">Billing Details</h3>
                     <div class="row align-items-end">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="firstname">First Name</label>
-                                <input type="text" class="form-control" name="first_name" placeholder="Enter your first name" required>
+                                <label for="form-group">Full Name</label>
+                                <input  type="text" class="form-control text-success" name="full_name" value="{{ address.full_name }}"  readonly readonly >
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="lastname">Last Name</label>
-                                <input type="text" class="form-control" name="last_name" placeholder="Enter your last name" required>
-                            </div>
-                        </div>
+
                         <div class="col-md-6">
 							<div class="form-group">
-								<label for="country">Phone</label>
-								<input type="text" class="form-control" name="phone" placeholder="Enter your phone number" required>
+								<label for="country">Phone number</label>
+								<input type="text" class="form-control" name="phone" value="{{ address.phone }}" readonly>
 							</div>
 						</div>
                         <div class="col-md-6">
 							<div class="form-group">
 								<label for="email">Email</label>
-								<input type="email" class="form-control" name="email" placeholder="Enter your email" required>
+								<input type="email" class="form-control" name="email" value="{{ address.email }}" readonly>
 							</div>
 						</div>
+
                         <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Pincode">Pincode</label>
+                                <input type="text" class="form-control" name="pincode" value="{{ address.pincode }}" readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label for="address">Address</label>
-                                <input type="text" class="form-control" name="address_line_1" placeholder="House number and street name" required>
+                                <input type="text" class="form-control" name="address_line_1" value="{{ address.address_line_1 }}" readonly>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="address_line_2">Address Line 2</label>
-                                <input type="text" class="form-control" name="address_line_2" placeholder="Apartment, suite, unit, etc. (optional)">
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="country">Country</label>
-                                <input type="text" class="form-control" name="country" placeholder="Enter your country" required>
-                            </div>
-                        </div>
+
+                
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="state">State</label>
-                                <input type="text" class="form-control" name="state" placeholder="Enter your state" required>
+                                <input type="text" class="form-control" name="state" value="{{ address.state }}" readonly>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="city">City</label>
-                                <input type="text" class="form-control" name="city" placeholder="Enter your city" required>
+                                <input type="text" class="form-control" name="city" value="{{ address.city }}" readonly>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="order_note">Order Note</label>
-                                <textarea class="form-control" name="order_note" rows="4" placeholder="Write your order note here (optional)"></textarea>
-                            </div>
-                        </div>
+    
                         <div class="col-md-6">
                             <div class="cart-detail bg-light p-3 p-md-4">
                                 <h3 class="billing-heading mb-4">Payment Method</h3>
@@ -87,9 +94,28 @@
                             </div>
                         </div>
                     </div>
+                    </div>
                 </form>
             </div> <!-- .col-md-8 -->
         </div>
     </div>
 </section> <!-- .section -->
 {% endblock body %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    <script>
+        document.getElementById("orderButton").addEventListener("click", function() {
+          Swal.fire({
+            icon: 'success',
+            title: 'Order Successful!',
+            text: 'Your order has been placed successfully.',
+            showConfirmButton: false,
+            timer: 2000 // Close after 2 seconds
+          });
+        });
+        </script>
+        
+</script>

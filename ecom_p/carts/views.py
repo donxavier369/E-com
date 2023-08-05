@@ -4,6 +4,7 @@ from store.models import Product,Variation
 from carts.models import Cart,CartItem
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
+from user.models import Profile
 # Create your views here.
 
 
@@ -162,7 +163,7 @@ def remove_cart_item(request, product_id, cart_item_id):
     return redirect('cart')
 
 
-def cart(request, total=0, quantity=0, cart_item=None):
+def cart(request, total=0, quantity=0, cart_items=None):
     try:
         tax = 0
         grand_total = 0
@@ -170,7 +171,7 @@ def cart(request, total=0, quantity=0, cart_item=None):
             cart_items = CartItem.objects.filter(user=request.user, is_active=True)
         else:   
             cart = Cart.objects.get(cart_id=_cart_id(request))
-            print(cart,'222222222222222222')
+            print(cart,'222222222222222222')                             
             cart_items = CartItem.objects.filter(cart=cart, is_active=True)
             print(cart_items,"1111111111111111111")
         for cart_item in cart_items:
@@ -193,28 +194,40 @@ def cart(request, total=0, quantity=0, cart_item=None):
 
 @login_required(login_url='handlelogin')
 def checkout(request,total=0, quantity=0, cart_item=None):
-    try:
-        tax = 0
-        grand_total = 0
-        if request.user.is_authenticated:
-            cart_items = CartItem.objects.filter(user=request.user, is_active=True)
-        else:   
-            cart = Cart.objects.get(cart_id=_cart_id(request))
-            print(cart,'222222222222222222')
-            cart_items = CartItem.objects.filter(cart=cart, is_active=True)
-            print(cart_items,"1111111111111111111")
-        for cart_item in cart_items:
-            total += (cart_item.product.price * cart_item.quantity)
-            quantity += cart_item.quantity
-        tax = (2*total)/100
-        grand_total = total + tax    
-    except ObjectDoesNotExist:
-        pass # just ignore
-    context = {
-        'total' : total,
-        'quantity' : quantity,
-        'cart_items' : cart_items,
-        'tax':tax,
-        'grand_total':grand_total,
-    } 
-    return render(request, 'store/checkout.html', context)
+    address_count = Profile.objects.filter(user=request.user).count()
+        
+    if address_count<1:
+        return redirect('add_address')
+    else:
+        try:
+            tax = 0
+            grand_total = 0
+            if request.user.is_authenticated:
+                cart_items = CartItem.objects.filter(user=request.user, is_active=True)
+            else:   
+                cart = Cart.objects.get(cart_id=_cart_id(request))
+                print(cart,'222222222222222222')
+                cart_items = CartItem.objects.filter(cart=cart, is_active=True)
+                print(cart_items,"1111111111111111111")
+            for cart_item in cart_items:
+                total += (cart_item.product.price * cart_item.quantity)
+                quantity += cart_item.quantity
+            tax = (2*total)/100
+            grand_total = total + tax    
+        except ObjectDoesNotExist:
+            pass # just ignore
+
+        address = Profile.objects.get(user=request.user, set_default=True)
+        total_address = Profile.objects.filter(user=request.user).count()
+
+
+        context = {
+            'total' : total,
+            'quantity' : quantity,
+            'cart_items' : cart_items,
+            'tax':tax,
+            'grand_total':grand_total,
+            'address':address,
+            'total_address' : total_address,
+        } 
+    return render(request, 'orders/checkout.html', context)

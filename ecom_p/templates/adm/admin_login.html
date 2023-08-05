@@ -14,7 +14,7 @@
 <body>
   <div class="container">
     <h2>AdminLogin</h2>
-    <form method="post" action="{% url 'add'%}" onsubmit="return validateForm();">
+    <form method="post" action="{% url 'admin_login'%}" onsubmit="return validateForm();">
       {% csrf_token %}
       <div class="form-group">
         <label for="email">Email</label>
@@ -45,12 +45,12 @@
     </form>
   </div>
 
-<div style="z-index: -1000; position: absolute;">
+{% comment %} <div style="z-index: -1000; position: absolute;">
   {% for message in messages %}
   <div class="hidden-alert message-{{message.tags}}" data-tags="{{ message.tags }}" data-message="{{ message }}">{{message}}</div>
   {% comment %} <div class="hidden-alert message-{{message.tags}}" data-tags="success" data-message="This is a success message" data-button-url="{%url 'handlelogin'%}">please login</div> {% endcomment %}
-  {% endfor %}
-</div>
+  {% comment %} {% endfor %}
+</div> {% endcomment %} 
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>

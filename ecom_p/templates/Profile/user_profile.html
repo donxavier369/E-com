@@ -1,6 +1,7 @@
 {% extends 'layouts/main.html' %}
 {% load static %}
 {% block body %} 
+
   <section style="background-color: #eee;">
     <div class="container py-5">
       <div class="row">
@@ -15,7 +16,7 @@
               <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
                 class="rounded-circle img-fluid" style="width: 150px;">
               <h5 class="my-3">{{ user.name }}</h5>
-               <p class="text-muted mb-1">Adress</p>
+               <a href="{% url 'address' %}" class="mb-1">Address</a>
                <p class="text-muted mb-1">Orders</p>
 
 

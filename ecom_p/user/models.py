@@ -63,18 +63,15 @@ class CustomUser(AbstractUser):
 
 class Profile(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
-    order_number = models.CharField(max_length=20)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    full_name = models.CharField(max_length=50)
     phone = models.CharField(max_length=15)
     email = models.EmailField(max_length=50)
     address_line_1 = models.CharField(max_length=50)
-    address_line_2 = models.CharField(max_length=50, blank=True)
-    country = models.CharField(max_length=50)
+    pincode = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
-
+    set_default = models.BooleanField(default = False)
     
     def __str__ (self):
-        return self.first_name
+        return self.full_name
     

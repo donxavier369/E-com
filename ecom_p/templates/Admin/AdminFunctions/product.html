@@ -12,7 +12,7 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="col">Product Name</th>
+          <th scope="col">Product_Name</th>
           <th scope="col">Category</th>
           <th scope="col">NewArrival</th>
           <th scope="col">Brand</th>
@@ -75,11 +75,9 @@
             <label for="editProductBrand">Brand:</label>
             <select class="form-control" id="editProductBrand" name="brand">
               <option value="">Select brand</option>
-              {% for status_value, status_label in status_choices.items %}
-    <option value="{{ status_value }}" {% if order.status == status_value %}selected{% endif %}>
-        {{ status_label }}
-    </option>
-    {% endfor %}
+              {% for brand in brands %}
+              <option value="{{ brand.id }}" {% if product.brand.id == brand.id %}selected{% endif %}>{{ brand.brand_name }}</option>
+              {% endfor %}
             </select>
           </div>
           <div class="form-group">
@@ -147,14 +145,14 @@
               </select> 
           </div>
 
-          <div class="form-group">
+          {% comment %} <div class="form-group">
               <label for="product_variant">Variant</label>
               <select class="form-control" id="product_variant" name="product_variant" required>
                   {% for variant in variants %}
                       <option value="{{ variant.id }}">{{ variant.variant_name }}</option>
                   {% endfor %}
               </select> 
-          </div>
+          </div> {% endcomment %}
 
           <div class="form-group">
             <label for="product_new_arrival">New Arrival</label>
