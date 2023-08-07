@@ -17,6 +17,7 @@ from carts.models import Cart, CartItem
 import requests
 from .models import Profile
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.hashers import make_password
 # Load environment variables from .env file in the current directory
 load_dotenv()
 
@@ -190,8 +191,10 @@ def send(phone):
 
 
 def check(phone, code):
+    print(phone,'checkkkkkkkkkkkkkkkkk')
     try:
         result = verify.verification_checks.create(to=phone, code=code)
+        print('yes')
     except TwilioRestException:
         print('no')
         return False
@@ -247,9 +250,11 @@ def verify_phone(request):
 
 @login_required(login_url='handlelogin')
 def user_profile(request):
+    bool = True
     user = CustomUser.objects.get(pk=request.user.pk)
     context = {
-        'user': user
+        'user': user,
+        'show_footer': bool
     }
     return render(request, 'Profile/user_profile.html', context)
 
@@ -356,3 +361,63 @@ def set_default(request, id):
       
         return redirect('address')
     return render(request,'profile/address.html' )
+
+
+# password management
+
+def forgot_password(request):
+    
+    if request.method == 'POST':
+        phone = '+91'+request.POST.get("phone")
+
+        try:
+            if phone:
+                print(phone,'otp send')
+                send(phone)
+            else:
+                HttpResponse("Check Your Internet Connection!")
+        except:
+            pass            
+        context={
+            'phone':phone
+        }
+        return render(request,'Profile/Enter_otp_password.html',context)
+    return render(request,'Profile/forgot_password.html')
+
+
+def password_otpverification(request,phone):
+    if request.method == 'POST':
+        code = request.POST.get('code')
+
+        if check(phone,code):
+            user = CustomUser.objects.filter(phone=phone)
+            try:
+              if user:
+                return redirect("change_password",phone=phone)
+            except:
+               HttpResponse('enter currect phone number')  
+        else:
+            return render(request, "Profile/Enter_otp_password.html",{'phone':phone})
+    return render(request, "Profile/Enter_otp_password.html",{'phone':phone})
+
+
+def change_password(request,phone):
+    print(phone,'done')
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password1')
+        print(new_password)
+        user = CustomUser.objects.get(phone=phone)
+
+        if user.password == new_password:
+            messages.success(request,"This password similar to your old password")
+            return render(request,"Profile/change_password.html",{'phone':phone})
+        else:
+            update_password=CustomUser.objects.filter(id=user.id).update(password=make_password(new_password))
+
+        
+
+        messages.success(request,"Password changed successfulley")
+        return redirect('handlelogin')                
+
+  
+    return render(request,"Profile/change_password.html",{'phone':phone})

@@ -18,8 +18,13 @@ urlpatterns = [
     path('add_address/',views.add_address,name="add_address"),
     path('edit_address/<int:id>',views.edit_address,name="edit_address"),
     path('delete_address/<int:id>',views.delete_address,name="delete_address"),
-    path('set_default/<int:id>',views.set_default,name="set_default")
+    path('set_default/<int:id>',views.set_default,name="set_default"),
 
+    # forgot password
+
+    path('forgot_password',views.forgot_password, name="forgot_password"),
+    path('password_otpverification/<str:phone>',views.password_otpverification,name="password_otpverification"),
+    path('change_password/<str:phone>',views.change_password,name="change_password"),
 
 
 ]
