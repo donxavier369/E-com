@@ -2,68 +2,124 @@
 {% load static %}
 {% block body %} 
 
-  <section style="background-color: #eee;">
-    <div class="container py-5">
-      <div class="row">
-        <div class="col">
-        </div>
-      </div>
+<section class="h-100 gradient-custom-2">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col col-lg-9 col-xl-7">
+          <div class="card">
+            <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
+              <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                  alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                  style="width: 150px; z-index: 1">
+                {% comment %} <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
+                  style="z-index: 1;">
+                  Edit profile
+                </button> {% endcomment %}
 
-      <div class="row">
-        <div class="col-lg-4">
-          <div class="card mb-4">
-            <div class="card-body text-center">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-                class="rounded-circle img-fluid" style="width: 150px;">
-              <h5 class="my-3">{{ user.name }}</h5>
-               <a href="{% url 'address' %}" class="mb-1">Address</a>
-               <p class="text-muted mb-1">Orders</p>
+                <a href="#" class="btn btn-outline-dark mt-1" data-bs-toggle="modal" data-bs-target="#editaddressModal{{ user.id }}" data-mdb-ripple-color="dark" style="z-index: 1;">Edit Profile</a>
+             
+                <div class="modal fade" id="editaddressModal{{ user.id }}" tabindex="-1" aria-labelledby="editaddressModalLabel{{ user.id }}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="editaddressModalLabel{{ user.id }}">Edit Profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        {% comment %} <form action="{% url 'edit_address' address.id %}" method="POST" enctype="multipart/form-data"> {% endcomment %}
+                          {% csrf_token %}
+                          <input type="hidden" name="address_id" value="{{ user.id }}">
+                          <div class="form-group">
+                            <label for="editaddressName{{ user.id }}" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="name" value="{{ address.full_name }}" style="margin-bottom:10px;" required>
+                          </div>
 
+          
+                          <div class="form-group">
+                            <label for="editaddressName{{ user.id }}" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="email" value="{{ address.email }}" style="margin-bottom:10px;" required>
+                          </div>
 
-               {% comment %}
-              <p class="text-muted mb-4">Bay Area, San Francisco, CA</p>
-              <div class="d-flex justify-content-center mb-2">
-                <button type="button" class="btn btn-primary">Follow</button>
-                <button type="button" class="btn btn-outline-primary ms-1">Message</button>
-              </div> {% endcomment %}
+                          <div class="form-group">
+                            <label for="editaddressName{{ user.id }}" class="form-label">Phone</label>
+                            <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="phone" value="{{ address.phone }}" style="margin-bottom:10px;" required>
+                          </div>
+                          
+
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary">Save Changes</button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
-          </div>
-        </div>
-        <div class="col-lg-8">
-          <div class="card mb-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Full Name</p>
+            <div class="p-4 text-black" style="background-color: #f8f9fa;">
+              <div class="d-flex justify-content-end text-center py-1">
+                <div>
+                  <a class="mb-1 h5" href="{% url 'address' %}">Address</a>
                 </div>
-                <div class="col-sm-9">
-                  <p class="text-muted mb-0">{{user.name}}</p>
+                <div class="px-3">
+                  <a class="mb-1 h5" href="{% url 'order_detail' %}">Orders</a>
                 </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Email</p>
+                <div class="px-3">
+                  <a class="mb-1 h5" href="{% url 'wishlist' %}">Wishlist</a>
                 </div>
-                <div class="col-sm-9">
-                  <p class="text-muted mb-0">{{user.email}}</p>
-                </div>
-              </div>
-              <hr>
-              <div class="row">
-                <div class="col-sm-3">
-                  <p class="mb-0">Phone</p>
-                </div>
-                <div class="col-sm-9">
-                  <p class="text-muted mb-0">{{user.phone}}</p>
-                </div>
-              </div>
-            </div>
-          </div>
            
+                
+              </div>
+            </div>
+
+            <div class="card-body p-4 text-black">
+              <div class="mb-5">
+                <p class="lead fw-normal mb-1">About</p>
+                <div class="p-4" style="background-color: #f8f9fa; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <p class="font-italic mb-1">{{user.name}}</p>
+                    <p class="font-italic mb-1">{{user.email}}</p>
+                    <p class="font-italic mb-0">{{user.phone}}</p>
+                  </div>
+                  {% comment %} <button type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="z-index: 1;">
+                    Logout
+                  </button>
+                   {% endcomment %}
+                <!--Delete user address-->
+                  <input type="submit" class="btn btn-outline-dark" value="Logout" data-toggle="modal" data-target="#myModal"></input>
+
+                  <div class="modal" tabindex="-1" role="dialog" id="myModal">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Delete Address</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <form action="{% url 'handlelogout' %}" method="POST">{% csrf_token %}
+                        <div class="modal-body">
+                          <p>Are you shure you want to logout?</p>
+                        </div>
+                        <div class="modal-footer">
+                          <input type="submit" class="btn btn-danger" value="Continue"></input>
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
   </section>
+
   {% endblock body %}

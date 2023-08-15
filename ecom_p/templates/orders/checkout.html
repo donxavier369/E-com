@@ -23,7 +23,7 @@
                 {% csrf_token %}
             </div>
                 
-                <form action="{% url 'place_order' %}" class="billing-form" method="post">
+                <form action="{% url 'order_payment' %}" class="billing-form" method="post">
                     {% csrf_token %}
                   
                     <h3 class="mb-4 billing-heading">Billing Details</h3>
@@ -80,18 +80,25 @@
                             <div class="cart-detail bg-light p-3 p-md-4">
                                 <h3 class="billing-heading mb-4">Payment Method</h3>
                                 <div class="form-group">
-                                    <div class="col-md-12">
-                                        <div class="radio">
-                                            <label><input type="radio" name="optradio" class="mr-2">COD</label>
-                                        </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="payment" value="razorpay" id="razorpay" required>
+                                        <label class="form-check-label" for="upiPayments">
+                                            Razorpay(RPZ)
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="payment" value="cod" id="cashondelivery" required>
+                                        <label class="form-check-label" for="cashOnDelivery">
+                                            Cash on Delivery (COD)
+                                        </label>
                                     </div>
                                 </div>
                                 <!-- Order Summary details here -->
                                 <p>Total: ₹ {{ total }}</p>
                                 <p>Tax: ₹ {{ tax }}</p>
                                 <p>Grand Total: ₹ {{ grand_total }}</p>
-                                <input type="submit" value="Place an order" class="btn btn-primary py-3 px-4">
-                            </div>
+                                <input type="submit" value="Place order" class="btn btn-primary py-3 px-4" style="padding-left: 20px; padding-right: 20px;">
+                                </div>
                         </div>
                     </div>
                     </div>

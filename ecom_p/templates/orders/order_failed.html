@@ -1,0 +1,12 @@
+{% extends 'layouts/main.html' %}
+{% load static %}
+{% block body %} 
+
+<div class="container text-center mt-5">
+    <img src="{% static 'images/order_failed.jpg' %}" alt="order_failure" height="400" width="500" />
+    <h1 class="display-4"><b>Order Failure !!!</b></h1>
+    <p class="lead">Sorry, your order could not be processed.</p>
+    <p>Please try again later or contact our customer support for assistance.</p>
+    <a href="/" class="btn btn-success mt-3">Back to Home</a>
+</div>
+{% endblock body %}

@@ -14,17 +14,26 @@ urlpatterns = [
 
     # user profile
     path('user_profile/',views.user_profile,name='user_profile'),
+    path('detail_profile/',views.detail_profile,name='detail_profile'),
+    path('wishlist/',views.wishlist,name="wishlist"),
+    path('add_to_wishlist/<int:product_id>/',views.add_to_wishlist,name="add_to_wishlist"),
+    path('remove_wishlist_item/<int:product_id>/<int:wishlist_id>/',views.remove_wishlist_item,name="remove_wishlist_item"),
+
+    # address mangement
     path('address/',views.address,name="address"),
     path('add_address/',views.add_address,name="add_address"),
     path('edit_address/<int:id>',views.edit_address,name="edit_address"),
     path('delete_address/<int:id>',views.delete_address,name="delete_address"),
     path('set_default/<int:id>',views.set_default,name="set_default"),
 
-    # forgot password
-
+    # password  management
     path('forgot_password',views.forgot_password, name="forgot_password"),
     path('password_otpverification/<str:phone>',views.password_otpverification,name="password_otpverification"),
     path('change_password/<str:phone>',views.change_password,name="change_password"),
 
+    # orders
+    path('order_detail',views.order_detail, name="order_detail"),
+
+ 
 
 ]

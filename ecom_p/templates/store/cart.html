@@ -48,7 +48,7 @@
 						        <td class="image-prod"><div class="img" style="background-image:url('{{ cart_item.product.images.url }}')"></div></td>
 						        
 						        <td class="product-name">
-						        	<h3><a href="{{ cart_item.product.get_url }}">{{ cart_item.product.product_name}}</a></h3>
+						        	<h3><a href="{% url 'product_details' cart_item.product.id %}">{{ cart_item.product.product_name}}</a></h3>
 									<p class="text-muted-small">
 										{% if cart_item.variations.all %}
 											{% for item in cart_item.variations.all %}
@@ -59,23 +59,22 @@
 						        	<p>{{ cart_item.product.description }}</p>
 						        </td>
 						        
-						        <td class="price">₹{{ cart_item.product.price }}</td>
+						        <td class="price">₹{{ cart_item.product.product_price }}</td>
 						        
 						        <td class="quantity text-center">
-									<div class="input-group text-center mb-3 " style="width: 150px;">
-										<a href="{% url 'remove_cart' cart_item.product.id cart_item.id %}" class="input-group-text  btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center;justify-content: center;width: 25px;height: 53px;">-</a>
+								 <div class="input-group text-center mb-3 " style="width: 150px;">
+										<a href="{% url 'update_cart_item_quantity' cart_item.id 'decrease'%}" class="input-group-text  btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center;justify-content: center;width: 25px;height: 53px;">-</a>
 										<input type="text" name="quantity" class="form-control text-center" value="{{ cart_item.quantity }}">
-										<form action="{% url 'add_cart' cart_item.product.id %}" method="POST">
-											{% csrf_token %}
-											{% for item in cart_item.variations.all %}
-											<input type="hidden" name="{{ item.variation_category | lower }}" value="{{ item.variation_value | capfirst }}">
-											{% endfor %}
-											<button  class="input-group-text btn btn-primary mx-2" type="submit"style="display: flex;align-items: center;justify-content: center;width: 25px;height: 53px;">+</button>
-									    </form>
-									</div>
+										<a href="{% url 'update_cart_item_quantity' cart_item.id 'increase'%}" class="input-group-text  btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center;justify-content: center;width: 25px;height: 53px;">+</a>
+									</div>  
+								
 					            </td>
 						        
-						        <td class="total">₹{{ cart_item.sub_total }}</td>
+						        <td class="total">
+									₹{{ cart_item.cart_price  }}
+
+								  </td>
+								  {% comment %} <td>{{ 10|add:5}}</td> {% endcomment %}
 						      </tr><!-- END TR-->
 
 
@@ -99,16 +98,16 @@
     					</p>
     					<p class="d-flex">
     						<span>Delivery</span>
-    						<span>$0.00</span>
+    						<span>₹0.00</span>
     					</p>
 						<p class="d-flex">
     						<span>Tax</span>
     						<span>₹{{tax}}</span>
     					</p>
-    					<p class="d-flex">
+    					{% comment %} <p class="d-flex">
     						<span>Discount</span>
     						<span>$3.00</span>
-    					</p>
+    					</p> {% endcomment %}
     					<hr>
     					<p class="d-flex total-price">
     						<span>Total</span>

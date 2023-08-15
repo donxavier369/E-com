@@ -26,8 +26,8 @@
                     <ul>
                         <li><a href="{% url 'store' %}">All products</a></li>
 
-                        {% for category in links %}
-                        <li><a href="{{ category.get_url }}">{{ category.category_name  }}</a></li>
+                        {% for category in categories %}
+                        <li><a href="{% url 'categories' category.id %}">{{ category.category_name  }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -36,29 +36,24 @@
             {% for product in products %}
                 <div class="col-sm col-md-6 col-lg ftco-animate">
                     <div class="product">
-                        <a href="{{ product.get_url }}" class="img-prod"><img class="img-fluid" src="{{ product.images.url }}" alt="Colorlib Template">
+                   
+                    
+                        <a href="{% url 'product_details' product.id %}" class="img-prod"><img class="img-fluid" src="{{ product.images.url }}" alt="Colorlib Template">
                             <span class="status">30%</span>
                             <div class="overlay"></div>
                         </a>
                         <div class="text py-3 px-3">
-                            <h3><a href="{{ product.get_url }}">{{ product.product_name }}</a></h3>
+                            <h3><a href="{% url 'product_details' product.id %}">{{ product.product_name }}</a></h3>
                             <div class="d-flex">
                                 <div class="pricing">
-                                    <p class="price"><span class="mr-2 price-dc">$120.00</span><span class="price-sale">{{ product.price }}</span></p>
+                                    <p class="price"><span class="mr-2 price-dc"></span><span class="price-sale">₹{{ product.product_price }}</span></p>
                                 </div>
-                                <div class="rating">
-                                    <p class="text-right">
-                                        <a href="#"><span class="ion-ios-star-outline"></span></a>
-                                        <a href="#"><span class="ion-ios-star-outline"></span></a>
-                                        <a href="#"><span class="ion-ios-star-outline"></span></a>
-                                        <a href="#"><span class="ion-ios-star-outline"></span></a>
-                                        <a href="#"><span class="ion-ios-star-outline"></span></a>
-                                    </p>
-                                </div>
+
                             </div>
                             <p class="bottom-area d-flex px-3">
-                                <a href="{% url 'add_cart' product.id %}" class="add-to-cart text-center py-2 mr-1"><span>Add to cart <i class="ion-ios-add ml-1"></i></span></a>
-                                <a href="#" class="buy-now text-center py-2">WishList<span><i class="ion-ios-heart ml-1"></i></span></a>
+                                {% comment %} <a href="{% url 'add_to_wishlist' product.id  %}" class="add-to-cart text-center py-2 mr-1"><span>Wishlist <i class="ion-ios-heart ml-1"></i></span></a> {% endcomment %}
+                                {% comment %} <button class="add-to-wishlist" data-product-id="{{ product.id }}">Add to Wishlist</button> {% endcomment %}
+                                <a href="{% url 'product_details' product.id %}" class="buy-now text-center py-2">View Product<span><i class="ion-ios-eye ml-1"></i></span></a>
                             </p>
                         </div>
                     </div> 
@@ -97,3 +92,25 @@
 </section>
 
 {% endblock body %}
+
+
+<!-- Include SweetAlert library -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Your JavaScript code -->
+{% comment %} <script>
+    document.querySelectorAll('.add-to-wishlist').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-product-id');
+            
+            fetch(`/add_to_wishlist_ajax/${productId}`)
+                .then(response => response.json())
+                .then(data => {
+                    showAlert(data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    });
+    </script> {% endcomment %}

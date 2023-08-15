@@ -1,12 +1,87 @@
 {% extends 'Admin/adminlayouts/main.html' %}
+{% load static %}
 {% block title %}Product{% endblock title %}
+
 {% block body %}
+
 
 
 <div class="card">
   <div class="card-header">
     <h4>Product List</h4>
-    <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addProductModal">Add New Product</button>
+        <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addProductModal">Add New Product</button>
+<!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Add form fields here -->
+        <form method="POST" action="{% url 'add_product' %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="product_name">Product Name</label>
+            <input type="text" class="form-control" id="product_name" name="product_name" required>
+          </div>
+
+          <div class="form-group">
+              <label for="product_category">Category</label>
+              <select class="form-control" id="product_category" name="product_category" required>
+                  {% for category in categories %}
+                      <option value="{{ category.id }}">{{ category.category_name }}</option>
+                  {% endfor %}
+              </select> 
+          </div>
+
+          <div class="form-group">
+            <label for="product_new_arrival">New Arrival</label>
+            <select class="form-control" id="product_new_arrival" name="product_new_arrival" required>
+              <option value="1">Yes</option>
+              <option value="0">No</option>
+            </select> 
+          </div>
+
+
+
+          <div class="form-group">
+            <label for="product_brand">Brand</label>
+            <select class="form-control" id="product_brand" name="product_brand" required> 
+              {% for brand in brands %}
+                <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
+              {% endfor %}
+            </select> 
+          </div>
+
+          <div class="form-group">
+            <label for="editProductDescription" class="form-label">Product Description</label>
+            <textarea class="form-control" id="editProductDescription" name="product_description" rows="4" required></textarea>
+          </div>
+
+          
+          
+          <div class="form-group">
+            <label for="product_mrp">MRP</label>
+            <input type="number" class="form-control" id="product_mrp" name="product_price" min="0" required>
+          </div>
+
+          <div class="form-group">
+            <label for="productImage" class="form-label">Product Image</label>
+            <input type="file" class="form-control" id="productImage" name="product_image">
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
   </div>
   <div class="card-body">
     <table class="table table-striped">
@@ -17,9 +92,9 @@
           <th scope="col">NewArrival</th>
           <th scope="col">Brand</th>
           <th scope="col">Description</th>
-          <th scope="col">MRP</th>
-          <th scope="col">Stock</th>
+          <th scope="col">Variant</th>
           <th scope="col">Image</th>
+          <th scope="col">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -31,30 +106,125 @@
           <td>{{ product.new_arrival }}</td>
           <td>{{ product.brand }}</td>
           <td>{{ product.description }}</td>
-          <td>{{ product.price }}</td>
-          <td>{{ product.stock}}</td>
+          <h1 hidden>{{ product.id }}</h1>
+          <td>
+                  <!-- Dropdown menu -->
+            <div class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                  <i class="fa fa-edit me-lg-2"></i>
+                  <span class="d-none d-lg-inline-flex">Variants</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                  {% for var in product.variant_set.all %}
+                      <h6 class="fw-normal mb-0 ml-3 variant-trigger" data-bs-toggle="modal" data-bs-target="#editVariantModal{{ var.id }}" data-variant-color="{{ var.variant_colour }}">
+                          <i class="fa fa-edit me-lg-1" style="font-size: 0.7rem;"></i>
+                          {{ var.variant_colour }} <span value="view"></span>
+                      </h6>
+                  {% endfor %}
+              </div>
+            </div>
 
+            <!-- Modal content -->
+            {% for var in product.variant_set.all %}
+              <div class="modal fade" id="editVariantModal{{ var.id }}" tabindex="-1" aria-labelledby="editVariantModalLabel{{ var.id }}" aria-hidden="true">
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="editVariantModalLabel{{ var.id }}">Edit Variant</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                              <!-- Add form fields here -->
+                              <form method="POST" action="{% url 'variant_details' var.id %}" enctype="multipart/form-data">
+                                  {% csrf_token %}
+                                  <!-- Form fields go here -->
+                                  <div class="form-group">
+                                    <label for="product_name">Product Name {{ var.variant_colour }} </label>
+                                    <input type="text" class="form-control" id="product_name" name="product_name" value="{{ product.product_name }}"readonly>
+                                  </div>
+                        
+                                  <div class="form-group">
+                                    <label for="varitation_category">varitation_category </label>
+                                    <input type="text" class="form-control" id="product_name" name="varitation_category" value="color"readonly>
+                                  </div>
+                    
+                                  <div class="form-group">
+                                    <label for="variation_quantity{{ var.id }}">Variant_stock</label>
+                                    <input type="number" class="form-control" id="variation_quantity{{ var.id }}" name="variant_stock" value ="{{ var.variant_stock }}" min="0" required>
+                                  </div>
+                        
+                        
+                                  <div class="form-group">
+                                    <label for="product_new_arrival">Is_available</label>
+                                    <select class="form-control" id="product_new_arrival" name="variant_is_available" required>
+                                      <option value="1">Yes</option>
+                                      <option value="0">No</option>
+                                    </select> 
+                                  </div>
+                        
+                                  <div class="form-group">
+                                    <label for="varitation_value{{ var.id }}">variant colour</label>
+                                    <input type="text" class="form-control" id="variation_value{{ var.id }}" name="variant_colour" value ="{{ var.variant_colour }}" required>
+                                  </div>
+                        
+                                  <div class="form-group">
+                                    <label for="editProductImages{{ var.id }}" class="form-label">Images</label>
+                                    <input type="file" class="form-control" id="editProductImages{{ var.id }}" name="variant_image" accept="image/*">
+                                    <div class="mt-2">
+                                      <img src="/media/{{ var.variant_image }}" alt="{{ var.variant_image }}" width="100" height="100">
+                                    </div>
+                                  </div>
+                          </div>
+                          <div class="modal-footer">
+                                 <!-- Delete Confirmation Button -->
+                              <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal{{ var.id }}">Delete</button>
+
+                              <button type="submit" class="btn btn-primary">Save</button>
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          </div>          
+                        </form>
+                      </div>
+                  </div>
+              </div>
+                  <!-- Delete Confirmation Modal -->
+              <div class="modal fade" id="deleteConfirmModal{{ var.id }}" tabindex="-1" aria-labelledby="deleteConfirmModalLabel{{ var.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteConfirmModalLabel{{ var.id }}">Delete Variant Confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete the variant "{{ var.variant_colour }}"?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="{% url 'delete_variant' var.id %}" class="btn btn-danger">Confirm Delete</a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          {% endfor %}
+
+        </td> 
+
+      
           <td class="align-middle"><img src="/media/{{ product.images}}" alt="{{ product.images}}" width="70px" height="70px"></td>
 
           <td>
-          {% comment %} <a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProductModal" onclick="editProductModal({{ product.id }})">Edit</a> {% endcomment %}
-           <a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProductModal{{ product.id }}">Edit</a>
+          <button class="btn btn-outline-warning mx-1 mt-3 " data-bs-toggle="modal" data-bs-target="#addVariantModal{{ product.id }}">Variant</button>
+
+           <a href="#" class="btn btn-outline-dark mx-1 mt-3 px-4" data-bs-toggle="modal" data-bs-target="#editProductModal{{ product.id }}">Edit</a>
   
             {% if product.is_available %}
-              <a href="{% url 'product_block' product.id %}" class="btn btn-outline-danger mx-2 mt-2">Block</a>
+              <a href="{% url 'product_block' product.id %}" class="btn btn-outline-danger mx-1 mt-2 px-3">Block</a>
             {% else %}
-              <a href="{% url 'product_unblock' product.id %}" class="btn btn-outline-success mx-1">Unblock</a>
+              <a href="{% url 'product_unblock' product.id %}" class="btn btn-outline-success mx-1 mt-2">Unblock</a>
             {% endif %}
           </td>
         </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
 
 
-{% for product in products %}
 <!-- Edit Product Modal -->
 <div class="modal fade" id="editProductModal{{ product.id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ product.id }}" aria-hidden="true">
   <div class="modal-dialog">
@@ -93,14 +263,14 @@
             <label for="editProductDescription{{ product.id }}" class="form-label">Product Description</label>
             <textarea class="form-control" id="editProductDescription{{ product.id }}" name="product_description" rows="4" required>{{ product.description }}</textarea>
           </div>
+
+              
           <div class="form-group">
             <label for="editProductMRP{{ product.id }}" class="form-label">MRP</label>
-            <input type="number" step="0.01" class="form-control" id="editProductMRP{{ product.id }}" name="product_mrp" value="{{ product.price }}" required>
-          </div>
-          <div class="form-group">
-            <label for="editProductStock{{ product.id }}" class="form-label">Stock</label>
-            <input type="number" class="form-control" id="editProductStock{{ product.id }}" name="product_stock" value="{{ product.stock }}" required>
-          </div>
+            <input type="number" step="0.01" class="form-control" id="editProductMRP{{ product.id }}" name="product_price" value="{{ product.product_price }}" required>
+          </div> 
+
+ 
           <div class="form-group">
             <label for="editProductImages{{ product.id }}" class="form-label">Images</label>
             <input type="file" class="form-control" id="editProductImages{{ product.id }}" name="product_images" accept="image/*">
@@ -119,79 +289,57 @@
 </div>
 
 
-<!-- Add Product Modal -->
-<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+<!--mange-variant-->
+<div class="modal fade" id="addVariantModal{{ product.id }}" tabindex="-1" aria-labelledby="addVariantModalLabel{{ product.id }}" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+        <h5 class="modal-title" id="addVariantModalLabel{{ product.id }}">Add New Variant</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <!-- Add form fields here -->
-        <form method="POST" action="{% url 'add_product' %}" enctype="multipart/form-data">
+        <form method="POST" action="{% url 'variant' product.id %}" enctype="multipart/form-data">
           {% csrf_token %}
+     
           <div class="form-group">
-            <label for="product_name">Product Name</label>
-            <input type="text" class="form-control" id="product_name" name="product_name" required>
+            <label for="product_name">Product Name {{ product.id }}</label>
+            <input type="text" class="form-control" id="product_name" name="product_name" value="{{ product.product_name }}"readonly>
           </div>
 
+
+
           <div class="form-group">
-              <label for="product_category">Category</label>
-              <select class="form-control" id="product_category" name="product_category" required>
-                  {% for category in categories %}
-                      <option value="{{ category.id }}">{{ category.category_name }}</option>
-                  {% endfor %}
-              </select> 
+            <label for="varitation_category">varitation_category</label>
+            <input type="text" class="form-control" id="product_name" name="varitation_category" value="color"readonly>
           </div>
 
-          {% comment %} <div class="form-group">
-              <label for="product_variant">Variant</label>
-              <select class="form-control" id="product_variant" name="product_variant" required>
-                  {% for variant in variants %}
-                      <option value="{{ variant.id }}">{{ variant.variant_name }}</option>
-                  {% endfor %}
-              </select> 
-          </div> {% endcomment %}
 
           <div class="form-group">
-            <label for="product_new_arrival">New Arrival</label>
-            <select class="form-control" id="product_new_arrival" name="product_new_arrival" required>
+            <label for="variation_quantity">Variant_stock</label>
+            <input type="number" class="form-control" id="variation_quantity" name="variant_stock" min="0" required>
+          </div>
+
+
+          <div class="form-group">
+            <label for="product_new_arrival">Is_available</label>
+            <select class="form-control" id="product_new_arrival" name="variant_is_available" required>
               <option value="1">Yes</option>
               <option value="0">No</option>
             </select> 
           </div>
 
-
-
           <div class="form-group">
-            <label for="product_brand">Brand</label>
-            <select class="form-control" id="product_brand" name="product_brand" required> 
-              {% for brand in brands %}
-                <option value="{{ brand.id }}">{{ brand.brand_name }}</option>
-              {% endfor %}
-            </select> 
+            <label for="varitation_value">variant colour</label>
+            <input type="text" class="form-control" id="variation_value" name="variant_colour" required>
           </div>
 
           <div class="form-group">
-            <label for="editProductDescription" class="form-label">Product Description</label>
-            <textarea class="form-control" id="editProductDescription" name="product_description" rows="4" required></textarea>
+            <label for="productImage" class="form-label">Variant Image</label>
+            <input type="file" class="form-control" id="productImage" name="variant_image" required>
           </div>
-
-          <div class="form-group">
-            <label for="product_mrp">MRP</label>
-            <input type="number" class="form-control" id="product_mrp" name="product_mrp" required>
-          </div>
-
-          <div class="form-group">
-            <label for="product_quantity">Product Stock</label>
-            <input type="number" class="form-control" id="product_quantity" name="product_quantity" required>
-          </div>
-
-          <div class="form-group">
-            <label for="productImage" class="form-label">Product Image</label>
-            <input type="file" class="form-control" id="productImage" name="product_image">
-          </div>
+          
+        </div>
 
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Save</button>
@@ -202,7 +350,15 @@
     </div>
   </div>
 </div>
-{% endfor %}
-{% endblock body %} 
 
+
+
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+
+
+{% endblock body %} 
 

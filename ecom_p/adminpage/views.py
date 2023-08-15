@@ -7,9 +7,11 @@ from django.db.models import Q
 from django.urls import reverse
 from user.models import CustomUser
 from django.contrib.auth import authenticate,login,logout
-from store.models import Product, Category, Brand
+from store.models import Product , Variant
+from category.models import  Category, Brand
 from django.shortcuts import get_object_or_404
 from orders.models import Order
+# from store.models import Variation
 # Create your views here.
 
 
@@ -79,13 +81,15 @@ def product(request):
         categories = Category.objects.filter(is_available=True)
         product_count = products.count()
         brands = Brand.objects.all()
-        # variants = Variant.objects.all()
+        variant = Variant.objects.all()
+        
         context = {
             "products" : products,
             "product_count" : product_count,
             "categories" : categories,
             "brands" : brands,
-            # "variants" : variants
+            "variant":variant,
+           
         }
         return render(request, "Admin/AdminFunctions/product.html",context)
 
@@ -95,27 +99,22 @@ def add_product(request):
     if request.method == 'POST':
         product_name = request.POST.get('product_name')
         category_id = request.POST.get('product_category')
-        # variant_id = request.POST.get('product_variant')
         new_arrival = request.POST.get('product_new_arrival')
         brand_id = request.POST.get('product_brand')
         product_description = request.POST.get('product_description')
-        product_price = request.POST.get('product_mrp')
-        product_stock = request.POST.get('product_quantity')
         product_image = request.FILES.get('product_image')
-
+        product_price = request.POST.get('product_price')
         category = get_object_or_404(Category, id=category_id)
-        # variant = get_object_or_404(Variant, id=variant_id)
         brand = get_object_or_404(Brand, id=brand_id)
 
         product = Product(
             product_name=product_name,
             category=category,
-            # variant=variant,
             new_arrival=(new_arrival == '1'),  # Convert to boolean
             brand=brand,
             description=product_description,
-            price=product_price,
-            stock=product_stock,
+            product_price = product_price,
+        
             images=product_image
         )
         product.save()
@@ -123,8 +122,7 @@ def add_product(request):
         return redirect('product')  # Replace 'product' with the name of the view that displays the list of products
     categories = Category.objects.all()
     brands = Brand.objects.all()
-    variants = Variant.objects.all()
-    return render(request, 'Admin/AdminFunctions/product.html', {'categories': categories, 'brands': brands, 'variants': variants})
+    return render(request, 'Admin/AdminFunctions/product.html', {'categories': categories, 'brands': brands})
 
     
 def edit_product(request, id):
@@ -137,9 +135,11 @@ def edit_product(request, id):
         product_price = request.POST.get('product_mrp')
         product_stock = request.POST.get('product_stock')
         product_description = request.POST.get('product_description')
+        product_price = request.POST.get('product_description')
 
         # Retrieve the updated 'images' field value
-        product_thumbnail = request.FILES.get('product_thumbnail')
+        product_thumbnail = request.FILES.get('product_images')
+        print(product_thumbnail,"thumbbbbbbbbbbbbbbbbbb")
 
         # Update other product details
         product.product_name = product_name
@@ -209,11 +209,11 @@ def add_category(request):
 
 def edit_category(request, id):
     category = get_object_or_404(Category,id=id)
-
     if request.method == 'POST':
         category_name = request.POST.get('category_name')
         category_description = request.POST.get('category_description')
         category_thumbnail = request.FILES.get('category_images')
+
 
         category.category_name = category_name
         category.description = category_description
@@ -227,12 +227,8 @@ def edit_category(request, id):
 
     return render(request,"Admin/AdminFunctions/category.html")
 
-# variant management
 
-def variant(request):
-    variants = Variant.objects.all()
-    return render(request,"Admin/AdminFunctions/category.html",{'variants':variants})
-
+# order management
 
 def manage_order(request):
     orders = Order.objects.all()
@@ -252,3 +248,62 @@ def manage_orderstatus(request, id):
         order.save()
         return redirect('manage_order')
     return render(request, "Admin/AdminFunctions/order.html")
+
+# variant management
+
+def variant(request,id):
+    if request.method == 'POST':
+        variant_colour = request.POST.get('variant_colour')
+        variant_stock =request.POST.get('variant_stock')
+        is_available = request.POST.get('variant_is_available')
+        variant_image = request.FILES.get('variant_image')
+        # variant_mrp = request.POST.get('variant_price')
+        
+       
+        product = get_object_or_404(Product, id=id)
+        variant = Variant.objects.create(  
+             product = product,
+            variant_colour = variant_colour,
+            variant_stock = variant_stock,
+            is_available = is_available,
+            variant_image = variant_image,
+            # variant_price = variant_mrp,
+           
+        )
+        return redirect('product')
+
+    return render(request,"Admin/AdminFunctions/product.html",{'variant':variant})
+
+
+def variant_details(request,id):
+    variant = get_object_or_404(Variant, id=id)
+    if request.method == 'POST':
+        variant_colour = request.POST.get('variant_colour')
+        variant_stock =request.POST.get('variant_stock')
+        is_available = request.POST.get('variant_is_available')
+        variant_image = request.FILES.get('variant_image')
+        # variant_mrp = request.POST.get('variant_price')
+
+        variant.variant_colour = variant_colour
+        variant.variant_stock = variant_stock
+        variant.is_available = is_available
+        # variant.variant_price = variant_mrp
+
+        if variant_image:
+            variant.variant_image = variant_image
+
+        variant.save()
+        return redirect('product')
+
+
+    return render(request,"Admin/AdminFunctions/product.html")
+
+
+def delete_variant(request, id):
+    delete_variant = Variant.objects.filter(id=id)
+    if delete_variant:
+        delete_variant.delete()
+        return redirect('product')
+    return render(request,"Admin/AdminFunctions/product.html")
+
+    

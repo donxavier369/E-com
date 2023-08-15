@@ -1,0 +1,108 @@
+
+{% extends 'layouts/main.html' %}
+{% load static %}
+{% block body %} 
+
+<div class="container mt-5">
+    <div class="row mt-5">
+        <div class="col-md-8 offset-md-2 ">
+            <center>
+                <h1 class="card-title mb-5 mt-5">Order Placed Successfully!</h1>
+            </center>
+            <div class="card p-4 mt-3" id="topdf">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h6>Date: {{ date }}</h6>
+                    <h1><b><i>E-NAH</i></b></h1>
+                </div>
+                <div class="card-body text-center">
+                    <h4><b><u>Invoice</u></b></h4>
+                    <div class="d-flex align-items-center justify-content-between mt-5 mb-5">
+                        <p class="card-text text-start">
+                            <b><u>Shipping Address:</u></b><br />
+                            {{ address.full_name }}<br>
+                            {{ address.address_lane_1 }}<br>
+                            {{ address.address_lane_2 }}<br>
+                            {{ address.city_or_town }},{{ address.district }},India<br>
+                            Pin:{{ address.pincode }}<br>
+                            Ph:{{ address.phone_number }},{{ address.alt_phone_number }}<br>
+                            Land Mark:{{ address.land_mark }}
+                        </p>
+                        <p class="card-text text-end">
+                            <b><u>Company Address:</u></b><br />
+                            VINKEL Pvt.Ltd<br>
+                            Edathalans Building<br>
+                            Maradu<br>
+                            Pin:683245<br>
+                            Ph:9207284416,9645060923<br>
+                            Land Mark: Opp.PS Mission Hospital,Maradu.
+                        </p>
+                    </div>
+                    <h4>Order Summary:</h4>
+                    <table class="table table-striped table-success mt-3 mb-5">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Unit Price:</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td>{{ order.product_name }}</td>
+                                <td>{{ order.unit_price }}</td>
+                                <td>{{ order.quantity }}</td>
+                                <td>₹{{ order.amount }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            <tr>
+                                <th><h6>Subtotal</h6></th>
+                                <th></th>
+                                <th></th>
+                                <th><h6>₹{{ sub_total }}</h6></th>
+                            </tr>
+                            <tr>
+                                <th><h6>Discount</h6></th>
+                                <th></th>
+                                <th></th>
+                                <th><h6>-₹{{ discount }}</h6></th>
+                            </tr>
+                            <tr>
+                                <th><h4><b>Total</b></h4></th>
+                                <th></th>
+                                <th></th>
+                                <th><h4><b>₹{{ total_amount }}</b></h4></th>
+                            </tr>
+
+                        </thead>
+                    </table>
+                    <p class="card-text">Thank you for your purchase. Your order has been successfully placed.</p>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+                <a href="/" class="btn btn-success mt-4"><b>Continue Shopping</b></a>
+                <button onclick="downloadPDF()" class="btn btn-info mt-4">
+                    <b>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer-fill" viewBox="0 0 16 16">
+                            <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z" />
+                            <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z" />
+                        </svg>
+                        Print Invoice
+                    </b>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock body %}

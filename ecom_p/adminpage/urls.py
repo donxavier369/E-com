@@ -23,7 +23,9 @@ urlpatterns = [
     
     # variant management
 
-    path('variant', views.variant, name="variant"),
+    path('variant/<int:id>', views.variant, name="variant"),
+    path('variant_details/<int:id>',views.variant_details, name="variant_details"),
+    path('delete_variant/<int:id>', views.delete_variant, name="delete_variant"),
 
     # user order management
     path('manageorder', views.manage_order, name="manage_order"),

@@ -27,26 +27,11 @@
     			</div>
 				
     			<div class="col-lg-6 product-details pl-md-5 ftco-animate">
-					<form action="{% url 'add_cart' single_product.id %}" method="POST">
-						{% csrf_token %}
+				<form action="{% url 'add_to_cart' single_product.id %}" method="POST">
+						{% csrf_token %} 
     				<h3>{{ single_product.product_name }}</h3>
-    				<div class="rating d-flex">
-							{% comment %} <p class="text-left mr-4">
-								<a href="#" class="mr-2">5.0</a>
-								<a href="#"><span class="ion-ios-star-outline"></span></a>
-								<a href="#"><span class="ion-ios-star-outline"></span></a>
-								<a href="#"><span class="ion-ios-star-outline"></span></a>
-								<a href="#"><span class="ion-ios-star-outline"></span></a>
-								<a href="#"><span class="ion-ios-star-outline"></span></a> {% endcomment %}
-							{% comment %} </p>
-							<p class="text-left mr-4">
-								<a href="#" class="mr-2" style="color: #000;">100 <span style="color: #bbb;">Rating</span></a>
-							</p>
-							<p class="text-left">
-								<a href="#" class="mr-2" style="color: #000;">500 <span style="color: #bbb;">Sold</span></a>
-							</p> {% endcomment %}
-						</div>
-    				<p class="price"><span>{{ single_product.product_price}}</span></p>
+    	
+    				<p class="price"><span>₹{{ single_product.product_price}}</span></p>
     				<p>{{ single_product.product_name }} {{ single_product.description }}</p>
 
 						<div class="row mt-4">
@@ -54,13 +39,18 @@
 								<div class="form-group d-flex">
 						<div class="select-wrap">
 						<div class="icon"><span class="ion-ios-arrow-down"></span></div>
-						<select name="color" id="color" class="form-control" required>dsf
-							<option value="" disabled selected >Choose Color</option>
-							{% for i in single_product.variation_set.colors %}
-							<option value="{{ i.variation_value | lower }}">{{ i.variation_value |capfirst }}</option>
+						{% comment %} <select name="colour" id="colour" class="form-control" required>dsf
+							<option value="" disabled selected >Choose Colour</option>
+							{% for variant in variation %}
+							<option  value="{{ variant.variant_colour | lower }}">{{ variant.variant_colour |capfirst }}{{variant.id}}</option>
 							{% endfor %}
-						</select>
-						
+						</select> {% endcomment %}
+						<select name="variant" id="variant-select" class="form-control"required>
+							<option value="">Select a Variant</option>
+							{% for variant in variation %}
+							<option  value="{{ variant.id }}">{{ variant.variant_colour |capfirst }}{{variant.id}}</option>
+							{% endfor %}
+				   		</select>
 						</div>
 						
 
@@ -83,7 +73,9 @@
 					 {% endcomment %}
 					
 					<input type="submit" class="btn btn-black py-3 px-5 mt-2" value="add to cart"></input>
-                 
+					<a href="/user/add_to_wishlist/{{single_product.id}}" class="btn btn-black py-3 px-5 mt-2" >Wishlist</a>
+
+					
 				    {% comment %} {% endif %}	 {% endcomment %}
 				{% endif %}	
 			</form>		
@@ -124,6 +116,7 @@
 		// Attach the event handler to the onpageshow event
 		window.addEventListener('pageshow', refreshPage);
 	</script> {% endcomment %}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
 		$(document).ready(function(){
 
@@ -159,6 +152,48 @@
 		    });
 		    
 		});
+	</script>
+
+	<script>
+		$(document).ready(function() {
+			console.log("heloooooooooooooooooooooooooooooooooo")
+			$('#variant-select').change(function() {
+			  var selectedVariantId = $(this).val();
+			  console.log(selectedVariantId)
+		
+			  // Perform an AJAX request to fetch the details of the selected variant
+			  // Replace the URL with the actual endpoint that returns the variant details
+
+
+
+			  $.ajax({
+				url: '/get-variant-details',
+				type: 'GET',
+				data: { variantId: selectedVariantId },
+		
+				success: function(response)
+				 {
+				  // Update the product details on the page
+				  var productImage = response.variant_image;
+				  var productPrice = response.variant_price;
+					  var variantName = response.variant_name;
+					  var variantStock = response.variant_stock;
+					  var variantStatus = response.variant_status;
+			   
+		
+				  // Update the image source and price text
+				  $('#product-image').attr('src', productImage);
+				  $('#product-price').text('₹'+ productPrice);
+					  $('#product-variant-name').html(variantProduct +' '+ variantName);
+					  $('#variant-stock').text(variantStock);
+					  $('#variant-status').text(variantStatus);
+					},
+					error: function(xhr, status, error) {
+					  // Handle error response if needed
+					}
+				  });
+				});
+			  });
 	</script>
     
   </body>

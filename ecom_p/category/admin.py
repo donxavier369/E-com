@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Category,Brand
+from store.models import Variant
 
 # Register your models here.
 
@@ -13,7 +14,7 @@ class BrandAdmin(admin.ModelAdmin):
 
 admin.site.register(Brand,BrandAdmin)   
 
-# class VariantAdmin(admin.ModelAdmin):
-#     list_display = ('variant_name',)
+class VariantAdmin(admin.ModelAdmin):
+    list_display = ('variant_colour','variant_stock')
 
-# admin.site.register(Variant,VariantAdmin)    
+admin.site.register(Variant,VariantAdmin)    

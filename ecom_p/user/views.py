@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
@@ -6,18 +7,19 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from user.models import CustomUser
-from store.models import Product
+from store.models import Product,Wishlist,Variant
 from twilio.base.exceptions import TwilioRestException
 from dotenv import load_dotenv
 import os
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
-from carts.views import _cart_id,CartItem
+# from carts.views import _cart_id,CartItem
 from carts.models import Cart, CartItem
 import requests
 from .models import Profile
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password
+from orders.models import Order
 # Load environment variables from .env file in the current directory
 load_dotenv()
 
@@ -29,6 +31,7 @@ client = Client(os.environ['TWILIO_ACCOUNT_SID'], os.environ['TWILIO_AUTH_TOKEN'
 
 # Create a Verify service
 verify = client.verify.services(os.environ['TWILIO_VERIFY_SERVICE_SID'])
+
 
 
 
@@ -259,6 +262,17 @@ def user_profile(request):
     return render(request, 'Profile/user_profile.html', context)
 
 
+def detail_profile(request):
+    bool = True
+    user = CustomUser.objects.get(pk=request.user.pk)
+    context = {
+        'user': user,
+        'show_footer': bool
+    }
+    return render(request, 'Profile/detail_profile.html',context)
+
+# address management
+
 def address(request):
     bool = True
 
@@ -269,6 +283,7 @@ def address(request):
     }
     
     return render(request, 'Profile/address.html',context)
+
 
 
 def add_address(request):
@@ -421,3 +436,80 @@ def change_password(request,phone):
 
   
     return render(request,"Profile/change_password.html",{'phone':phone})
+
+
+
+# orders
+
+def order_detail(request):
+    bool = True
+    orders = Order.objects.filter(user=request.user)
+    print(orders,"ooooooooooooooooo ")
+
+
+    context = {
+        'show_footer': bool,
+        'orders':orders,
+
+    }
+    return render(request,"profile/order_detail.html",context)
+
+# wishlist
+
+def wishlist(request):
+    wishlists = Wishlist.objects.all()
+    bool = True
+    context = {
+        'wishlists':wishlists,
+        'show_footer': bool,
+    }
+    return render(request,"profile/wishlist.html",context)
+
+def add_to_wishlist(request, product_id):
+    print('hello0',product_id)
+    product = get_object_or_404(Product, id=product_id)
+    variation = Variant.objects.filter(product=product)
+    # Check if the product is already in the user's wishlist
+    wishlist_entry = Wishlist.objects.filter(user=request.user, product=product).first()
+    
+    if wishlist_entry:
+        messages.info(request,"Product already in wishlist")
+    else:
+        Wishlist.objects.create(
+            product=product,
+            user=request.user,
+        
+        )
+        messages.info(request,"Product added to wishlist")
+      
+        return render(request, 'store/product_detail.html',{"single_product":product}) # Assuming "wishlist" is the URL name for the wishlist page
+    return render(request, 'store/product_detail.html',{"single_product":product,"variation":variation})
+
+# def add_to_wishlist_ajax(request, productid):
+#     product = get_object_or_404(Product, id=productid)
+    
+#     wishlist_entry = Wishlist.objects.filter(user=request.user, product=product).first()
+    
+#     if wishlist_entry:
+#         response_data = {'message': 'already_in_wishlist'}
+#     else:
+#         Wishlist.objects.create(
+#             product=product,
+#             user=request.user,
+#         )
+#         response_data = {'message': 'added_to_wishlist'}
+    
+#     return JsonResponse(response_data)
+
+def remove_wishlist_item(request, product_id, wishlist_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.user.is_authenticated:
+        wishlist_item = Wishlist.objects.get(product=product, user=request.user, id=wishlist_id)
+        wishlist_item.delete()
+
+    else:
+        pass
+        
+
+    return redirect('wishlist')
+
