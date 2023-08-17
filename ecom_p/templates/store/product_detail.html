@@ -23,7 +23,7 @@
     	<div class="container">
     		<div class="row">
     			<div class="col-lg-6 mb-5 ftco-animate">
-    				<a href="images/menu-2.jpg" class="image-popup"><img src="/media/{{ single_product.images }}" class="img-fluid" alt="Colorlib Template"></a>
+    				<a href="images/menu-2.jpg" class="image-popup"><img src="/media/{{ single_product.images }}" id="product-image" class="img-fluid" alt="Colorlib Template"></a>
     			</div>
 				
     			<div class="col-lg-6 product-details pl-md-5 ftco-animate">
@@ -73,7 +73,8 @@
 					 {% endcomment %}
 					
 					<input type="submit" class="btn btn-black py-3 px-5 mt-2" value="add to cart"></input>
-					<a href="/user/add_to_wishlist/{{single_product.id}}" class="btn btn-black py-3 px-5 mt-2" >Wishlist</a>
+					{% comment %} <a href="/user/add_to_wishlist/{{single_product.id}}" class="btn btn-black py-3 px-5 mt-2" >Wishlist</a> {% endcomment %}
+					{% comment %} <a href="{% url 'add_to_wishlist' single_product.id variant.id %}" class="btn btn-black py-3 px-5 mt-2">Wishlist</a> {% endcomment %}
 
 					
 				    {% comment %} {% endif %}	 {% endcomment %}

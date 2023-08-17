@@ -298,79 +298,79 @@ def payments(request,order_id):
 
 
 
-def place_order(request, total=0, quantity=0):
+# def place_order(request, total=0, quantity=0):
 
-    current_user = request.user
-    cart_items = CartItem.objects.filter(user=current_user)
-    cart_count = cart_items.count()
-
-
-    if cart_count <= 0:
-        return redirect('store')
-
-    grand_total = 0
-    tax = 0
-
-    for cart_item in cart_items:
-        total += (cart_item.product.product_price * cart_item.quantity)
-        quantity += (cart_item.quantity)
-
-    tax = (2 * total) / 100
-    grand_total = total + tax
-
-    if request.method == 'POST':
-        # Get the billing information from the form data
-        full_name = request.POST.get('full_name')
-        phone = request.POST.get('phone')
-        email = request.POST.get('email')
-        address_line_1 = request.POST.get('address_line_1')
-        pincode = request.POST.get('pincode')
-        state = request.POST.get('state')
-        city = request.POST.get('city')
-        payment_type = request.POST.get('payment')
-        print(payment_type,"typeeeeeeeeeeeeeeeeeee")
-        if payment_type == "razorpay":
-            print(255)
-            amount = str(grand_total)
-            name = full_name
-            return redirect('order_payment',amount=amount,name=name)
-
-        # Store all the billing information inside Order table
-        data = Order(
-        user = current_user,
-        full_name = full_name,
-        phone = phone,
-        email = email,
-        address_line_1 = address_line_1,
-        pincode = pincode,
-        state = state,
-        city = city,
-        order_total = grand_total,
-        tax = tax,
-        ip = request.META.get('REMOTE_ADDR'),
-        payment_method = payment_type
-        )
-        data.save()
-        cart_items.delete()
+#     current_user = request.user
+#     cart_items = CartItem.objects.filter(user=current_user)
+#     cart_count = cart_items.count()
 
 
+#     if cart_count <= 0:
+#         return redirect('store')
 
-        # Generate order_number
-        yr = int(datetime.date.today().strftime('%Y'))
-        dt = int(datetime.date.today().strftime('%d'))
-        mt = int(datetime.date.today().strftime('%m'))
-        d = datetime.date(yr, mt, dt)
-        current_date = d.strftime('%Y%m%d')  # 20230731
-        order_number = current_date + str(data.id)
-        data.order_number = order_number
-        data.save()
+#     grand_total = 0
+#     tax = 0
 
-        # Redirect to payments page with the order details
-        # return redirect('payments', order_id=data.id)
-        return redirect('home')
+#     for cart_item in cart_items:
+#         total += (cart_item.product.product_price * cart_item.quantity)
+#         quantity += (cart_item.quantity)
 
-    else:
-        return render(request, 'orders/checkout.html', {'total': total, 'tax': tax, 'grand_total': grand_total})
+#     tax = (2 * total) / 100
+#     grand_total = total + tax
+
+#     if request.method == 'POST':
+#         # Get the billing information from the form data
+#         full_name = request.POST.get('full_name')
+#         phone = request.POST.get('phone')
+#         email = request.POST.get('email')
+#         address_line_1 = request.POST.get('address_line_1')
+#         pincode = request.POST.get('pincode')
+#         state = request.POST.get('state')
+#         city = request.POST.get('city')
+#         payment_type = request.POST.get('payment')
+#         print(payment_type,"typeeeeeeeeeeeeeeeeeee")
+#         if payment_type == "razorpay":
+#             print(255)
+#             amount = str(grand_total)
+#             name = full_name
+#             return redirect('order_payment',amount=amount,name=name)
+
+#         # Store all the billing information inside Order table
+#         data = Order(
+#         user = current_user,
+#         full_name = full_name,
+#         phone = phone,
+#         email = email,
+#         address_line_1 = address_line_1,
+#         pincode = pincode,
+#         state = state,
+#         city = city,
+#         order_total = grand_total,
+#         tax = tax,
+#         ip = request.META.get('REMOTE_ADDR'),
+#         payment_method = payment_type
+#         )
+#         data.save()
+#         cart_items.delete()
+
+
+
+#         # Generate order_number
+#         yr = int(datetime.date.today().strftime('%Y'))
+#         dt = int(datetime.date.today().strftime('%d'))
+#         mt = int(datetime.date.today().strftime('%m'))
+#         d = datetime.date(yr, mt, dt)
+#         current_date = d.strftime('%Y%m%d')  # 20230731
+#         order_number = current_date + str(data.id)
+#         data.order_number = order_number
+#         data.save()
+
+#         # Redirect to payments page with the order details
+#         # return redirect('payments', order_id=data.id)
+#         return redirect('home')
+
+#     else:
+#         return render(request, 'orders/checkout.html', {'total': total, 'tax': tax, 'grand_total': grand_total})
 
 
 
@@ -464,7 +464,7 @@ def order_payment(request, total=0, quantity=0):
        
             amount = float(amount)
             client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
-            print(client,"clienttttttttttttttttt")
+
             razorpay_order = client.order.create(
                 {"amount": int(amount) * 100, "currency": "INR", "payment_capture": "1"}
             )
@@ -498,7 +498,7 @@ def order_payment(request, total=0, quantity=0):
                 total_amount = grand_total
                 )
                 data.save()
-                cart_items.delete()
+                
 
 
 
@@ -513,18 +513,22 @@ def order_payment(request, total=0, quantity=0):
                 data.save()
 
             current_order = bulk_order_id
-            print(order,"000000000000000")
+            current_user = request.user
+            print(current_user,"current_userrrrrrrrrr")
+
             return render(
                 request,
                 "orders/payment.html",
                 {
-                    "callback_url": "http://" + "127.0.0.1:8000" + "/orders/callback/?current_order={current_order}",
+                    "callback_url": "http://127.0.0.1:8000/orders/callback/?current_order={}&current_user={}".format(current_order, current_user),
+
                     "razorpay_key": RAZORPAY_KEY_ID,
                     "order": order,
                 },
             )
         else:
             pass
+            print("pass")
     return render(request, "orders/payment.html")
 
 
@@ -533,15 +537,16 @@ def order_payment(request, total=0, quantity=0):
 
 @csrf_exempt
 def callback(request):
+    current_user = request.GET.get("current_user")
     current_order = request.GET.get("current_order")
-    print(current_order,"00000000000000")
+    print(current_order,"current_orderrrrrrrrrrrr",current_user)
     current_order = Order.objects.filter(bulk_order_id = current_order)
-    print("callllllllllllllll")
+
     def verify_signature(response_data):
         client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
         return client.utility.verify_payment_signature(response_data)
-    print(request)
-    print(request.POST)
+    print(request,"request")
+    print(request.POST,"requst.post")
     if "razorpay_signature" in request.POST:
         payment_id = request.POST.get("razorpay_payment_id", "")
         provider_order_id = request.POST.get("razorpay_order_id", "")
@@ -553,24 +558,28 @@ def callback(request):
         if verify_signature(request.POST):
             order.status = PaymentStatus.SUCCESS
             order.save()
-            
-            current_order.payment_status = "Payed"
-
+            print("success")
+            current_order.update(payment_status = "Paid")
+            print(current_order,"status")
+            # cart_items.delete()
             return render(request, "orders/order_success.html", context={"status": order.status})
         
         else:
             order.status = PaymentStatus.FAILURE
             order.save()
-
+            current_order.delete()
+            print("failed")
             return render(request, "orders/order_success.html", context={"status": order.status})
     else:
         payment_id = json.loads(request.POST.get("error[metadata]")).get("payment_id")
         provider_order_id = json.loads(request.POST.get("error[metadata]")).get(
             "order_id"
         )
-        order = Order.objects.get(provider_order_id=provider_order_id)
+        order = Razorpay_Order.objects.get(provider_order_id=provider_order_id)
         order.payment_id = payment_id
         order.status = PaymentStatus.FAILURE
         order.save()
-        return render(request, "orders/callback.html", context={"status": order.status})
+        current_order.delete()
+        print("else failed")
+        return render(request, "orders/order_success.html", context={"status": order.status})
 

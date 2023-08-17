@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
+from carts.views import _cart_id
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -86,15 +87,20 @@ def handlesignup(request):
         return render(request,"register/otp_phone.html",{"id":myuser.id, "phone":myuser.phone},)
     return render(request,"register/signup.html")
 
+def _cart_id(request):
+    cart = request.session.session_key
+    if not cart:
+        cart = request.session.create()
+    return cart    
+
+
+
+
 @ never_cache
 def handlelogin(request):
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return redirect("admin_page")
-        else:
-            return redirect("/")
+    
+    
     if request.method == "POST":
-        
         email = request.POST.get("email")
         password = request.POST.get("pass1")
         try:
@@ -114,73 +120,41 @@ def handlelogin(request):
         except:
             messages.error(request,"Invalid Credentials")
             return redirect("handlelogin") 
-        myuser = authenticate(request,email=email, password=password)
+        myuser = authenticate(username=email, password=password)
+        print(myuser,"haiiiiiiii")
         if myuser:
-                if myuser.is_superuser:
-                    login(request,myuser)
-                    # messages.success(request,"Login Success")
-                    return redirect("admin_page")
-                else:
-                    try:
-                       cart = Cart.objects.get(cart_id=_cart_id(request))
-                       is_cart_item_exist = CartItem.objects.filter(cart=cart).exists()
-                       print(is_cart_item_exist)
-                       if is_cart_item_exist:
-                           cart_item = CartItem.objects.filter(cart=cart)
- 
-                           # getting the product variation by cart id
-                           product_variation = []
-                           for item in cart_item:
-                               variation = item.variations.all()
-                               product_variation.append(list(variation))
+            print("888888888888888")
+            if myuser.is_superuser:
+                login(request,myuser)
+                # messages.success(request,"Login Success")
+                return redirect("admin_page")
+            else:
+                try:
+                    cart = Cart.objects.get(cart_id=_cart_id(request))
+                    cart_items = CartItem.objects.filter(cart=cart)
 
-                           # Get the cart items from the usr ot access his product variations
-                           cart_item = CartItem.objects.filter(user = myuser)
-                           ex_var_list = []
-                           id = []
-                           for item in cart_item:
-                                existing_variation = item.variations.all()
-                                ex_var_list.append(list(existing_variation))
-                                id.append(item.id)
-    
+                    for item in cart_items:
+                        item.user = myuser
+                        item.save()
 
-                        #    product_variation = [1,2,3,5,6]
-                        #    ex_var_list = [4,6,3,5]
+                except Cart.DoesNotExist:
+                    pass
+                
+                login(request,myuser)
 
-                           for pr in product_variation:
-                            if pr in ex_var_list:
-                               index = ex_var_list.index(pr)
-                               item_id = id[index]
-                               item = CartItem.objects.get(id=item_id)
-                               item.quantity += 1
-                               item.user = user
-                               item.save
-                            else:
-                                cart_item = CartItem.objects.filter(cart=cart)
-                                for item in cart_item:
-                                    item.user = myuser
-                                    item.save()
+            return redirect('home')
 
-                    except:
-                       print('enetereing inside the except block ')
-                       pass    
-                    login(request,myuser)
-                #    messages.success(request,"Login success") 
-                    url = request.META.get('HTTP_REFERER')
-                    try:
-                       query = requests.utils.urlparse(url).query
-                       # next=/cart/checkout/
-                       params = dict(x.split('=') for x in query.split('&'))
-                       if 'next' in params:
-                           nextPage = params['next']
-                           return redirect(nextPage)
-                    except:
-                       return redirect("home")
-                   
         else:
-            messages.error(request,"Account is blocked or Not a user!")
+            messages.error(request, "Account is blocked or not a user!")
             return redirect("handlelogin")
-    return render(request,'register/login.html')
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return redirect("admin_page")
+        else:
+            return redirect("/")
+    else:
+        return render(request, 'register/login.html')
+
 
 def handlelogout(request):
     logout(request)
@@ -445,11 +419,16 @@ def order_detail(request):
     bool = True
     orders = Order.objects.filter(user=request.user)
     print(orders,"ooooooooooooooooo ")
+    # if orders.exists():  # Check if there are orders
+    #     single_order = orders.first()  # Get the first order
 
+    list_order = ()
+    for order in  orders:
+        list.append(order)
 
     context = {
         'show_footer': bool,
-        'orders':orders,
+        'orders':list_order,
 
     }
     return render(request,"profile/order_detail.html",context)
@@ -465,10 +444,11 @@ def wishlist(request):
     }
     return render(request,"profile/wishlist.html",context)
 
-def add_to_wishlist(request, product_id):
+def add_to_wishlist(request, product_id, variant_id):
     print('hello0',product_id)
     product = get_object_or_404(Product, id=product_id)
-    variation = Variant.objects.filter(product=product)
+    variant = get_object_or_404(Variant, id=variant_id)
+    # variation = Variant.objects.filter(product=product)
     # Check if the product is already in the user's wishlist
     wishlist_entry = Wishlist.objects.filter(user=request.user, product=product).first()
     
@@ -477,13 +457,13 @@ def add_to_wishlist(request, product_id):
     else:
         Wishlist.objects.create(
             product=product,
+            variant = variant,
             user=request.user,
         
         )
         messages.info(request,"Product added to wishlist")
-      
-        return render(request, 'store/product_detail.html',{"single_product":product}) # Assuming "wishlist" is the URL name for the wishlist page
-    return render(request, 'store/product_detail.html',{"single_product":product,"variation":variation})
+        return redirect('wishlist')
+    return redirect('product_details',productid=product_id)
 
 # def add_to_wishlist_ajax(request, productid):
 #     product = get_object_or_404(Product, id=productid)

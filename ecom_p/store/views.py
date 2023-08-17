@@ -97,7 +97,7 @@ def get_variant_details(request):
     try:
         variant = Variant.objects.select_related('product').prefetch_related('variant_image').get(id=variant_id)
         variant_data = {
-            'variant_image': variant.images.first().image1.url,
+            'variant_image': variant.images.first().variant_image.url,
             'variant_price': variant.price,
             'variant_name': variant.product.product_name,
             'variant_stock': variant.variant_stock,

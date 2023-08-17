@@ -16,7 +16,7 @@ urlpatterns = [
     path('user_profile/',views.user_profile,name='user_profile'),
     path('detail_profile/',views.detail_profile,name='detail_profile'),
     path('wishlist/',views.wishlist,name="wishlist"),
-    path('add_to_wishlist/<int:product_id>/',views.add_to_wishlist,name="add_to_wishlist"),
+    path('add_to_wishlist/<int:product_id>/<int:variant_id>/',views.add_to_wishlist,name="add_to_wishlist"),
     path('remove_wishlist_item/<int:product_id>/<int:wishlist_id>/',views.remove_wishlist_item,name="remove_wishlist_item"),
 
     # address mangement
