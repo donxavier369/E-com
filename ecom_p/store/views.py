@@ -39,7 +39,6 @@ def about(request):
 
 def banner(request):
     banners = Banner.objects.all().filter(is_available=True)
-    print(banner,"44444444444444444444444444444444444")
     context={
         'banners':banners
     }
