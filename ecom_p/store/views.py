@@ -98,7 +98,6 @@ def get_variant_details(request):
             'variant_name': variant.product.product_name,
             'variant_stock': variant.variant_stock,
             'variant_status': variant.is_available,
-            # Include other variant details as needed
         }
         return JsonResponse(variant_data)
     except Variant.DoesNotExist:
