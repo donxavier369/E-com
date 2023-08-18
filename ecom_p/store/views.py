@@ -91,7 +91,6 @@ def categories(request, categoryid):
 def get_variant_details(request):
     
     variant_id = request.GET.get('variantId')
-    print(variant_id,"hrlooooooooooooooooo")
     try:
         variant = Variant.objects.select_related('product').prefetch_related('variant_image').get(id=variant_id)
         variant_data = {
