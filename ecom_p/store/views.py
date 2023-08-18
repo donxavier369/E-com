@@ -57,7 +57,6 @@ def shop(request):
 def product_details(request, productid):
     single_product = Product.objects.get(id=productid)
     variation = Variant.objects.filter(product=productid)
-    print(variation,"9999909990990990909")
     print(single_product.id,"0000000000000000000")
     context = {
         'single_product': single_product,
