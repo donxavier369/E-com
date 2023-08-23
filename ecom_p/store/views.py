@@ -41,7 +41,6 @@ def about(request):
 
 def banner(request):
     banners = Banner.objects.all().filter(is_available=True)
-    print(banner,"44444444444444444444444444444444444")
     context={
         'banners':banners
     }
@@ -60,12 +59,14 @@ def shop(request):
 def product_details(request, productid):
     single_product = Product.objects.get(id=productid)
     variation = Variant.objects.filter(product=productid)
+
     wishlist = Wishlist.objects.all()
     print(variation,"9999909990990990909")
     print(single_product.id,"0000000000000000000")
   # Create a list of variant IDs in the wishlist
     wishlist_variant_ids = [item.variant.id for item in wishlist]
     
+
     context = {
         'single_product': single_product,
         'variation': variation,
@@ -122,7 +123,6 @@ def categories(request, categoryid):
 def get_variant_details(request):
     
     variant_id = request.GET.get('variantId')
-    print(variant_id,"hrlooooooooooooooooo")
     try:
         print('yes inside')
         variant = Variant.objects.select_related('product').get(id=variant_id)
@@ -131,7 +131,6 @@ def get_variant_details(request):
             'variant_name': variant.product.product_name,
             'variant_stock': variant.variant_stock, 
             'variant_status': variant.is_available,
-            # Include other variant details as needed
         }
         print(variant_data['variant_stock'])
 
