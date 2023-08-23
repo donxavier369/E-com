@@ -19,7 +19,7 @@
 
 <h2 class="text-center">Your Wishlist Is Empty!</h2><br>
 <div class="text-center">
-  <a href= {% url 'shop' %} class="btn btn-black py-3 px-5 mb-5">Continue Shopping...</a>
+  <a href= {% url 'shop' %} class="btn btn-black py-3 px-3 mb-5">Add Products...</a>
 </div>
 
 {% else %}
@@ -34,11 +34,14 @@
 						      <tr class="text-center">
 						         {% comment %} <th>&nbsp;</th> {% endcomment %}
 						     
-						        <th>Product</th>
-								<th>name</th>
+						        <th></th>
+								<th>Product</th>
+								<th>Name</th>
                                 <th>Discription</th>
 						        <th>Price</th>
+								<th></th>
 								<th>Actions</th>
+								<th></th>
                               
 						     
 						      </tr>
@@ -48,8 +51,12 @@
 						      <tr class="text-center">
 						        <td class="product-remove"><a href="{% url 'remove_wishlist_item' wishlist.product.id wishlist.id %}"  onclick="return confirm('Are you sure you want to delete this item?')"><span class="ion-ios-close"></span></a></td>
 						        
-						        <td class="image-prod"><div class="img" style="background-image:url('{{ wishlist.product.images.url }}')"></div></td>
-						        <td><h6><a href="">{{ wishlist.product.product_name}}</a></h6></td>
+								<td class="image-prod">
+									<a href="{% url 'product_details' wishlist.variant.product.id %}">
+										<div class="img" style="background-image: url('{{ wishlist.variant.variant_image.url }}');"></div>
+									</a>
+								</td>
+								<td><h6><a href="{% url 'product_details' wishlist.variant.product.id %}">{{ wishlist.product.product_name}}</a></h6></td>
 						        <td class="product-name">
 									<p class="text-muted-small">
 										{% comment %} {% if cart_item.variations.all %}
@@ -63,7 +70,8 @@
 						        
 						        <td class="price">₹{{ wishlist.product.product_price }}</td>
 						        
-							
+								<td></td>
+								<td><a href="{% url 'wishlist_to_cart' wishlist.product.id wishlist.variant.id %}" class="btn btn-black py-2 px-5 mb-4 ml-2">Add to Cart</a></td>
 						      
 								  {% comment %} <td>{{ 10|add:5}}</td> {% endcomment %}
 						      </tr><!-- END TR-->
@@ -73,7 +81,7 @@
 							{% endfor %}
 						  </table>
 							<div class="align-item-center text-right">
-								<a href="{% url 'shop' %}" class="btn btn-black py-3 px-5 mb-5">Continue Shopping...</a>
+								<a href="{% url 'shop' %}" class="btn btn-black py-3 px-5 mb-5">Add Product...</a>
 							</div>
 					</div>
     			</div>

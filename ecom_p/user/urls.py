@@ -14,9 +14,9 @@ urlpatterns = [
 
     # user profile
     path('user_profile/',views.user_profile,name='user_profile'),
-    path('detail_profile/',views.detail_profile,name='detail_profile'),
+    path('edit_profile/',views.edit_profile,name='edit_profile'),
     path('wishlist/',views.wishlist,name="wishlist"),
-    path('add_to_wishlist/<int:product_id>/<int:variant_id>/',views.add_to_wishlist,name="add_to_wishlist"),
+    path('add_to_wishlist/<int:variant_id>/',views.add_to_wishlist,name="add_to_wishlist"),
     path('remove_wishlist_item/<int:product_id>/<int:wishlist_id>/',views.remove_wishlist_item,name="remove_wishlist_item"),
 
     # address mangement
@@ -30,10 +30,14 @@ urlpatterns = [
     path('forgot_password',views.forgot_password, name="forgot_password"),
     path('password_otpverification/<str:phone>',views.password_otpverification,name="password_otpverification"),
     path('change_password/<str:phone>',views.change_password,name="change_password"),
+    path('change_password_profile',views.change_password_profile, name="change_password_profile"),
 
     # orders
     path('order_detail',views.order_detail, name="order_detail"),
+    path('order_detail_view/<int:order_id>',views.order_detail_view,name="order_detail_view"),
+    path('cancel_order/<int:order_id>/',views.cancel_order,name="cancel_order"),
 
- 
+
+
 
 ]

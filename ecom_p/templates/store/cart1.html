@@ -1,8 +1,11 @@
 {% extends 'layouts/main.html' %}
 {% load static %}
 {% block head %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<style>
+    .qty-button {
+        width: 40px; /* Adjust as needed */
+    }
+</style>
 {% endblock head %}
 {% block body %} 
     
@@ -71,11 +74,23 @@
 									{% else %}
 									<p>{{cart_item.id}}...{{cart_item.quantity}}</p>
 								 	 <div class="input-group text-center mb-3 " style="width: 150px;">
-										<a onclick="changeQuantity('{{ cart_item.id }}', -1, this.parentNode)" class="input-group-text  btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center;justify-content: center;width: 25px;height: 53px;">-</a>
+										<a href="#" onclick="changeQuantity('{{ cart_item.id }}', -1, this.parentNode)" class="input-group-text  btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center;justify-content: center;width: 25px;height: 53px;">-</a>
 										<input type="text" name="quantity" class="form-control text-center" value="{{ cart_item.quantity }}">
-										<a onclick="changeQuantity('{{ cart_item.id }}', 1, this.parentNode)" class="input-group-text  btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center;justify-content: center;width: 25px;height: 53px;">+</a>
-									</div> 
-	
+										<a href="#" onclick="changeQuantity('{{ cart_item.id }}', 1, this.parentNode)" class="input-group-text  btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center;justify-content: center;width: 25px;height: 53px;">+</a>
+									</div>  
+									{% comment %} <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+										<div class="quantity">
+										  <span class="qty-minus" onclick="changeQuantity('{{ item.id }}', -1, this.parentNode)"><i class="fa fa-minus" aria-hidden="true"></i></span>
+										  <input type="number" class="qty-text" id="qty-{{ item.id }}" step="1" min="1" max="1200" name="quantity" value="{{ item.quantity }}" onchange="updateCartItem('{{ item.id }}', this.value)">
+										  <input type="text" class="qty-max" id="mj-{{ item.id }}" value="{{ item.product_size.Quantity }}" hidden>
+										  <span class="qty-plus" onclick="changeQuantity('{{ item.id }}', 1, this.parentNode)"><i class="fa fa-plus" aria-hidden="true"></i></span>
+										   <p class="error-message" id="error-message-{{ item.id }}"> </p>
+									  </div> {% endcomment %}
+									
+									
+									
+									
+									
 								{% endif %} 
 								
 					            </td>
@@ -84,9 +99,10 @@
 									₹{{ cart_item.cart_price  }}
 
 								  </td>
+								  {% comment %} <td>{{ 10|add:5}}</td> {% endcomment %}
 						      </tr><!-- END TR-->
 
-							  
+
 						    </tbody>
 							{% endfor %}
 						  </table>
@@ -113,18 +129,16 @@
     						<span>Tax</span>
     						<span>₹{{tax}}</span>
     					</p>
-    				
+    					{% comment %} <p class="d-flex">
+    						<span>Discount</span>
+    						<span>$3.00</span>
+    					</p> {% endcomment %}
     					<hr>
     					<p class="d-flex total-price">
     						<span>Total</span>
     						<span>₹{{grand_total}}</span>
     					</p>
-						{% if grand_total == 0 %}
-						<p style="color: #df9595">Out Of Stock Add Anoter Item For Continue Shopping...</p>
-						{% else %}
 						<p class="text-center"><a href="{% url 'checkout' %}" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
-						{% endif %}
-						
     				</div>
     				
     			</div>
@@ -133,13 +147,12 @@
 		
 		</section>
 {% endif %}	
-
-
+{% endblock body %}
     
   
 
   <!-- loader -->
-  {% comment %} <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div> {% endcomment %}
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
@@ -160,16 +173,52 @@
   <script src="js/google-map.js"></script>
   <script src="js/main.js"></script>
 
+  {% comment %} <script>
+		$(document).ready(function(){
+
+		var quantitiy=0;
+		   $('.quantity-right-plus').click(function(e){
+		        
+		        // Stop acting like a button
+		        e.preventDefault();
+		        // Get the field name
+		        var quantity = parseInt($('#quantity').val());
+		        
+		        // If is not undefined
+		            
+		            $('#quantity').val(quantity + 1);
+
+		          
+		            // Increment
+		        
+		    });
+
+		     $('.quantity-left-minus').click(function(e){
+		        // Stop acting like a button
+		        e.preventDefault();
+		        // Get the field name
+		        var quantity = parseInt($('#quantity').val());
+		        
+		        // If is not undefined
+		      
+		            // Increment
+		            if(quantity>0){
+		            $('#quantity').val(quantity - 1);
+		            }
+		    });
+		    
+		});
+	</script> {% endcomment %}
 
 	<script>                               
 		function changeQuantity(itemId, change, parent) {
-		  console.log(itemId,"item id")
-		  console.log(change,"change")
-		  console.log(parent,"parent")
+		  console.log(itemId)
+		  console.log(change)
+		  console.log(parent)
 			var quantityInput = parent.querySelector('.qty-text');
 			
 			var quantity = parseInt(quantityInput.value);
-			console.log(quantity,"quantity")
+			console.log(quantity)
 			var ma = parseInt(document.getElementById('mj-'+itemId).value);
 			var err = document.getElementById('error-message-'+itemId).textContent;
 			console.log("total-------", ma);
@@ -222,9 +271,7 @@
 		  
 		
 		function  updateCartItem(itemId, quantity) {
-			console.log(itemId,"itemId")
-			//var url = "{% url 'update_cart_item' 0 %}".replace('0', itemId);
-			var url = "/update_cart_item/" + itemId + "/";  // Construct the URL with itemId
+			var url = "{% url 'update_cart_item' 0 %}".replace('0', itemId);
 			var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 		  
 			$.ajax({
@@ -258,7 +305,5 @@
   
 	</script>
     
-
+  </body>
 </html>
-
-{% endblock body %}

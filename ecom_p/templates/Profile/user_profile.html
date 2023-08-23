@@ -1,5 +1,14 @@
 {% extends 'layouts/main.html' %}
 {% load static %}
+
+{% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+ 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.css">
+{% endblock head %}
+
 {% block body %} 
 
 <section class="h-100 gradient-custom-2">
@@ -16,46 +25,8 @@
                   style="z-index: 1;">
                   Edit profile
                 </button> {% endcomment %}
+                
 
-                <a href="#" class="btn btn-outline-dark mt-1" data-bs-toggle="modal" data-bs-target="#editaddressModal{{ user.id }}" data-mdb-ripple-color="dark" style="z-index: 1;">Edit Profile</a>
-             
-                <div class="modal fade" id="editaddressModal{{ user.id }}" tabindex="-1" aria-labelledby="editaddressModalLabel{{ user.id }}" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="editaddressModalLabel{{ user.id }}">Edit Profile</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        {% comment %} <form action="{% url 'edit_address' address.id %}" method="POST" enctype="multipart/form-data"> {% endcomment %}
-                          {% csrf_token %}
-                          <input type="hidden" name="address_id" value="{{ user.id }}">
-                          <div class="form-group">
-                            <label for="editaddressName{{ user.id }}" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="name" value="{{ address.full_name }}" style="margin-bottom:10px;" required>
-                          </div>
-
-          
-                          <div class="form-group">
-                            <label for="editaddressName{{ user.id }}" class="form-label">Email</label>
-                            <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="email" value="{{ address.email }}" style="margin-bottom:10px;" required>
-                          </div>
-
-                          <div class="form-group">
-                            <label for="editaddressName{{ user.id }}" class="form-label">Phone</label>
-                            <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="phone" value="{{ address.phone }}" style="margin-bottom:10px;" required>
-                          </div>
-                          
-
-                        </div>
-                        <div class="modal-footer">
-                          <button type="submit" class="btn btn-primary">Save Changes</button>
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
               </div>
 
             </div>
@@ -69,7 +40,7 @@
                 </div>
                 <div class="px-3">
                   <a class="mb-1 h5" href="{% url 'wishlist' %}">Wishlist</a>
-                </div>
+               
            
                 
               </div>
@@ -88,14 +59,17 @@
                     Logout
                   </button>
                    {% endcomment %}
-                <!--Delete user address-->
+                <!--user logout-->
+                  <input type="submit" class="btn btn-outline-dark" value="profile" data-toggle="modal" data-target="#myProfile"></input>
                   <input type="submit" class="btn btn-outline-dark" value="Logout" data-toggle="modal" data-target="#myModal"></input>
+                  <input type="submit" class="btn btn-outline-dark" value="password" data-toggle="modal" data-target="#ChangePassword"></input>
+
 
                   <div class="modal" tabindex="-1" role="dialog" id="myModal">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title">Delete Address</h5>
+                          <h5 class="modal-title">Logout</h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
@@ -112,10 +86,111 @@
                       </div>
                     </div>
                   </div>
+
+
+
+                  <!--edit profile-->
+                  <div class="modal" tabindex="-1" role="dialog" id="myProfile">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Edit Profile</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <form action="{% url 'edit_profile' %}" method="POST">{% csrf_token %}
+                        <div class="modal-body">
+                          <div class="modal-body">
+                            {% comment %} <form action="{% url 'edit_address' address.id %}" method="POST" enctype="multipart/form-data"> {% endcomment %}
+                              {% csrf_token %}
+                              <input type="hidden" name="address_id" value="{{ user.id }}">
+                              <div class="form-group">
+                                <label for="editaddressName{{ user.id }}" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="name" value="{{ user.name }}" style="margin-bottom:10px;" required>
+                              </div>
+    
+              
+                              <div class="form-group">
+                                <label for="editaddressName{{ user.id }}" class="form-label">Email</label>
+                                <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="email" value="{{ user.email }}" style="margin-bottom:10px;" required>
+                              </div>
+    
+                              <div class="form-group">
+                                <label for="editaddressName{{ user.id }}" class="form-label">Phone</label>
+                                <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="phone" value="{{ user.phone }}" style="margin-bottom:10px;" required>
+                              </div>
+                              
+    
+                            </div>
+                            <div class="modal-footer">
+                              <input type="submit" class="btn btn-success" value="Save"></input>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                          </form>
+
+                        </div>
+                      
+                      </form>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
+              <!--change password-->
+              <div class="modal" tabindex="-1" role="dialog" id="ChangePassword">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Change Password</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <form action="{% url 'change_password_profile' %}" method="POST" onsubmit="return validateForm();">{% csrf_token %}
+                    <div class="modal-body">
+                      <p>Changing your passwrod may required login again!</p>
+                      <div class="modal-body">
+                        {% comment %} <form action="{% url 'edit_address' address.id %}" method="POST" enctype="multipart/form-data"> {% endcomment %}
+                          {% csrf_token %}
+                          <input type="hidden" name="address_id" value="">
+                          <div class="form-group">
+                            <label for="editaddressName" class="form-label">Current Password</label>
+                            <input type="text" class="form-control" id="editaddressName" name="current_password" value="" style="margin-bottom:10px;" required>
+                          </div>
+
+          
+                          <div class="form-group">
+                            <label for="editaddressName" class="form-label">New password</label>
+                            <input type="text" class="form-control" id="editaddressName" name="new_password" value="" style="margin-bottom:10px;" required>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="editaddressName" class="form-label">Confirm New Password</label>
+                            <input type="text" class="form-control" id="editaddressName" name="confirm_password" value="" style="margin-bottom:10px;" required>
+                          </div>
+                          
+
+                        </div>
+                        <div class="modal-footer">
+                          <input type="submit" class="btn btn-success" value="Change"></input>
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </form>
+
+                    </div>
+                  
+                  </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+            
           </div>
         </div>
       </div>
@@ -123,3 +198,78 @@
   </section>
 
   {% endblock body %}
+
+
+
+  
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>
+
+<script>
+  const errorMessages = 
+    Array.from(document.querySelectorAll('.message-warning .message-error'))
+    .map(el => el.dataset.message);
+  
+  const successMessageEl = document.querySelector('.message-success');
+  const successMessage = successMessageEl?.dataset?.message;
+
+  const isSuccess = !!successMessageEl;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var alerts = document.querySelectorAll(".hidden-alert");
+        alerts.forEach(function(alert) {
+            var tags = alert.dataset.tags;
+            var message = alert.dataset.message;
+            var buttonUrl = alert.dataset.buttonUrl; // Add this line to retrieve the button URL
+
+            Swal.fire({
+                icon: tags,
+                title: message,
+                showConfirmButton: isSuccess,
+                showCancelButton: !isSuccess,
+                timer: 7000,
+                confirmButtonText: 'LOGIN',
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = "{%url 'handlelogin'%}"
+              }
+            });
+        });
+    });
+
+  // Form validation
+  function validateForm() {
+
+    var password = document.getElementById("new_password").value;
+    var confirm_password = document.getElementById("confirm_password").value;
+
+
+  
+
+
+
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
+    if (!password.match(passwordRegex)) {
+      showError("password_error", "Password must be at least 6 characters combination of numbers and special characters.");
+      return false;
+    }
+
+    if (password !== confirm_password) {
+      showError("confirm_password_error", "Passwords do not match.");
+      return false;
+    }
+
+    return true;
+  }
+
+  function showError(elementId, errorMessage) {
+    var errorElement = document.getElementById(elementId);
+    errorElement.innerHTML = errorMessage;
+    errorElement.style.display = "block";
+
+    setTimeout(function () {
+      errorElement.innerHTML = "";
+      errorElement.style.display = "none";
+    }, 3000); // Display the error message for 3 seconds
+  }
+</script>

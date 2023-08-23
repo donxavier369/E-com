@@ -11,6 +11,7 @@ from user.models import Profile
 from ecom_p.settings import RAZORPAY_KEY_ID,RAZORPAY_KEY_SECRET
 from .models import Razorpay_Order
 from store.models import Product
+from django.views.decorators.cache import never_cache
 
 # Create your views here.
 
@@ -414,48 +415,63 @@ def order_payment(request, total=0, quantity=0):
 
         bulk_order_id = generate_bunch_order_id()
         print(bulk_order_id)
+        
         if payment_type == "cod":
-            
             # Store all the billing information inside Order table
             for cart in cart_items:
-                data = Order(
-                user = current_user,
-                full_name = full_name,
-                phone = phone,
-                email = email,
-                address_line_1 = address_line_1,
-                pincode = pincode,
-                state = state,
-                city = city,
-                order_total = grand_total,
-                tax = tax,
-                ip = request.META.get('REMOTE_ADDR'),
-                payment_method = payment_type,
-                product_id = cart.product.id,
-                variant_id = cart.variant.id,
-                quantity= cart.quantity,
-                bulk_order_id = bulk_order_id,
-                unit_amount = cart.product.product_price,
-                total_amount = grand_total
-                )
-                data.save()
-                cart_items.delete()
+                
+                if cart.variant.variant_stock > 0:
+                    print(cart,"cartttttttttttttttt",cart.quantity)
+                    print("timessssssss")
+                    data = Order(
+                    user = current_user,
+                    full_name = full_name,
+                    phone = phone,
+                    email = email,
+                    address_line_1 = address_line_1,
+                    pincode = pincode,
+                    state = state,
+                    city = city,
+                    order_total = grand_total,
+                    tax = tax,
+                    ip = request.META.get('REMOTE_ADDR'),
+                    payment_method = payment_type,
+                    product_id = cart.product.id,
+                    variant_id = cart.variant.id,
+                    quantity= cart.quantity,
+                    bulk_order_id = bulk_order_id,
+                    unit_amount = cart.product.product_price,
+                    total_amount = grand_total
+                    )
+                    data.save()
+                    new_qty = cart.quantity
+                    update_quantity = cart.variant.variant_stock - new_qty
+                    cart_item.variant.variant_stock = update_quantity
+                    cart.variant.save()
 
 
 
-                # Generate order_number
-                yr = int(datetime.date.today().strftime('%Y'))
-                dt = int(datetime.date.today().strftime('%d'))
-                mt = int(datetime.date.today().strftime('%m'))
-                d = datetime.date(yr, mt, dt)
-                current_date = d.strftime('%Y%m%d')  # 20230731
-                order_number = current_date + str(data.id)
-                data.order_number = order_number
-                data.save()
 
-            # Redirect to payments page with the order details
-            # return redirect('payments', order_id=data.id)
-            return redirect('home')
+                    # Generate order_number
+                    yr = int(datetime.date.today().strftime('%Y'))
+                    dt = int(datetime.date.today().strftime('%d'))
+                    mt = int(datetime.date.today().strftime('%m'))
+                    d = datetime.date(yr, mt, dt)
+                    current_date = d.strftime('%Y%m%d')  # 20230731
+                    order_number = current_date + str(data.id)
+                    data.order_number = order_number
+                    data.save()
+            orders = Order.objects.filter(bulk_order_id = bulk_order_id)
+            order_user = request.user
+            print(orders,"111111111111111")
+            context = {
+                "orders":orders,
+                "user":order_user,
+            }
+            # cart_items.delete()
+            # return render(request, "orders/order_summery.html",context)
+            return redirect('order_summery', bulk_order_id=bulk_order_id)
+
 
         elif payment_type == "razorpay":
             print(255)
@@ -477,44 +493,50 @@ def order_payment(request, total=0, quantity=0):
 
            # Store all the billing information inside Order table
             for cart in cart_items:
-                data = Order(
-                user = current_user,
-                full_name = full_name,
-                phone = phone,
-                email = email,
-                address_line_1 = address_line_1,
-                pincode = pincode,
-                state = state,
-                city = city,
-                order_total = grand_total,
-                tax = tax,
-                ip = request.META.get('REMOTE_ADDR'),
-                payment_method = payment_type,
-                product_id = cart.product.id,
-                variant_id = cart.variant.id,
-                quantity= cart.quantity,
-                bulk_order_id = bulk_order_id,
-                unit_amount = cart.product.product_price,
-                total_amount = grand_total
-                )
-                data.save()
-                
+                if cart.variant.variant_stock > 0:
+                    print("razorpay timessssssssss")
+                    data = Order(
+                    user = current_user,
+                    full_name = full_name,
+                    phone = phone,
+                    email = email,
+                    address_line_1 = address_line_1,
+                    pincode = pincode,
+                    state = state,
+                    city = city,
+                    order_total = grand_total,
+                    tax = tax,
+                    ip = request.META.get('REMOTE_ADDR'),
+                    payment_method = payment_type,
+                    product_id = cart.product.id,
+                    variant_id = cart.variant.id,
+                    quantity= cart.quantity,
+                    bulk_order_id = bulk_order_id,
+                    unit_amount = cart.product.product_price,
+                    total_amount = grand_total
+                    )
+                    data.save()
+                    # cart_items.delete()
+                    
+                    new_qty = cart.quantity
+                    update_quantity = cart.variant.variant_stock - new_qty
+                    cart_item.variant.variant_stock = update_quantity
+                    cart.variant.save()
 
 
-
-                # Generate order_number
-                yr = int(datetime.date.today().strftime('%Y'))
-                dt = int(datetime.date.today().strftime('%d'))
-                mt = int(datetime.date.today().strftime('%m'))
-                d = datetime.date(yr, mt, dt)
-                current_date = d.strftime('%Y%m%d')  # 20230731
-                order_number = current_date + str(data.id)
-                data.order_number = order_number
-                data.save()
+                    # Generate order_number
+                    yr = int(datetime.date.today().strftime('%Y'))
+                    dt = int(datetime.date.today().strftime('%d'))
+                    mt = int(datetime.date.today().strftime('%m'))
+                    d = datetime.date(yr, mt, dt)
+                    current_date = d.strftime('%Y%m%d')  # 20230731
+                    order_number = current_date + str(data.id)
+                    data.order_number = order_number
+                    data.save()
 
             current_order = bulk_order_id
             current_user = request.user
-            print(current_user,"current_userrrrrrrrrr")
+            print(current_user,"current_userrrrrrrrrr",current_order)
 
             return render(
                 request,
@@ -532,15 +554,12 @@ def order_payment(request, total=0, quantity=0):
     return render(request, "orders/payment.html")
 
 
-
-
-
 @csrf_exempt
 def callback(request):
     current_user = request.GET.get("current_user")
-    current_order = request.GET.get("current_order")
-    print(current_order,"current_orderrrrrrrrrrrr",current_user)
-    current_order = Order.objects.filter(bulk_order_id = current_order)
+    bulk_order_id = request.GET.get("current_order")
+    print("current_orderrrrrrrrrrrr",current_user)
+    current_order = Order.objects.filter(bulk_order_id = bulk_order_id)
 
     def verify_signature(response_data):
         client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
@@ -562,14 +581,16 @@ def callback(request):
             current_order.update(payment_status = "Paid")
             print(current_order,"status")
             # cart_items.delete()
-            return render(request, "orders/order_success.html", context={"status": order.status})
+            # return render(request, "orders/order_summery.html", context={"status": order.status})
+            return redirect('order_summery', bulk_order_id=bulk_order_id)
+
         
         else:
             order.status = PaymentStatus.FAILURE
             order.save()
             current_order.delete()
             print("failed")
-            return render(request, "orders/order_success.html", context={"status": order.status})
+            return render(request, "orders/order_failed.html")
     else:
         payment_id = json.loads(request.POST.get("error[metadata]")).get("payment_id")
         provider_order_id = json.loads(request.POST.get("error[metadata]")).get(
@@ -581,5 +602,24 @@ def callback(request):
         order.save()
         current_order.delete()
         print("else failed")
-        return render(request, "orders/order_success.html", context={"status": order.status})
+        return render(request, "orders/order_failed.html")
+
+
+@never_cache
+def order_summery(request, bulk_order_id):
+
+    cart_items = CartItem.objects.all()
+    for cart in cart_items:
+        if cart.variant.variant_stock > 0:
+            cart.delete()
+        else:
+            pass 
+    orders = Order.objects.filter(bulk_order_id = bulk_order_id)
+    print(bulk_order_id,"got it bulk order id")
+    order_user = request.user
+    context = {
+    "orders":orders,
+    "user":order_user,
+    }
+    return render(request, "orders/order_summery.html",context)
 
