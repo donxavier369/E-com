@@ -1,25 +1,4 @@
 {% load static %}
-
-<style>
-	.form-controls {
-		margin-left: 19px;
-		height: 47px ;
-		width: 240px;
-		background: #fff ;
-		color: #050310 ;
-		font-size: 18px;
-		border-radius: 0px;
-		-webkit-box-shadow: none ;
-		box-shadow: none ; }
-		 .form-controls:focus, .form-controls:active {
-		  border-color: #000000;  
-		 }
-
-		 .form-controls::placeholder {
-			font-size: 14px; /* Adjust the font size as needed */
-			text-align: center;
-		  }
-</style>
   <body class="goto-here">
 		<div class="py-1 bg-black">
     	<div class="container">
@@ -51,7 +30,6 @@
 
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav ml-auto">
-
 	          <li class="nav-item"><a href={% url 'home' %} class="nav-link">Home</a></li>
 	          <li class="nav-item dropdown active">
               <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
@@ -73,22 +51,10 @@
 	          <li class="nav-item cta cta-colored"><a href="{% url 'cart' %}" class="nav-link"><span class="icon-shopping_cart"></span>[{{cart_count}}]</a></li>
 			  <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-heart color-danger" aria-hidden="true"></span>[0]</a></li>
 			  <li class="nav-item cta cta-colored"><a href="{% url 'user_profile' %}" class="nav-link"><span class="icon-user color-danger" aria-hidden="true"></span></a></li>
-			  
-			  <li>
-				<form action="{% url 'search' %}" method="POST"> {% csrf_token %} <!-- Set the action attribute to your search results URL -->
-				  <div class="input-group mb-3">
-					<input type="text" class="form-controls" name="keyword" placeholder="TYPE A KEY WORK AND HIT ENTER" aria-label="Search" aria-describedby="search-button" >
 	
-					</div>
-				  </div>
-				</form>
-			  </li>
-			  
 
 	        </ul>
 	      </div>
 	    </div>
 	  </nav>
-    <script>
-		
-	</script>
+    

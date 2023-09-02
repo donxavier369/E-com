@@ -20,10 +20,9 @@
 <section class="ftco-section bg-light">
     <div class="container">
         <div class="row">
-            
             <div class="col-md-4 col-lg-2 sidebar">
                 <div class="sidebar-box-2">
-                    <h2 class="heading mb-4"><a href="{% url 'store' %}">Categories</a></h2>
+                    <h2 class="heading mb-4"><a href="#">Categories</a></h2>
                     <ul>
                         <li><a href="{% url 'store' %}">All products</a></li>
 
@@ -88,16 +87,6 @@
                 </ul>
             {% endif %}
         </div>
-        <form method="post" action="{% url 'filter_products_by_price'%}">
-            {% csrf_token %}
-            <label for="price-min">Minimum Price:</label>
-            <input type="number" name="price-min" id="price-min" value="{{ selected_price_filter.min|default:1000 }}" min="0" max="1000000" style="background-color: #686e78">
-    
-            <label for="price-max">Maximum Price:</label>
-            <input type="number" name="price-max" id="price-max" value="{{ selected_price_filter.max|default:1000000 }}" min="0" max="1000000" style="background-color: #686e78">
-    
-            <input type="submit" data-inline="true" value="Submit" style="background-color: #ffa45c">
-        </form>
     </div>    
     
 </section>

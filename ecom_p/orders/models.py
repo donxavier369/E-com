@@ -17,7 +17,6 @@ class Order(models.Model):
         ('Approved', 'Approved'),
         ('Shipped', 'Shipped'),     
         ('Returned', 'Delivered'),
-        ('Cancelled', 'Cancelled'),
     )    
 
     user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)

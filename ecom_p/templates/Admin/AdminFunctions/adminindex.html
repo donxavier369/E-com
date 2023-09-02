@@ -1,0 +1,153 @@
+{% comment %} {% extends 'Admin/adminlayouts/main.html' %}
+{% load static %}
+
+{% block body %} {% endcomment %}
+{% comment %} <button class="btn btn-primary float-end mt-2 mb-0" data-bs-toggle="modal" data-bs-target="#addProductModal">Date Filter</button>
+
+<!-- Add Coupon Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addProductModalLabel">Enter Date</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Add form fields here -->
+                <form id="filterForm">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" class="form-control" id="start_date" name="start_date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="end_date">End Date</label>
+                        <input type="date" class="form-control" id="end_date" name="end_date" required>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<canvas id="myChart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('myChart');
+    let myChart; // Store the chart instance
+
+    // Initial chart data (total orders)
+    const initialData = {
+        labels: {{ labels|safe }},
+        datasets: [{
+            label: '# of Orders',
+            data: {{ data|safe }},
+            borderWidth: 1
+        }]
+    };
+
+    myChart = new Chart(ctx, {
+        type: 'bar',
+        data: initialData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Handle form submission for filtering
+    document.getElementById('filterForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Get the start_date and end_date values
+        const start_date = document.getElementById('start_date').value;
+        const end_date = document.getElementById('end_date').value;
+
+        // Make an AJAX request to filter the orders
+        fetch('{% url "filter_orders" %}', {
+            method: 'POST',
+            body: new URLSearchParams({
+                'start_date': start_date,
+                'end_date': end_date,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            }),
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update the chart with filtered data
+            myChart.data.labels = data.labels;
+            myChart.data.datasets[0].data = data.data;
+            myChart.update();
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    });
+</script> {% endcomment %}
+
+{% comment %} 
+
+    <div class="container">
+        <h2>Order Amounts by Status</h2>
+        <canvas id="orderAmountChart" width="400" height="200"></canvas>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var statusLabels = [
+            {% for status_total in status_order_totals %}
+                "{{ status_total.status }}",
+            {% endfor %}
+        ];
+
+        var totalAmounts = [
+            {% for status_total in status_order_totals %}
+                {{ status_total.total_amount }},
+            {% endfor %}
+        ];
+
+        var ctx = document.getElementById('orderAmountChart').getContext('2d');
+        var orderAmountChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    label: 'Total Amount',
+                    data: totalAmounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value, index, values) {
+                                return '₹' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+
+{% endblock body %} {% endcomment %}

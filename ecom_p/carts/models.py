@@ -26,22 +26,6 @@ class CartItem(models.Model):
 
     def sub_total(self):
         return self.product.price * self.quantity
-    
-    def get_total_quantity(self):
-        return sum(item.quantity for item in self.cart.all())
 
     def __unicode__(self) -> str:
         return self.product
-    
-
-class Coupon(models.Model):
-    code = models.CharField(max_length=50, unique=True)
-    discount_price = models.DecimalField(max_digits=5, decimal_places=2)
-    is_active = models.BooleanField(default=True)
-    start_date = models.DateField(default = True)
-    end_date = models.DateField(default=0)
-    min_price = models.IntegerField(default=0)
-    max_price = models.IntegerField(default=0)
-
-    def __str__(self) -> str:
-        return str(self.discount_price)
