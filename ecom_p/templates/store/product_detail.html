@@ -107,6 +107,7 @@
           	</div>
     			</div>
     		</div>
+			
     	</div>
     </section>
 
@@ -194,7 +195,7 @@
 			$('#variant-select').change(function() {
 			  var selectedVariantId = $(this).val();
 			  console.log(selectedVariantId)
-		
+			$('#cid').text(selectedVariantId)
 			  // Perform an AJAX request to fetch the details of the selected variant
 			  // Replace the URL with the actual endpoint that returns the variant details
 
@@ -209,7 +210,6 @@
 				 {
 				  // Update the product details on the page
 				  var productImage = response.variant_image;
-				  var productPrice = response.variant_price;
 					  var variantName = response.variant_name;
 					  var variantStock = response.variant_stock;
 					  var variantStatus = response.variant_status;
@@ -237,7 +237,9 @@
 					}
 				  });
 				});
-			  });
+			  }
+			  );
+
 	</script>
 
 

@@ -11,13 +11,15 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th scope="col">Order_number</th>
-          <th scope="col">User Name</th>
-          <th scope="col">Phone</th>
-          <th scope="col">Address</th>
-          <th scope="col">Order_Total</th>
-          <th scope="col">Total_Tax</th>
-          <th scope="col">Status</th>
+          <th scope="col">Order Id</th>
+          <th scope="col">Product Id</th>
+          <th scope="col">Product Name</th>
+          <th scope="col">Quantity</th>
+          <th scope="col">Customer_id</th>
+          <th scope="col">Order Status</th>
+          <th scope="col">Amount</th>
+          <th scope="col" class="align-item-center"></th>
+          <th scope="col"></th>
          
         </tr>
       </thead>
@@ -26,12 +28,12 @@
         <tr>
           <td>{{ order.order_number }}</td>
 
-          <td>{{ order.first_name }} {{ order.last_name }}</td>
-          <td>{{ order.phone }}</td>
-          <td>{{ order.address_line_1 }}</td>
-          <td>{{ order.order_total }}</td>
-          <td>{{ order.tax }}</td>
-          <td>{{ order.status}}</td>
+          <td>{{ order.product.id }}</td>
+          <td>{{ order.product.product_name }}</td>
+          <td>{{ order.quantity }}</td>
+          <td>+91{{ order.phone }}</td>
+          <td>{{ order.status }}</td>
+          <td>{{ order.unit_amount}}</td>
 
 
           {% comment %} <a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProductModal" onclick="editProductModal({{ product.id }})">Edit</a> {% endcomment %}
@@ -82,8 +84,6 @@
   </div>
 </div>
 
-<<<<<<< HEAD
-=======
 <div class="modal fade" id="detailProductModal{{ order.id }}" tabindex="-1" aria-labelledby="detailProductModalLabel{{ order.id }}" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -116,7 +116,6 @@
     </div>
   </div>
 </div>
->>>>>>> PG-1
 
 {% endfor %}
 {% endblock body %} 

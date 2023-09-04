@@ -59,7 +59,7 @@
 						      <tr class="text-center">
 						        <td class="product-remove"><a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}"  onclick="return confirm('Are you sure you want to delete this item?')"><span class="fas fa-close"></span></a></td>
 						        
-						        <td class="image-prod"><div class="img" style="background-image:url('{{ cart_item.product.images.url }}')"></div></td>
+						        <td class="image-prod"><div class="img" style="background-image:url('/media/{{ cart_item.variant.variant_image }}')" height="70" width="90"></div></td>
 						        
 						        <td class="product-name">
 						        	<h3><a href="{% url 'product_details' cart_item.product.id %}">{{ cart_item.product.product_name}}</a></h3>
@@ -105,10 +105,9 @@
 									 ₹{{ cart_item.cart_price  }} 
 
 								  </td>
-								  {% comment %} <td>{{ 10|add:5}}</td> {% endcomment %}
 						      </tr><!-- END TR-->
 
-
+							  
 						    </tbody>
 							{% endfor %}
 						  </table>
@@ -136,10 +135,7 @@
     						<span class="tax">₹{{tax}}</span>
 						 
     					</p>
-    					{% comment %} <p class="d-flex">
-    						<span>Discount</span>
-    						<span>$3.00</span>
-    					</p> {% endcomment %}
+    				
     					<hr>
     					<p class="d-flex total-price">
     						<span>Total</span>
@@ -162,7 +158,8 @@
 		
 		</section>
 {% endif %}	
-{% endblock body %}
+
+
     
   
 
@@ -395,5 +392,7 @@
   
 	</script> {% endcomment %}
     
-  </body>
+
 </html>
+
+{% endblock body %}

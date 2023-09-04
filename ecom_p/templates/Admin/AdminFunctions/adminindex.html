@@ -35,15 +35,9 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
-</div>
-
-<canvas id="myChart"></canvas>
-=======
 </div> {% endcomment %}
 
 {% comment %} <canvas id="myChart"></canvas> {% endcomment %}
->>>>>>> PG-1
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -82,11 +76,7 @@
         const end_date = document.getElementById('end_date').value;
 
         // Make an AJAX request to filter the orders
-<<<<<<< HEAD
-        fetch('{% url "filter_orders" %}', {
-=======
         fetch('#', {
->>>>>>> PG-1
             method: 'POST',
             body: new URLSearchParams({
                 'start_date': start_date,
@@ -108,15 +98,9 @@
             console.error(error);
         });
     });
-<<<<<<< HEAD
-</script> {% endcomment %}
-
-{% comment %} 
-=======
 </script> 
 
 
->>>>>>> PG-1
 
     <div class="container">
         <h2>Order Amounts by Status</h2>
@@ -139,11 +123,7 @@
 
         var ctx = document.getElementById('orderAmountChart').getContext('2d');
         var orderAmountChart = new Chart(ctx, {
-<<<<<<< HEAD
-            type: 'bar',
-=======
             type: 'line',
->>>>>>> PG-1
             data: {
                 labels: statusLabels,
                 datasets: [{
@@ -170,8 +150,4 @@
     </script>
 
 
-<<<<<<< HEAD
-{% endblock body %} {% endcomment %}
-=======
 {% endblock body %} 
->>>>>>> PG-1

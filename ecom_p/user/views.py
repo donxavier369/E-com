@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.db.models import Q
 from django.shortcuts import render,redirect
 from django.contrib.auth.models import User
 from carts.views import _cart_id
@@ -260,16 +261,6 @@ def user_profile(request, wallet = 0):
     return render(request, 'Profile/user_profile.html', context)
 
 
-<<<<<<< HEAD
-def detail_profile(request):
-    bool = True
-    user = CustomUser.objects.get(pk=request.user.pk)
-    context = {
-        'user': user,
-        'show_footer': bool
-    }
-    return render(request, 'Profile/detail_profile.html',context)
-=======
 def edit_profile(request):
     if request.method == 'POST':
         name = request.POST.get("name")
@@ -286,7 +277,6 @@ def edit_profile(request):
  
         return redirect('user_profile')
     return render(request, 'Profile/user_profile.html')
->>>>>>> PG-1
 
 # address management
 
@@ -457,6 +447,27 @@ def change_password(request,phone):
     return render(request,"Profile/change_password.html",{'phone':phone})
 
 
+def change_password_profile(request):
+    if request.method == 'POST':
+        password = request.POST.get('new_password')
+        print(password,"22222222222")
+        user = request.user
+        current_user = CustomUser.objects.get(id = user.id)
+        current_password = current_user.password
+        try:
+            current_password == password
+            messages.info(request,"This password is you old password")
+        except:
+            pass
+        current_user.password = make_password(password)
+        current_user.save()
+        messages.success(request,"password changes successfully")
+        # return redirect('user_profile')
+
+    return render(request, 'Profile/user_profile.html')
+
+
+
 
 # orders
 
@@ -464,24 +475,15 @@ def order_detail(request):
     bool = True
     orders = Order.objects.filter(user=request.user,)
     print(orders,"ooooooooooooooooo ")
-    # if orders.exists():  # Check if there are orders
-    #     single_order = orders.first()  # Get the first order
 
-    list_order = ()
-    for order in  orders:
-        list.append(order)
 
     context = {
         'show_footer': bool,
-        'orders':list_order,
+        'orders':orders,
 
     }
     return render(request,"profile/order_detail.html",context)
 
-<<<<<<< HEAD
-# wishlist
-
-=======
 def order_detail_view(request,bulk_order_id, price=0):
     print(bulk_order_id,"bulk KKKKKKKKKK")
     bool = True
@@ -529,7 +531,6 @@ def cancel_order(request,order_id):
 # wishlist
 
 @login_required(login_url='handlelogin')
->>>>>>> PG-1
 def wishlist(request):
     wishlists = Wishlist.objects.all()
     bool = True
@@ -539,38 +540,24 @@ def wishlist(request):
     }
     return render(request,"profile/wishlist.html",context)
 
-def add_to_wishlist(request, product_id, variant_id):
-    print('hello0',product_id)
-    product = get_object_or_404(Product, id=product_id)
+def add_to_wishlist(request,variant_id):
     variant = get_object_or_404(Variant, id=variant_id)
-<<<<<<< HEAD
-    # variation = Variant.objects.filter(product=product)
-    # Check if the product is already in the user's wishlist
-    wishlist_entry = Wishlist.objects.filter(user=request.user, product=product).first()
-    
-=======
     print(variant_id,"varianttttttttttttt")
     product = variant.product
     wishlist_entry = Wishlist.objects.filter(user=request.user, variant = variant).first()
     print("productttttt",product)
->>>>>>> PG-1
     if wishlist_entry:
         messages.info(request,"Product already in wishlist")
     else:
         Wishlist.objects.create(
-            product=product,
+            product = product,
             variant = variant,
             user=request.user,
         
         )
         messages.info(request,"Product added to wishlist")
-<<<<<<< HEAD
-        return redirect('wishlist')
-    return redirect('product_details',productid=product_id)
-=======
         # return redirect('wishlist')
     return redirect('product_details',productid=product.id)
->>>>>>> PG-1
 
 # def add_to_wishlist_ajax(request, productid):
 #     product = get_object_or_404(Product, id=productid)
@@ -596,7 +583,6 @@ def remove_wishlist_item(request, product_id, wishlist_id):
 
     else:
         pass
-        
-
+    
     return redirect('wishlist')
 

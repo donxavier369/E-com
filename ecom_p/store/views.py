@@ -1,10 +1,12 @@
-from django.shortcuts import render,get_object_or_404
-from store.models import Product,Banner,Variant
+from django.shortcuts import redirect, render,get_object_or_404
+from store.models import Product,Banner,Variant,Wishlist
 from category.models import Category
 from django.urls import reverse
 from django.http import Http404, HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.http import require_GET
+from django.db.models import Q
+from decimal import Decimal
 
 # from carts.views import _cart_id
 from carts.models import CartItem
@@ -56,10 +58,6 @@ def banner(request):
 def product_details(request, productid):
     single_product = Product.objects.get(id=productid)
     variation = Variant.objects.filter(product=productid)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> PG-1
 
     wishlist = Wishlist.objects.all()
     print(variation,"9999909990990990909")
@@ -68,26 +66,16 @@ def product_details(request, productid):
     wishlist_variant_ids = [item.variant.id for item in wishlist]
     
 
-<<<<<<< HEAD
-=======
-    print(variation,"9999909990990990909")
-    print(single_product.id,"0000000000000000000")
->>>>>>> parent of f08f8d3 (modified profile,cart,wishlist,checkout,payment)
-=======
->>>>>>> PG-1
     context = {
         'single_product': single_product,
-        'variation':variation,
-        # 'in_cart':in_cart
+        'variation': variation,
+        'wishlist_variant_ids': wishlist_variant_ids,
     }
     return render(request, 'store/product_detail.html', context)
 
-<<<<<<< HEAD
-=======
 
 
 
->>>>>>> PG-1
 def store(request):
     
     products = Product.objects.filter(is_available=True)
@@ -122,32 +110,24 @@ def get_variant_details(request):
     
     variant_id = request.GET.get('variantId')
     try:
-<<<<<<< HEAD
-        variant = Variant.objects.select_related('product').prefetch_related('variant_image').get(id=variant_id)
-=======
         print('yes inside')
         variant = Variant.objects.select_related('product').get(id=variant_id)
         stock_status = variant.variant_stock > 0 
->>>>>>> PG-1
         variant_data = {
-            'variant_image': variant.images.first().variant_image.url,
-            'variant_price': variant.price,
+            'variant_image': variant.variant_image.url,
             'variant_name': variant.product.product_name,
-            'variant_stock': variant.variant_stock,
+            'variant_stock': variant.variant_stock, 
             'variant_status': variant.is_available,
-<<<<<<< HEAD
-=======
             'stock_status' : stock_status,
             
->>>>>>> PG-1
         }
+        print(variant_data['variant_stock'])
+
         return JsonResponse(variant_data)
     except Variant.DoesNotExist:
         return JsonResponse({'error': 'Variant not found'}, status=404)
 
 
-<<<<<<< HEAD
-=======
 def get_variant_stock_status(request):
     if request.method == 'GET' and request.is_ajax():
         variant_id = request.GET.get('variantId')
@@ -222,4 +202,3 @@ def filter_products_by_price(request):
     # ...
 
     return render(request, 'store/shop.html', context)
->>>>>>> PG-1

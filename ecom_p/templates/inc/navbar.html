@@ -1,6 +1,4 @@
 {% load static %}
-<<<<<<< HEAD
-=======
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
@@ -23,7 +21,6 @@
 			text-align: center;
 		  }
 </style>
->>>>>>> PG-1
   <body class="goto-here">
 		<div class="py-1 bg-black">
     	<div class="container">
@@ -55,6 +52,7 @@
 
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav ml-auto">
+
 	          <li class="nav-item"><a href={% url 'home' %} class="nav-link">Home</a></li>
 	          <li class="nav-item dropdown active">
               <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
@@ -73,11 +71,6 @@
 			  <li class="nav-item"><a href={% url 'handlelogin' %} class="nav-link">Login</a></li>
 			  {% endif %}
 
-<<<<<<< HEAD
-	          <li class="nav-item cta cta-colored"><a href="{% url 'cart' %}" class="nav-link"><span class="icon-shopping_cart"></span>[{{cart_count}}]</a></li>
-			  <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-heart color-danger" aria-hidden="true"></span>[0]</a></li>
-			  <li class="nav-item cta cta-colored"><a href="{% url 'user_profile' %}" class="nav-link"><span class="icon-user color-danger" aria-hidden="true"></span></a></li>
-=======
 	          {% comment %} <li class="nav-item cta cta-colored"><a href="{% url 'cart' %}" class="nav-link"><span class="icon-shopping_cart"></span>[{{cart_count}}]</a></li> {% endcomment %}
 			  <li class="nav-item cta cta-colored"><a href="{% url 'cart' %}" class="nav-link"><span class="fa fa-shopping-cart"></span></a></li>
 			  <li class="nav-item cta cta-colored"><a href="{% url 'wishlist' %}" class="nav-link"><span class="fa fa-heart color-danger" aria-hidden="true"></span></a></li>
@@ -87,11 +80,17 @@
 				<form action="{% url 'search' %}" method="POST"> {% csrf_token %} <!-- Set the action attribute to your search results URL -->
 				  <div class="input-group mb-3">
 					<input type="text" class="form-controls" name="keyword" placeholder="TYPE A KEY WORK AND HIT ENTER" aria-label="Search" aria-describedby="search-button" >
->>>>>>> PG-1
 	
+					</div>
+				  </div>
+				</form>
+			  </li>
+			  
 
 	        </ul>
 	      </div>
 	    </div>
 	  </nav>
-    
+    <script>
+		
+	</script>

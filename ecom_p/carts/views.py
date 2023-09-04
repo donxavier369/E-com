@@ -23,6 +23,12 @@ def _cart_id(request):
 
 
 def cart(request, total=0, quantity=0, cart_items=None):
+    variants = Variant.objects.all()
+    list = []
+    for variant in variants:
+        if variant.variant_stock < 1:
+            list.append(variant.id)
+    print(list,"out of stock")
     try:
         tax = 0
         grand_total = 0
@@ -51,9 +57,11 @@ def cart(request, total=0, quantity=0, cart_items=None):
         'cart_items' : cart_items,
         'tax':tax,
         'grand_total':grand_total,
+        'list':list,
     }         
     return render(request, 'store/cart.html', context)
 
+# views.py
 
 def wishlist_to_cart(request, product_id, variant_id):
     print(variant_id,"varianttttttttttttt in wishlis")
@@ -113,13 +121,20 @@ def add_to_cart(request,product_id,variant=0):
     product = Product.objects.get(id=product_id)
     variant_id = request.POST.get('variant')  
     # quantity = int(request.POST.get('quantity'))  
+    action = request.POST.get('action')
     current_user = request.user
-    variant = Variant.objects.get(id = variant_id)
-    try:
-        get_product = CartItem.objects.get(product=product)
-        cart_quantity = get_product.quantity
-    except:
-        cart_quantity = 0
+    if variant_id:
+        try:
+            variant = Variant.objects.get(id=variant_id)
+        except Variant.DoesNotExist:
+            pass
+    elif variant_id_from_session:
+        try:
+            variant = Variant.objects.get(id=variant_id_from_session)
+        except Variant.DoesNotExist:
+            pass
+    print(variant,"variant in cartttttttttttttttt")
+    
 
     if action == 'Add to Cart' or action == None:
         print("add to carttttttttttt")
@@ -176,22 +191,6 @@ def add_to_cart(request,product_id,variant=0):
         return redirect('product_details', productid=product_id)
   
 
-    #     if action == 'increase':
-    #         if cart_item.variant.variant_stock > 0 and cart_item.variant.variant_stock > cart_item.quantity:
-    #             cart_item.quantity += 1
-    #             cart_item.save()
-    #     elif action == 'decrease':
-    #         if cart_item.quantity > 1:
-    #             cart_item.quantity -= 1
-    #             cart_item.save()
-    #             # if cart_item.quantity == 0:
-    #             #     cart_item.delete()
-    #         else:
-    #             pass
-    #     else:
-    #         pass
-    # except CartItem.DoesNotExist:
-    #     pass
 
 def update_quantity(request):
     print(update_quantity,"setttttttttttttttt")
@@ -235,6 +234,7 @@ def update_quantity(request):
     else:
         return JsonResponse({'error': 'Invalid request method.'})
                 
+
 
 def remove_cart_item(request, product_id, cart_item_id):
     product = get_object_or_404(Product, id=product_id)
@@ -360,13 +360,5 @@ def checkout(request,total=0, quantity=0, coupon_amount=0, coupon_id = 0, cart_i
         }
         print(context,"''''''''''''''''''''")
     return render(request, 'orders/checkout.html', context)
-
-
-
-
-
-
-
-
 
 
