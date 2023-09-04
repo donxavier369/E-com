@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from user.models import CustomUser
 from store.models import Product,Variant
-    
+from carts.models import Coupon
 from django.db import models
 from django.db.models.fields import CharField
 from django.utils.translation import gettext_lazy as _
@@ -33,7 +33,7 @@ class Order(models.Model):
     full_name = models.CharField(max_length=50)
     phone = models.CharField(max_length=15)
     email = models.EmailField(max_length=50)
-    address_line_1 = models.CharField(max_length=50)
+    address_line_1 = models.CharField()
     pincode = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     city = models.CharField(max_length=50)
@@ -43,7 +43,8 @@ class Order(models.Model):
     ip = models.CharField(blank=True, max_length=20)
     is_ordered = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)    
-    updated_at = models.DateTimeField(default=timezone.now)   
+    updated_at = models.DateTimeField(default=timezone.now)  
+    coupon = models.ForeignKey(Coupon, on_delete=models.CASCADE, default=None, null=True, blank=True)
     
 
     def __str__ (self):
@@ -103,3 +104,13 @@ class Razorpay_Order(models.Model):
 
     def __str__(self):
         return f"{self.id}-{self.name}-{self.status}"
+
+
+
+
+class Wallet(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    wallet_amount = models.IntegerField()
+
+    def __str__(self):
+        return f"Wallet for {self.user.username}"

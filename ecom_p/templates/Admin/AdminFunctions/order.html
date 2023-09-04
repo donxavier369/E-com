@@ -35,7 +35,13 @@
 
 
           {% comment %} <a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProductModal" onclick="editProductModal({{ product.id }})">Edit</a> {% endcomment %}
+          {% if order.status == "Cancelled" %}
+          <td><p  class="mt-4"style = "color: #ee5959">Cancelled</p></td>
+          {% else %}
           <td><a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProductModal{{ order.id }}">Edit Status</a></td>
+          {% endif %}
+          <td><a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#detailProductModal{{ order.id }}">Details</a></td>
+
         </tr>
         {% endfor %}
       </tbody>
@@ -76,6 +82,41 @@
   </div>
 </div>
 
+<<<<<<< HEAD
+=======
+<div class="modal fade" id="detailProductModal{{ order.id }}" tabindex="-1" aria-labelledby="detailProductModalLabel{{ order.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailProductModalLabel{{ order.id }}">PRODUCT : {{order.product.product_name}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'manage_orderstatus' order.id %}" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+     
+          <div class="form-group">
+            <p>Order ID : {{order.id}}</p>
+            <p>Bulk Order ID : {{order.bulk_order_id}}</p>
+            <p>Order Date : {{order.created_at}}</p>
+            <p>Last Updated Date : {{order.created_at}}</p>
+            <p>Customer ID : {{order.user_id}}</p>
+            <p>Customer Name : {{order.full_name}}</p>
+            <p>Shipping Address : {{order.full_name}},{{order.address_line_1}},{{order.city}},{{order.state}}-{{order.state}}</p>
+            <p>Total Amount : ₹ {{order.order_total}}</p>
+            <p>Order Status : {{order.status}}</p>
+            <p>Payment Method : {{order.payment_method}}</p>
+            <p>Payment Status : {{order.payment_status}}</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+>>>>>>> PG-1
 
 {% endfor %}
 {% endblock body %} 

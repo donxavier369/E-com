@@ -67,11 +67,9 @@
                 <div class="px-3">
                   <a class="mb-1 h5" href="{% url 'order_detail' %}">Orders</a>
                 </div>
+   
                 <div class="px-3">
                   <a class="mb-1 h5" href="{% url 'wishlist' %}">Wishlist</a>
-                </div>
-           
-                
               </div>
             </div>
 
@@ -90,6 +88,10 @@
                    {% endcomment %}
                 <!--Delete user address-->
                   <input type="submit" class="btn btn-outline-dark" value="Logout" data-toggle="modal" data-target="#myModal"></input>
+                  <input type="submit" class="btn btn-outline-dark" value="password" data-toggle="modal" data-target="#ChangePassword"></input>
+                  <input type="submit" class="btn btn-outline-dark" value="wallet" data-toggle="modal" data-target="#Wallet"></input>
+
+
 
                   <div class="modal" tabindex="-1" role="dialog" id="myModal">
                     <div class="modal-dialog" role="document">
@@ -108,6 +110,76 @@
                           <input type="submit" class="btn btn-danger" value="Continue"></input>
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         </div>
+                      </form>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--wallet-->
+                  <div class="modal" tabindex="-1" role="dialog" id="Wallet">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Wallet Amount</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Your Wallet Amount : ₹{{wallet.wallet_amount}}</p>
+                        </div>
+                        <div class="modal-footer">
+                          {% comment %} <input type="submit" class="btn btn-danger" value="Continue"></input> {% endcomment %}
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </form>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!--edit profile-->
+                  <div class="modal" tabindex="-1" role="dialog" id="myProfile">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Edit Profile</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <form action="{% url 'edit_profile' %}" method="POST">{% csrf_token %}
+                        <div class="modal-body">
+                          <div class="modal-body">
+                            {% comment %} <form action="{% url 'edit_address' address.id %}" method="POST" enctype="multipart/form-data"> {% endcomment %}
+                              {% csrf_token %}
+                              <input type="hidden" name="address_id" value="{{ user.id }}">
+                              <div class="form-group">
+                                <label for="editaddressName{{ user.id }}" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="name" value="{{ user.name }}" style="margin-bottom:10px;" required>
+                              </div>
+    
+              
+                              <div class="form-group">
+                                <label for="editaddressName{{ user.id }}" class="form-label">Email</label>
+                                <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="email" value="{{ user.email }}" style="margin-bottom:10px;" required>
+                              </div>
+    
+                              <div class="form-group">
+                                <label for="editaddressName{{ user.id }}" class="form-label">Phone</label>
+                                <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="phone" value="{{ user.phone }}" style="margin-bottom:10px;" required>
+                              </div>
+                              
+    
+                            </div>
+                            <div class="modal-footer">
+                              <input type="submit" class="btn btn-success" value="Save"></input>
+                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                          </form>
+
+                        </div>
+                      
                       </form>
                       </div>
                     </div>

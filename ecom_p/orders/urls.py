@@ -14,8 +14,7 @@ urlpatterns = [
 
     # payment   
     # path("order_payment/<str:amount>,<str:name>", views.order_payment, name="order_payment"),
-    path("order_payment/", views.order_payment, name="order_payment"),
-
+    path("order_payment/<int:coupon_id>/", views.order_payment, name="order_payment"),
     path("callback/", views.callback, name="callback"),
 
 ]

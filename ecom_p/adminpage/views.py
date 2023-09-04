@@ -11,22 +11,26 @@ from store.models import Product , Variant
 from category.models import  Category, Brand
 from django.shortcuts import get_object_or_404
 from orders.models import Order
+from carts.models import Coupon
+from django.db.models import Sum
 # from store.models import Variation
 # Create your views here.
+
+
 
 
 def manageuser(request):
     if request.user.is_authenticated and request.path != reverse('manageuser'):
         return redirect('manageuser')
 
-    data = CustomUser.objects.filter(is_superuser=False)  # Define data here
+    user_list = CustomUser.objects.filter(is_superuser=False)  # Define data here
 
     if 'search' in request.GET:
         q = request.GET['search']
-        data = CustomUser.objects.filter(Q(name__icontains=q) | Q(email__icontains=q) | Q(id__icontains=q))
+        user_list = CustomUser.objects.filter(Q(name__icontains=q) | Q(email__icontains=q) | Q(id__icontains=q))
 
-    context = {'data': data}
-    return render(request, "adm/data.html", context)  
+    context = {'user_list':user_list}
+    return render(request, "Admin/AdminFunctions/userdetail.html", context)  
 
 def user_block(requset,id):
     d = CustomUser.objects.get(id=id)
@@ -60,7 +64,7 @@ def admin_login(request):
         else:
             messages.error(request,"Invalid Credentials")
 
-    return render(request,"adm/admin_login.html")             
+    return render(request,"Admin/AdminFunctions/admin_login.html")             
             
 def admin_logout(request):
     logout(request)
@@ -68,11 +72,22 @@ def admin_logout(request):
     return redirect('admin_login')
 
 
+# def admin_page(request):
+#     if request.user.is_authenticated and request.user.is_superuser==True:
+#         return render(request,"Admin/AdminFunctions/adminindex.html")
+#     else:
+#         return render(request, "adm/admin_login.html")
+
+@login_required(login_url='admin_signin')
 def admin_page(request):
-    if request.user.is_authenticated and request.user.is_superuser==True:
-        return render(request,"Admin/adminindex.html")
-    else:
-        return render(request, "adm/admin_login.html")
+    status_order_totals = Order.objects.values('status').annotate(total_amount=Sum('order_total'))
+
+    context = {
+        'status_order_totals': status_order_totals,
+    }
+   
+    return render(request,"Admin/AdminFunctions/adminindex.html",context)
+
 
 # product management
 
@@ -81,6 +96,7 @@ def product(request):
         categories = Category.objects.filter(is_available=True)
         product_count = products.count()
         brands = Brand.objects.all()
+        activebrands = Brand.objects.filter(is_active = True)
         variant = Variant.objects.all()
         
         context = {
@@ -89,6 +105,7 @@ def product(request):
             "categories" : categories,
             "brands" : brands,
             "variant":variant,
+            "activebrands":activebrands, 
            
         }
         return render(request, "Admin/AdminFunctions/product.html",context)
@@ -132,20 +149,19 @@ def edit_product(request, id):
         product_name = request.POST.get('product_name')
         brand_id = request.POST.get('brand')  # Use 'brand' instead of 'product_brand'
         category_id = request.POST.get('category')  # Use 'category' instead of 'product_category'
-        product_price = request.POST.get('product_mrp')
+        product_price = request.POST.get('product_price')
         product_stock = request.POST.get('product_stock')
         product_description = request.POST.get('product_description')
-        product_price = request.POST.get('product_description')
 
         # Retrieve the updated 'images' field value
         product_thumbnail = request.FILES.get('product_images')
-        print(product_thumbnail,"thumbbbbbbbbbbbbbbbbbb")
+        print(product_thumbnail,"thumbbbbbbbbbbbbbbbbbb",product_price)
 
         # Update other product details
         product.product_name = product_name
         product.brand = get_object_or_404(Brand, id=brand_id)
         product.category = get_object_or_404(Category, id=category_id)
-        product.price = product_price
+        product.product_price = product_price
         product.stock = product_stock
         product.description = product_description
 
@@ -306,4 +322,85 @@ def delete_variant(request, id):
         return redirect('product')
     return render(request,"Admin/AdminFunctions/product.html")
 
+
+# coupon
+
+def coupon(request):
+    coupons = Coupon.objects.all()
+    return render(request,"Admin/AdminFunctions/coupon.html",{'coupons':coupons})
+
+def add_coupon(request):
+    if request.method == 'POST':
+        coupon_id = request.POST.get('coupon_id')
+        Is_available = request.POST.get('Is_available')
+        discount_price = request.POST.get('discount_price')
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+        min_price = request.POST.get('min_price')
+        max_price = request.POST.get('max_price')
+        coupon = Coupon.objects.create(
+            code=coupon_id,
+            is_active=Is_available,
+            discount_price = discount_price,
+            start_date = start_date,
+            end_date = end_date,
+            min_price = min_price,
+            max_price = max_price,
+        )
+        return redirect('coupon')
+
+    return render(request, "Admin/AdminFunctions/coupon.html")
+
+def edit_coupon(request, coupon_id):
+    print(coupon_id,"couponnnnnnnnnn")
+    return redirect('coupon')
+
+
+def coupon_block(request, coupon_id):
+    coupon = Coupon.objects.get(id=coupon_id)
+    coupon.is_active = False
+    coupon.save()
+    return redirect('coupon')
+
+def coupon_unblock(request, coupon_id):
+    print("haioiiiiiiiiiiiiiiiiiiiiiiiiii",coupon_id)
+    coupon = Coupon.objects.get(id=coupon_id)
+    coupon.is_active = True
+    coupon.save()
+    return redirect('coupon')
+
+
+# brand management
+
+def add_brand(request):
+    if request.method == 'POST':
+        brand_name = request.POST.get('brand_name')
+        brand = Brand.objects.create(brand_name = brand_name)
+        return redirect('product')
+    return render(request,"Admin/AdminFunctions/coupon.html")
     
+
+def brand_block(request, brand_id):
+    brand = Brand.objects.get(id=brand_id)
+    brand.is_active = False
+    brand.save()
+    return redirect('product')
+
+def brand_unblock(request, brand_id):
+    brand = Brand.objects.get(id=brand_id)
+    brand.is_active = True
+    brand.save()
+    return redirect('product')
+
+
+def sales_report(request):
+    sales_report = Order.objects.all().order_by('id')
+    context = {
+        'sales_report' : sales_report
+    }
+    return render(request,"Admin/AdminFunctions/sales_report.html",context)
+
+
+
+
+

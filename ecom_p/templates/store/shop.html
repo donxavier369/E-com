@@ -1,21 +1,24 @@
 {% extends 'layouts/main.html' %}
 
 {% load static %}
-
+{% block head %}
+        <!-- aleartyfy js-->
+      <!-- CSS -->
+      <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+      <!-- Default theme -->
+      <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+{% endblock head %}
 {% block body %}
 
 
 
-    <div class="hero-wrap hero-bread" style="background-image: url('images/bg_6.jpg');">
-      <div class="container">
-        <div class="row no-gutters slider-text align-items-center justify-content-center">
-          <div class="col-md-9 ftco-animate text-center">
-          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Products</span></p>
-            <h1 class="mb-0 bread">Collection Products</h1>
-          </div>
-        </div>
+ 
+
+
+      <div class="image"
+        style="background-image: url('{% static 'images/shopbanner.png' %}'); height: 38rem; background-size: cover; background-position: center;">
+
       </div>
-    </div>
 
 <section class="ftco-section bg-light">
     <div class="container">
@@ -39,7 +42,7 @@
                    
                     
                         <a href="{% url 'product_details' product.id %}" class="img-prod"><img class="img-fluid" src="{{ product.images.url }}" alt="Colorlib Template">
-                            <span class="status">30%</span>
+                            {% comment %} <span class="status">30%</span> {% endcomment %}
                             <div class="overlay"></div>
                         </a>
                         <div class="text py-3 px-3">
@@ -53,7 +56,7 @@
                             <p class="bottom-area d-flex px-3">
                                 {% comment %} <a href="{% url 'add_to_wishlist' product.id  %}" class="add-to-cart text-center py-2 mr-1"><span>Wishlist <i class="ion-ios-heart ml-1"></i></span></a> {% endcomment %}
                                 {% comment %} <button class="add-to-wishlist" data-product-id="{{ product.id }}">Add to Wishlist</button> {% endcomment %}
-                                <a href="{% url 'product_details' product.id %}" class="buy-now text-center py-2">View Product<span><i class="ion-ios-eye ml-1"></i></span></a>
+                                <a href="{% url 'product_details' product.id %}" class="buy-now text-center py-2">View Product<span><i class="fas fa-eye ml-1"></i></span></a>
                             </p>
                         </div>
                     </div> 
@@ -91,26 +94,19 @@
     
 </section>
 
+
+
+    <!-- aleartyfy js -->
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <script>
+      alertify.set('notifier','position', 'top-right');
+
+      {% for msg in messages %}
+          alertify.success('{{ msg }}');
+      {% endfor %}
+    </script>
+
 {% endblock body %}
 
 
-<!-- Include SweetAlert library -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- Your JavaScript code -->
-{% comment %} <script>
-    document.querySelectorAll('.add-to-wishlist').forEach(button => {
-        button.addEventListener('click', function() {
-            const productId = this.getAttribute('data-product-id');
-            
-            fetch(`/add_to_wishlist_ajax/${productId}`)
-                .then(response => response.json())
-                .then(data => {
-                    showAlert(data.message);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        });
-    });
-    </script> {% endcomment %}

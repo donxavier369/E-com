@@ -1,6 +1,27 @@
 {% extends 'layouts/main.html' %}
 {% load static %}
 {% block head %}
+<style>
+
+
+	.image-zoom-container {
+		overflow: hidden;
+	}
+	
+	.image-zoom-container img {
+		transition: transform 0.3s ease-in-out;
+	}
+	
+	.image-zoom-container:hover img {
+		transform: scale(1.1);
+	}
+	
+</style>
+	<!-- aleartyfy js-->
+	<!-- CSS -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+	<!-- Default theme -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
 
 {% endblock head %}
 
@@ -8,8 +29,8 @@
 {% block body %}
 
 
-    <div class="hero-wrap hero-bread" style="background-image: url('images/bg_6.jpg');">
-      <div class="container">
+<div class="hero-wrap hero-bread" style="background-image: url('{% static 'images/bg_6.jpg' %}');">
+	<div class="container">
         <div class="row no-gutters slider-text align-items-center justify-content-center">
           <div class="col-md-9 ftco-animate text-center">
           	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span class="mr-2"><a href="index.html">Product</a></span> <span>Product Single</span></p>
@@ -19,106 +40,118 @@
       </div>
     </div>
 
+
     <section class="ftco-section">
     	<div class="container">
     		<div class="row">
-    			<div class="col-lg-6 mb-5 ftco-animate">
-    				<a href="images/menu-2.jpg" class="image-popup"><img src="/media/{{ single_product.images }}" id="product-image" class="img-fluid" alt="Colorlib Template"></a>
-    			</div>
+
+ 
+				 {% comment %} <div class="col-lg-6 mb-5 ftco-animate"> 
+
+    				<a href="images/menu-2.jpg" class="zoom" onmousemove="zoom(event)" onmouseout="resetZoom(event)"><img src="/media/{{ single_product.images }}" id="product-image" class="img-fluid" alt="Colorlib Template"></a>
+    			
+				</div> {% endcomment %}
+
+				<div class="col-lg-6 mb-5">
+					<div class="image-zoom-container">
+						<a href="#">
+							<img src="/media/{{ single_product.images }}" id="product-image" class="img-fluid" alt="Colorlib Template">
+						</a>
+					</div>
+				</div>
+				
+
+
+
 				
     			<div class="col-lg-6 product-details pl-md-5 ftco-animate">
 				<form action="{% url 'add_to_cart' single_product.id %}" method="POST">
 						{% csrf_token %} 
     				<h3>{{ single_product.product_name }}</h3>
     	
-    				<p class="price"><span>₹{{ single_product.product_price}}</span></p>
+    				<p class="price"><span>₹{{ single_product.product_price}}.00</span></p>
     				<p>{{ single_product.product_name }} {{ single_product.description }}</p>
 
-						<div class="row mt-4">
-							<div class="col-md-6">
-								<div class="form-group d-flex">
-						<div class="select-wrap">
-						<div class="icon"><span class="ion-ios-arrow-down"></span></div>
-						{% comment %} <select name="colour" id="colour" class="form-control" required>dsf
-							<option value="" disabled selected >Choose Colour</option>
-							{% for variant in variation %}
-							<option  value="{{ variant.variant_colour | lower }}">{{ variant.variant_colour |capfirst }}{{variant.id}}</option>
-							{% endfor %}
-						</select> {% endcomment %}
-						<select name="variant" id="variant-select" class="form-control"required>
-							<option value="">Select a Variant</option>
-							{% for variant in variation %}
-							<option  value="{{ variant.id }}">{{ variant.variant_colour |capfirst }}{{variant.id}}</option>
-							{% endfor %}
-				   		</select>
+					<div class="col-md-6">
+						<div class="form-group d-flex">
+							<div class="select-wrap">
+								<div class="icon"><span class="fas fa-arrow-down"></span></div>
+								<select name="variant" id="variant-select" class="form-control" required>
+									<option value="">Select a Variant</option>
+									{% for variant in variation %}
+										<option value="{{ variant.id }}">{{ variant.variant_colour | capfirst }}{{ variant.id }}</option>
+									{% endfor %}
+								</select>
+							</div>
 						</div>
 						
-
-		            </div>
+						<!-- Add an empty <div> to display stock status -->
+						<div id="stock-status"></div>
+						<p style="color: #000;" id="variant-status"></p>
+						<p id="variant-stock"> pieces available</p>
 						</div>
-							
-						<p style="color: #000;">{{single_product.stock}} pieces available</p>
-							
-		                </div>
+					
+					<div class="row align-items-end">
+						<div class="col-md-6">
+							<input type="submit" class="btn btn-black py-3 px-5 mt-2" name="action" value="Add to Wishlist"></input>
+						</div>
+						<input type="submit" id="add-to-cart-btn" class="btn btn-black py-3 px-5 mt-2" name="action" value="Add to Cart">
 
-				{% if single_product.stock <= 0 %}
-					<h3 class="text-danger">Out Of Stock!</h3>
-			    {% else %}
-					{% comment %} {% if in_cart %}
-					<div style='display:flex; gap:7rem'>
-						<p class="mt-3">Item Already In Cart</p>
-						<a href="{% url 'cart'%}" class="btn btn-black py-3 px-5"style="background-color: #e5893d;">View Cart</a>
+						</div>
 					</div>
-					{% else %}		
-					 {% endcomment %}
 					
-					<input type="submit" class="btn btn-black py-3 px-5 mt-2" value="add to cart"></input>
-					{% comment %} <a href="/user/add_to_wishlist/{{single_product.id}}" class="btn btn-black py-3 px-5 mt-2" >Wishlist</a> {% endcomment %}
-					{% comment %} <a href="{% url 'add_to_wishlist' single_product.id variant.id %}" class="btn btn-black py-3 px-5 mt-2">Wishlist</a> {% endcomment %}
 
-					
-				    {% comment %} {% endif %}	 {% endcomment %}
-				{% endif %}	
-			</form>		
-			
+			</form>
+	
+
           	</div>
     			</div>
     		</div>
     	</div>
     </section>
 
-{% comment %} 
+    <!-- aleartyfy js -->
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <script>
+      alertify.set('notifier','position', 'top-right');
 
-	<script>
-		// Function to refresh the cart page
-		function refreshCartPage() {
-			// Check if the page has been refreshed before
-			if (!localStorage.getItem('cartPageRefreshed')) {
-				// If not refreshed before, reload the page
-				localStorage.setItem('cartPageRefreshed', 'true');
-				location.reload();
-			} else {
-				// Remove the localStorage flag so that the page can be refreshed again on the next visit
-				localStorage.removeItem('cartPageRefreshed');
-			}
-		}
-	
-		// Attach the event handler to the onpageshow event
-		window.addEventListener('pageshow', refreshCartPage);
-	</script> {% endcomment %}
-	
+      {% for msg in messages %}
+          alertify.success('{{ msg }}');
+      {% endfor %}
+    </script>
 
-	{% comment %} <script>
-		// Function to refresh the page
-		function refreshPage() {
-			location.reload();
-		}
-	
-		// Attach the event handler to the onpageshow event
-		window.addEventListener('pageshow', refreshPage);
-	</script> {% endcomment %}
+<!--image zoom-->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function() {
+		$(".image-zoom-container").mousemove(function(event) {
+			var imageWidth = $(this).find("img").width();
+			var imageHeight = $(this).find("img").height();
+
+			var offsetX = event.offsetX;
+			var offsetY = event.offsetY;
+
+			var zoomFactor = 2;
+			var translateX = (imageWidth * zoomFactor - imageWidth) / 2 - offsetX * (zoomFactor - 1);
+			var translateY = (imageHeight * zoomFactor - imageHeight) / 2 - offsetY * (zoomFactor - 1);
+
+			$(this).find("img").css({
+				transform: "scale(" + zoomFactor + ") translate(" + translateX + "px, " + translateY + "px)"
+			});
+		});
+
+		$(".image-zoom-container").mouseleave(function() {
+			$(this).find("img").css({
+				transform: "scale(1) translate(0, 0)"
+			});
+		});
+	});
+</script>
+	<!--=================================================================-->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script>
+<script>
+
 		$(document).ready(function(){
 
 		var quantitiy=0;
@@ -180,14 +213,24 @@
 					  var variantName = response.variant_name;
 					  var variantStock = response.variant_stock;
 					  var variantStatus = response.variant_status;
-			   
+					  var stockStatus = response.stock_status;
+
+					  var stockMessage = stockStatus ? '' : 'Out of Stock';
+					  var stockColor = stockStatus ? 'text-success' : 'text-danger';
+					  $('#stock-status').html('<h3 class="' + stockColor + '">' + stockMessage + '</h3>');
+  
+					  // Toggle visibility of Add to Cart button
+					  if (stockStatus) {
+						  $('#add-to-cart-btn').show();
+					  } else {
+						  $('#add-to-cart-btn').hide();
+					  }
+					  
+			   console.log(variantStock,'item stock')
 		
 				  // Update the image source and price text
 				  $('#product-image').attr('src', productImage);
-				  $('#product-price').text('₹'+ productPrice);
-					  $('#product-variant-name').html(variantProduct +' '+ variantName);
-					  $('#variant-stock').text(variantStock);
-					  $('#variant-status').text(variantStatus);
+				  $('#variant-stock').text(variantStock + '  pieces available'); // Make sure to include the text "pieces available"
 					},
 					error: function(xhr, status, error) {
 					  // Handle error response if needed
@@ -196,19 +239,46 @@
 				});
 			  });
 	</script>
-    
+
+
+
   </body>
 {% endblock body %}
 </html>
 
-	             	{% comment %} <span class="input-group-btn mr-2">
-	                	<button type="button" class="quantity-left-minus btn"  data-type="minus" data-field="">
-	                      <i class="ion-ios-remove"></i>
-	                	</button>
-	            	</span>
-	             	<input type="text" id="quantity" name="quantity" class="form-control input-number" value="1" min="1" max="100">
-	             	<span class="input-group-btn ml-2">
-	                	<button type="button" class="quantity-right-plus btn" data-type="plus" data-field="">
-	                      <i class="ion-ios-add"></i>
-	                    </button>
-	             	</span> {% endcomment %}
+
+
+   			{% comment %} <div class="col-lg-6 mb-5 ftco-animate">
+
+    				<a href="images/menu-2.jpg" class="image-popup"><img src="/media/{{ single_product.images }}" id="product-image" class="img-fluid" alt="Colorlib Template"></a>
+    			</div>
+				 {% endcomment %}
+
+
+
+
+				 
+				{% comment %} 
+				<div class="col-lg-6 mb-5 ftco-animate"> 
+					<a href="images/menu-2.jpg" class="zoom" onmousemove="zoom(event)" onmouseout="resetZoom(event)">
+						<img src="/media/{{ single_product.images }}" id="product-image" class="img-fluid" alt="Colorlib Template">
+					</a>
+				</div>
+				<script>
+					function zoom(event) {
+					  var zoomer = event.currentTarget;
+					  var offsetX = event.offsetX ? event.offsetX : event.touches[0].pageX;
+					  var offsetY = event.offsetY ? event.offsetY : event.touches[0].pageY;
+					  var x = (offsetX / zoomer.offsetWidth) * 100;
+					  var y = (offsetY / zoomer.offsetHeight) * 100;
+					  zoomer.querySelector('img').style.transform = 'scale(1.3)';
+					  zoomer.querySelector('img').style.transformOrigin = x + '% ' + y + '%';
+					}
+				  
+					function resetZoom(event) {
+					  var zoomer = event.currentTarget;
+					  zoomer.querySelector('img').style.transform = 'none';
+				    }
+				  </script> 
+			
+			  <script> {% endcomment %}

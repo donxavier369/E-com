@@ -1,0 +1,116 @@
+{% extends 'Admin/adminlayouts/main.html' %}
+{% load static %}
+
+{% block body %} 
+
+
+<div class="container">
+    <h4 class="mb-4">Sales Report</h4>
+    <button class="btn btn-primary" id="pdfButton">Export as PDF</button>
+    <button class="btn btn-success" id="excelButton">Export as Excel</button>
+
+    <div class="row mb-3">
+       
+        {% comment %} <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search Order ID">
+                <button class="btn btn-primary" id="searchButton">Search</button>
+                <button class="btn btn-secondary" id="clearButton">Clear</button>
+            </div>
+        </div> {% endcomment %}
+        <div class="col-md-6">
+            <p class="text-end">Total entities: {{ sales_report|length }}</p>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped" id="salesTable">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>User name</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                    <th>Payment Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in sales_report %}
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.user.name }}</td>
+                        <td>{{ order.created_at }}</td>
+                        <td>{{ order.status }}</td>
+                        <td>₹{{ order.total_amount }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+
+<script>
+
+    document.getElementById('searchButton').addEventListener('click', function() {
+        var searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+        var rows = document.querySelectorAll('#salesTable tbody tr');
+        rows.forEach(function(row) {
+            var orderId = row.querySelector('td:first-child').textContent.trim().toLowerCase();
+            if (orderId.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+
+    document.getElementById('clearButton').addEventListener('click', function() {
+        document.getElementById('searchInput').value = '';
+        var rows = document.querySelectorAll('#salesTable tbody tr');
+        rows.forEach(function(row) {
+            row.style.display = '';
+        });
+    });
+    
+   
+</script>
+<script>
+    document.getElementById('pdfButton').addEventListener('click', function() {
+        var salesTable = document.getElementById('salesTable');
+        var opt = {
+            margin: 10,
+            filename: 'sales_report.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        // Create a new instance of html2pdf and provide the element to be converted
+        html2pdf().from(salesTable).set(opt).save();
+    });
+</script>
+<script>
+    document.getElementById('excelButton').addEventListener('click', function() {
+        var salesTable = document.getElementById('salesTable');
+        var workbook = XLSX.utils.table_to_book(salesTable);
+        var excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+        // Convert the array buffer to a Blob
+        var blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        
+        // Create a download link
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'sales_report.xlsx';
+        a.click();
+    });
+</script>
+
+
+
+
+{% endblock body %}

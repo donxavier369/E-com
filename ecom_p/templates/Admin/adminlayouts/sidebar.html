@@ -8,22 +8,23 @@
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
                     <div class="position-relative">
-                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                        <img class="rounded-circle" src="https://preview.keenthemes.com/conquer/assets/img/profile/profile-img.png" alt="" style="width: 40px; height: 40px;">
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0">Jhon Doe</h6>
+                        <h6 class="mb-0">{{request.user.name}}</h6>
                         <span>Admin</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
 
                     <a href="{% url 'product' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Products</a>
-                    <a href="{% url 'category' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Category</a>
                     {% comment %} <a href="{% url 'variant' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Varient</a> {% endcomment %}
-                    <a href="{% url 'manageuser' %}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>User</a>
-                    <a href="{% url 'manage_order' %}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>orders</a>
-                    <a href="#" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>All orders</a>
+                    <a href="{% url 'category' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Category</a>
+                    <a href="{% url 'coupon' %}" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Coupon</a>
+                    <a href="{% url 'manageuser' %}" class="nav-item nav-link"><i class="fa fa-user me-2"></i>User</a>
+                    <a href="{% url 'manage_order' %}" class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>orders</a>
+                    <a href="{% url 'sales_report' %}" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Sales</a>
                     {% comment %} <a href="#" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>All orders</a> {% endcomment %}
 
 

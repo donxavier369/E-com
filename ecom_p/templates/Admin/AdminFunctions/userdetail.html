@@ -1,0 +1,57 @@
+{% extends 'Admin/adminlayouts/main.html' %}
+{% block title %}Category{% endblock title %}
+{% load static %}
+
+
+{% block body %}
+
+
+<!-- Table Start -->
+<div class="col-sm-12 col-xl-6" style="width: auto;">
+    <div class="bg-light rounded h-100 p-4 mt-5">
+
+                
+
+        <h6 class="mb-4">User List</h6>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">User Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">date_joined</th>
+                    <th scope="col">last_login</th>
+                    <th scope="col">Actions</th><!-- Add a new column for Actions -->
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in user_list %}
+                <tr>
+                    <th scope="row">{{ user.name }}</th>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>{{ user.date_joined }}</td>
+                    <td>{{ user.last_login }}</td>
+
+
+
+                    <td>
+                    {% if user.is_active %}
+                    <a href="{% url 'user_block' user.id %}" class="btn btn-outline-danger mx-1 mt-2 px-3">Block</a>
+                  {% else %}
+                    <a href="{% url 'user_unblock' user.id %}" class="btn btn-outline-success mx-1 mt-2">Unblock</a>
+                  {% endif %}
+                </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Table End -->
+
+
+
+{% endblock body %}
