@@ -1,8 +1,9 @@
 from django.http import HttpResponse
 import uuid
 from django.shortcuts import get_object_or_404, render,redirect
-from carts.models import CartItem
+from carts.models import CartItem,Coupon
 from .forms import OrderForm,Order
+from .models import Wallet
 import datetime
 from user.models import CustomUser
 from django.contrib.auth.decorators import login_required
@@ -381,10 +382,15 @@ def payments(request,order_id):
 def generate_bunch_order_id():
     return str(uuid.uuid4())
 
-def order_payment(request, total=0, quantity=0):
-
+def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=0, quantity=0):
+    print(coupon_id,"couponnnnnnnnnnnnnnnnnnnnnnnnnnid")
+    try:
+        applied_coupon = Coupon.objects.get(id=coupon_id)
+        coupon_amout = applied_coupon.discount_price
+    except:
+        pass
     current_user = request.user
-    cart_items = CartItem.objects.filter(user=current_user)
+    cart_items = CartItem.objects.filter(user=current_user, is_active = True)
     cart_count = cart_items.count()
 
 
@@ -399,7 +405,12 @@ def order_payment(request, total=0, quantity=0):
         quantity += (cart_item.quantity)
 
     tax = (2 * total) / 100
-    grand_total = total + tax
+    grand_total = total + tax - float(coupon_amout)
+
+    try:
+        wallet = Wallet.objects.get(user=request.user)
+    except:
+        pass
 
     if request.method == 'POST':
         # Get the billing information from the form data
@@ -415,7 +426,74 @@ def order_payment(request, total=0, quantity=0):
 
         bulk_order_id = generate_bunch_order_id()
         print(bulk_order_id)
-        
+
+        if payment_type == "wallet":
+            if grand_total <= wallet.wallet_amount:
+                for cart in cart_items:
+                    if cart.variant.variant_stock > 0:
+                        print(cart,"cartttttttttttttttt",cart.quantity)
+                        print("timessssssss")
+                        coupon = applied_coupon if applied_coupon else None  # Set coupon to applied_coupon if it exists, otherwise None
+                        data = Order(
+                        user = current_user,
+                        full_name = full_name,
+                        phone = phone,
+                        email = email,
+                        address_line_1 = address_line_1,
+                        pincode = pincode,
+                        state = state,
+                        city = city,
+                        order_total = grand_total,
+                        tax = tax,
+                        ip = request.META.get('REMOTE_ADDR'),
+                        payment_method = payment_type,
+                        product_id = cart.product.id,
+                        variant_id = cart.variant.id,
+                        quantity= cart.quantity,
+                        bulk_order_id = bulk_order_id,
+                        unit_amount = cart.product.product_price,
+                        total_amount = grand_total,
+                        coupon = coupon,
+                
+            
+                        )
+                        data.save()
+                        new_qty = cart.quantity
+                        update_quantity = cart.variant.variant_stock - new_qty
+                        cart_item.variant.variant_stock = update_quantity
+                        cart.variant.save()
+
+
+
+
+                        # Generate order_number
+                        yr = int(datetime.date.today().strftime('%Y'))
+                        dt = int(datetime.date.today().strftime('%d'))
+                        mt = int(datetime.date.today().strftime('%m'))
+                        d = datetime.date(yr, mt, dt)
+                        current_date = d.strftime('%Y%m%d')  # 20230731
+                        order_number = current_date + str(data.id)
+                        data.order_number = order_number
+                        data.save()
+                orders = Order.objects.filter(bulk_order_id = bulk_order_id)
+                order_user = request.user
+                wallet.wallet_amount -= grand_total
+                wallet.save()
+                print(orders,"111111111111111")
+                context = {
+                    "orders":orders,
+                    "user":order_user,
+                }
+                # cart_items.delete()
+                # return render(request, "orders/order_summery.html",context)
+                # return render(request,"Profile/address.html")
+                return redirect('order_summery', bulk_order_id=bulk_order_id)
+
+                
+                
+            else:
+                messages.info(request,"Insufficiant Wallet Amount")
+                return redirect("checkout")
         if payment_type == "cod":
             # Store all the billing information inside Order table
             for cart in cart_items:
@@ -423,6 +501,7 @@ def order_payment(request, total=0, quantity=0):
                 if cart.variant.variant_stock > 0:
                     print(cart,"cartttttttttttttttt",cart.quantity)
                     print("timessssssss")
+                    coupon = applied_coupon if applied_coupon else None  # Set coupon to applied_coupon if it exists, otherwise None
                     data = Order(
                     user = current_user,
                     full_name = full_name,
@@ -441,7 +520,10 @@ def order_payment(request, total=0, quantity=0):
                     quantity= cart.quantity,
                     bulk_order_id = bulk_order_id,
                     unit_amount = cart.product.product_price,
-                    total_amount = grand_total
+                    total_amount = grand_total,
+                    coupon = coupon,
+             
+         
                     )
                     data.save()
                     new_qty = cart.quantity
@@ -468,8 +550,10 @@ def order_payment(request, total=0, quantity=0):
                 "orders":orders,
                 "user":order_user,
             }
+            print("context",context)
             # cart_items.delete()
-            # return render(request, "orders/order_summery.html",context)
+            # return render(request, "orders/order_summery.html")
+            # return render(request, "orders/sample.html",context)
             return redirect('order_summery', bulk_order_id=bulk_order_id)
 
 
@@ -562,6 +646,7 @@ def callback(request):
     current_order = Order.objects.filter(bulk_order_id = bulk_order_id)
 
     def verify_signature(response_data):
+        print("verify_signatureeeeeeeeeeee")
         client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
         return client.utility.verify_payment_signature(response_data)
     print(request,"request")
@@ -577,12 +662,14 @@ def callback(request):
         if verify_signature(request.POST):
             order.status = PaymentStatus.SUCCESS
             order.save()
-            print("success")
+            print("successsssssssssssssssss")
             current_order.update(payment_status = "Paid")
-            print(current_order,"status")
+            print(current_order,"statusssssssssssss")
             # cart_items.delete()
             # return render(request, "orders/order_summery.html", context={"status": order.status})
             return redirect('order_summery', bulk_order_id=bulk_order_id)
+            # return render(request, "orders/sample.html")
+
 
         
         else:
@@ -607,8 +694,8 @@ def callback(request):
 
 @never_cache
 def order_summery(request, bulk_order_id):
-
-    cart_items = CartItem.objects.all()
+    print(bulk_order_id,"lkjjjjjjjjjjjlkjjllkjljljlsk;jf;alfj;lashdflsjgkl;sjdfl;jas")
+    cart_items = CartItem.objects.filter(user=request.user, is_active = True)
     for cart in cart_items:
         if cart.variant.variant_stock > 0:
             cart.delete()
@@ -617,9 +704,15 @@ def order_summery(request, bulk_order_id):
     orders = Order.objects.filter(bulk_order_id = bulk_order_id)
     print(bulk_order_id,"got it bulk order id")
     order_user = request.user
+    # coupon_amount = orders.coupon.discount_price
+    # total_amount = orders.total_amount+coupon_amount
     context = {
     "orders":orders,
     "user":order_user,
+    # "total_amount":total_amount,
     }
     return render(request, "orders/order_summery.html",context)
+    # return render(request, "orders/sample.html",context)
+
+
 

@@ -1,5 +1,12 @@
 {% extends 'layouts/main.html' %}
 {% load static %}
+{% block head %}
+	<!-- aleartyfy js-->
+	<!-- CSS -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+	<!-- Default theme -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+{% endblock head %}
 {% block body %} 
 
  <style>
@@ -23,7 +30,7 @@
                 {% csrf_token %}
             </div>
                 
-                <form action="{% url 'order_payment' %}" class="billing-form" method="post">
+                <form action="{% url 'order_payment' coupon_id %}" class="billing-form" method="post">
                     {% csrf_token %}
                   
                     <h3 class="mb-4 billing-heading">Billing Details</h3>
@@ -92,57 +99,80 @@
                                             Cash on Delivery (COD)
                                         </label>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="payment" value="wallet" id="cashondelivery" required>
+                                        <label class="form-check-label" for="cashOnDelivery">
+                                            Wallet
+                                        </label>
+                                    </div>
                                 </div>
                                 <!-- Order Summary details here -->
                                 <p>Total: ₹ {{ total }}</p>
                                 <p>Tax: ₹ {{ tax }}</p>
+                                <p>Coupon Discount: ₹ {{ coupon_amount }}</p>
                                 <p>Grand Total: ₹ {{ grand_total }}</p>
                                 <input type="submit" value="Place order" class="btn btn-primary py-3 px-4" style="padding-left: 20px; padding-right: 20px;">
-                                </div>
+                            </div>
                         </div>
-                    </div>
-                    </div>
+                    
                 </form>
                                             
                 <div class="col-md-6">
                     <div class="cart-detail bg-light p-3 p-md-4">
                         <h3 class="billing-heading mb-4">Apply Coupon Code</h3>
                         
-                        <form action="{% url 'checkout' %}" method="POST"> {% csrf_token %}
+                        <form action="{% url 'checkout' %}" method="POST">
+                            {% csrf_token %}
                             <div class="form-group">
                                 <label for="couponCode">Coupon Code:</label>
-                                <input type="text" class="form-control" id="couponCode" name="couponCode" placeholder="Enter your coupon code">
+                                <select class="form-control" id="couponCode" name="CouponCode">
+                                    {% if coupons|length == 0 %}
+                                    <option value="">No coupons are available for this price range.</option>
+                                    
+                                    {% else %}
+                                    <option value="">Select a coupon</option>
+                                    {% for coupon in coupons %}
+                                    <option value="{{ coupon.code }}">
+                                        {{ coupon.code }}
+                                        
+                                    </option>
+                                    {% endfor %}
+                                    {% endif %}
+                                </select>
                             </div>
+                            {% if coupons|length == 0 %}
                             
+                            {% else %}
                             <button type="submit" class="btn btn-primary py-3 px-4 mt-3">
                                 Apply Coupon
                             </button>
+                            {% endif %}
+                            
                         </form>
                     </div>
                 </div>
                 
                 
                 
+            </div>
+
             </div> <!-- .col-md-8 -->
         </div>
     </div>
 </section> <!-- .section -->
+
+
+
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+      <!-- aleartyfy js -->
+      <script>
+        alertify.set('notifier','position', 'top-right');
+  
+        {% for msg in messages %}
+            alertify.success('{{ msg }}');
+        {% endfor %}
+      </script>
+
+    
+
 {% endblock body %}
-
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-    <script>
-        document.getElementById("orderButton").addEventListener("click", function() {
-          Swal.fire({
-            icon: 'success',
-            title: 'Order Successful!',
-            text: 'Your order has been placed successfully.',
-            showConfirmButton: false,
-            timer: 2000 // Close after 2 seconds
-          });
-        });
-        </script>
-        
-</script>

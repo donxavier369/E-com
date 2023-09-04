@@ -2,7 +2,7 @@ from django.urls import path, re_path
 from user  import views
 
 urlpatterns = [
-    path('',views.home,name="home"),
+    # path('',views.home,name="home"),
     path('signup',views.handlesignup,name="handlesignup"),
     path('login',views.handlelogin,name="handlelogin"),
     path('logout',views.handlelogout,name="handlelogout"),
@@ -34,8 +34,9 @@ urlpatterns = [
 
     # orders
     path('order_detail',views.order_detail, name="order_detail"),
-    path('order_detail_view/<int:order_id>',views.order_detail_view,name="order_detail_view"),
+    path('order_detail_view/<uuid:bulk_order_id>',views.order_detail_view,name="order_detail_view"),
     path('cancel_order/<int:order_id>/',views.cancel_order,name="cancel_order"),
+    
 
 
 

@@ -37,7 +37,11 @@
 
 
           {% comment %} <a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProductModal" onclick="editProductModal({{ product.id }})">Edit</a> {% endcomment %}
+          {% if order.status == "Cancelled" %}
+          <td><p  class="mt-4"style = "color: #ee5959">Cancelled</p></td>
+          {% else %}
           <td><a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProductModal{{ order.id }}">Edit Status</a></td>
+          {% endif %}
           <td><a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#detailProductModal{{ order.id }}">Details</a></td>
 
         </tr>
@@ -92,13 +96,6 @@
           {% csrf_token %}
      
           <div class="form-group">
-              <label for="editProductStatus">Status</label>
-              <select class="form-control" id="editProductStatus" name="status">
-                <option value="">Select Status</option>
-                {% for status in statuses %}
-                <option value="{{ status.0 }}" {% if order.id == order.id %}selected{% endif %}>{{ status.1 }}</option>
-                {% endfor %}
-              </select>
             <p>Order ID : {{order.id}}</p>
             <p>Bulk Order ID : {{order.bulk_order_id}}</p>
             <p>Order Date : {{order.created_at}}</p>
@@ -113,7 +110,6 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Cancel Order</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </form>

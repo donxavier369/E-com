@@ -1,0 +1,186 @@
+{% extends 'Admin/adminlayouts/main.html' %}
+{% block title %}Category{% endblock title %}
+{% load static %}
+
+
+{% block body %}
+
+
+<!-- Table Start -->
+<div class="col-sm-12 col-xl-6" style="width: auto;">
+    <div class="bg-light rounded h-100 p-4 mt-5">
+        <button class="btn btn-primary float-end align" data-bs-toggle="modal" data-bs-target="#addProductModal">Add New Coupon</button>
+
+                
+        <!-- Add Coupon Modal -->
+        <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+        
+                <h5 class="modal-title" id="addProductModalLabel">Add New Coupon</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <!-- Add form fields here -->
+                <form method="POST" action="{% url 'add_coupon' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                    <label for="coupon_id">Coupon Name</label>
+                    <input type="text" class="form-control" id="coupon_id" name="coupon_id" min="0" required>
+                    </div>
+                
+                    
+                    <div class="form-group">
+                    <label for="Is_available">Is_available</label>
+                    <select class="form-control" id="Is_available" name="Is_available" required>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select> 
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="product_name">Discount_price</label>
+                        <input type="text" class="form-control" id="product_name" name="discount_price" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product_name">Start Date</label>
+                        <input type="date" class="form-control" id="product_name" name="start_date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product_name">End Date</label>
+                        <input type="date" class="form-control" id="product_name" name="end_date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product_name">Minimum_price</label>
+                        <input type="text" class="form-control" id="product_name" name="min_price" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product_name">Maximum_price</label>
+                        <input type="text" class="form-control" id="product_name" name="max_price" required>
+                    </div>
+        
+                    <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+                </div>
+            </div>
+            </div>
+        </div>
+        <h6 class="mb-4">category Table</h6>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Coupon_Id</th>
+                    <th scope="col">Discount_Price</th>
+                    <th scope="col">Is_available</th>
+                    <th scope="col">Date Range</th>
+                    <th scope="col">Price Range</th>
+                    <th scope="col">Actions</th><!-- Add a new column for Actions -->
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for coupon in coupons %}
+                <tr>
+                    <th scope="row">{{ coupon.code }}</th>
+                    <td>{{ coupon.discount_price }}</td>
+                    <td>{{ coupon.is_active }}</td>
+                    <td>{{ coupon.start_date }} -- {{ coupon.end_date }}</td>
+                    <td>{{ coupon.min_price}} - {{coupon.max_price}}</td>
+
+
+                    <!-- Actions column with flexbox utility classes -->
+                     <td class="d-flex align-items-center justify-content-center">
+            
+                        <a href="#" class="btn btn-outline-dark mt-2" data-bs-toggle="modal" data-bs-target="#editProductModal{{ coupon.id }}">Edit</a>
+
+                    </td> 
+                    <td>
+                    {% if coupon.is_active %}
+                    <a href="{% url 'coupon_block' coupon.id %}" class="btn btn-outline-danger mx-1 mt-2 px-3">Block</a>
+                  {% else %}
+                    <a href="{% url 'coupon_unblock' coupon.id %}" class="btn btn-outline-success mx-1 mt-2">Unblock</a>
+                  {% endif %}
+                </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Table End -->
+
+
+
+
+
+{% for coupon in coupons %}
+<!-- Edit Product Modal -->
+<div class="modal fade" id="editProductModal{{ coupon.id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ coupon.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editProductModalLabel{{ coupon.id }}">Edit Coupon</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'edit_coupon' coupon.id %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="hidden" name="product_id" value="{{ coupon.id }}">
+          <div class="form-group">
+            <label for="editProductName{{ coupon.id }}" class="form-label">Coupon Id</label>
+            <input type="text" class="form-control" id="editProductName{{ coupon.id }}" name="coupon_id" value="{{ coupon.code }}" style="margin-bottom:10px;" required>
+          </div>
+
+          
+          <div class="form-group">
+            <label for="editProductName{{ coupon.id }}" class="form-label">Discount_price</label>
+            <input type="number" class="form-control" id="editProductName{{ coupon.id }}" name="discount_price" value="{{ coupon.discount_price }}" style="margin-bottom:10px;" min="0" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editProductName{{ coupon.id }}" class="form-label">Start Date</label>
+            <input type="text" class="form-control datepicker" id="editProductName{{ coupon.id }}" name="start_date" value="{{ coupon.start_date }}" style="margin-bottom: 10px;" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editProductName{{ coupon.id }}" class="form-label">End Date</label>
+            <input type="text" class="form-control datepicker" id="editProductName{{ coupon.id }}" name="end_date" value="{{ coupon.end_date }}" style="margin-bottom: 10px;" required>
+          </div>
+        
+          <div class="form-group">
+            <label for="editProductName{{ coupon.id }}" class="form-label">Minimum_price</label>
+            <input type="number" class="form-control" id="editProductName{{ coupon.id }}" name="min_price" value="{{ coupon.min_price }}" style="margin-bottom:10px;" min="0" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editProductName{{ coupon.id }}" class="form-label">Maximum_price</label>
+            <input type="number" class="form-control" id="editProductName{{ coupon.id }}" name="max_price" value="{{ coupon.max_price }}" style="margin-bottom:10px;" min="0" required>
+          </div>
+          {% comment %} <div class="form-group">
+            <label for="editProductDescription{{ category.id }}" class="form-label">Category Description</label>
+            <textarea class="form-control" id="editProductDescription{{ category.id }}" name="category_description" rows="4" required>{{ category.description }}</textarea>
+          </div> {% endcomment %}
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+
+
+{% endblock body %}

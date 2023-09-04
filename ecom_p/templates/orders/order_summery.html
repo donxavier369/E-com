@@ -55,10 +55,10 @@
                       <p class="text-muted mb-0">{{order.product.product_name}}</p>
                     </div>
                     <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                      <p class="text-muted mb-0 small">White</p>
+                      <p class="text-muted mb-0 small">{{order.variant.variant_colour}}</p>
                     </div>
                     <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                      <p class="text-muted mb-0 small">Capacity: 64GB</p>
+                      <p class="text-muted mb-0 small">Type: {{order.product.category.category_name}}</p>
                     </div>
                     <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                       <p class="text-muted mb-0 small">Qty: {{ order.quantity }}</p>
@@ -93,14 +93,23 @@
               {% if forloop.first %}
               <div class="card mb-4">
                   <div class="card-body">
+                    {% comment %} 
+                      <div class="d-flex justify-content-between pt-2">
+                        <p class="text-muted mb-0" style="display: none;">Order_id : </p>
+                        <p class="text-muted mb-0" style="text-align: right"><span class="fw-bold me-4">Total Amount : </span>₹{{total_amount}}</p>
+                    </div> {% endcomment %}
                       <div class="d-flex justify-content-between pt-2">
                           <p class="text-muted mb-0">Order_id : {{ order.bulk_order_id }}</p>
-                          <p class="text-muted mb-0"><span class="fw-bold me-4">Discount</span> $19.00</p>
+                          {% if order.coupon.discount_price is None %}
+                          <p class="text-muted mb-0"><span class="fw-bold me-4">Coupon Discount : </span>₹0.00</p>
+                          {% else %}
+                          <p class="text-muted mb-0"><span class="fw-bold me-4">Coupon Discount : </span>₹{{order.coupon.discount_price}}</p>
+                          {% endif %}
                       </div>
           
                       <div class="d-flex justify-content-between">
                           <p class="text-muted mb-0">Date : {{ order.created_at }}</p>
-                          <p class="text-muted mb-0"><span class="fw-bold me-4">GST 2%</span> {{ order.tax }}</p>
+                          <p class="text-muted mb-0"><span class="fw-bold me-4">GST 2%</span> ₹{{ order.tax }}</p>
                       </div>
           
                       <div class="d-flex justify-content-between mb-5">

@@ -26,8 +26,7 @@ def home(request):
 def contact(request):
     return render(request,'contact.html')
 
-def checkout(request):
-    return render(request,'checkout.html')
+
 
 # def payment(request):
 #     return render(request, 'payment.html')
@@ -41,7 +40,6 @@ def about(request):
 
 def banner(request):
     banners = Banner.objects.all().filter(is_available=True)
-    print(banner,"44444444444444444444444444444444444")
     context={
         'banners':banners
     }
@@ -49,23 +47,25 @@ def banner(request):
 
 
 
-def shop(request):
-    products = Product.objects.filter(is_available=True)
-    context = {
-        'products': products,
-    }
-    return render(request, 'store/shop.html', context)
+# def shop(request):
+#     products = Product.objects.filter(is_available=True)
+#     context = {
+#         'products': products,
+#     }
+#     return render(request, 'store/shop.html', context)
 
 
 def product_details(request, productid):
     single_product = Product.objects.get(id=productid)
     variation = Variant.objects.filter(product=productid)
+
     wishlist = Wishlist.objects.all()
     print(variation,"9999909990990990909")
     print(single_product.id,"0000000000000000000")
   # Create a list of variant IDs in the wishlist
     wishlist_variant_ids = [item.variant.id for item in wishlist]
     
+
     context = {
         'single_product': single_product,
         'variation': variation,
@@ -73,34 +73,19 @@ def product_details(request, productid):
     }
     return render(request, 'store/product_detail.html', context)
 
-from django.http import JsonResponse
 
-def get_variant_stock_status(request):
-    if request.method == 'GET':
-        variant_id = request.GET.get('variantId')
-        # Perform logic to get the stock status of the selected variant based on variant_id
-        # For example, you might query your database for the stock status.
-        variant = Variant.objects.get(id == variant_id)
-        if variant.variant_stock < 1:
-            variant_stock_status = False
-        else:
-            # Dummy logic for demonstration purpose
-            variant_stock_status = True  # Assuming the variant is in stock
-
-        response_data = {
-            'stock_status': variant_stock_status,
-        }
-        return JsonResponse(response_data)
-    else:
-        # Handle other HTTP methods if needed
-        pass
 
 
 def store(request):
+    
     products = Product.objects.filter(is_available=True)
     categories = Category.objects.filter(is_available=True)
+    paginator = Paginator(products, 2)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
+    print(products)
     context = {
-        'products': products,
+        'products': paged_products,
         'categories':categories,
     }
     return render(request, 'store/shop.html', context)
@@ -108,10 +93,12 @@ def store(request):
 def categories(request, categoryid):
     products = Product.objects.filter(category=categoryid)
     categories = Category.objects.filter(is_available=True)
-
+    paginator = Paginator(products, 4)
+    page = request.GET.get('page')
+    paged_products = paginator.get_page(page)
     print(products)
     context = {
-        'products':products,
+        'products':paged_products,
         'categories':categories,
 
     }
@@ -122,16 +109,17 @@ def categories(request, categoryid):
 def get_variant_details(request):
     
     variant_id = request.GET.get('variantId')
-    print(variant_id,"hrlooooooooooooooooo")
     try:
         print('yes inside')
         variant = Variant.objects.select_related('product').get(id=variant_id)
+        stock_status = variant.variant_stock > 0 
         variant_data = {
             'variant_image': variant.variant_image.url,
             'variant_name': variant.product.product_name,
             'variant_stock': variant.variant_stock, 
             'variant_status': variant.is_available,
-            # Include other variant details as needed
+            'stock_status' : stock_status,
+            
         }
         print(variant_data['variant_stock'])
 
@@ -139,6 +127,15 @@ def get_variant_details(request):
     except Variant.DoesNotExist:
         return JsonResponse({'error': 'Variant not found'}, status=404)
 
+
+def get_variant_stock_status(request):
+    if request.method == 'GET' and request.is_ajax():
+        variant_id = request.GET.get('variantId')
+        variant = get_object_or_404(Variant, id=variant_id)  # Replace with your model's field names
+        print(variant,"vvvvvvvvvvvv")
+        stock_status = variant.variant_stock > 0  # Adjust this condition based on your model's stock field
+        return JsonResponse({'stock_status': stock_status})
+    return JsonResponse({}, status=400)
 
 
 

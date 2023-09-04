@@ -22,6 +22,7 @@ class Category(models.Model):
 
 class Brand(models.Model):
     brand_name = models.CharField(max_length=50)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self) -> str:
         return self.brand_name

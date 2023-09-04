@@ -38,11 +38,9 @@
                 <div class="px-3">
                   <a class="mb-1 h5" href="{% url 'order_detail' %}">Orders</a>
                 </div>
+   
                 <div class="px-3">
                   <a class="mb-1 h5" href="{% url 'wishlist' %}">Wishlist</a>
-               
-           
-                
               </div>
             </div>
 
@@ -63,6 +61,8 @@
                   <input type="submit" class="btn btn-outline-dark" value="profile" data-toggle="modal" data-target="#myProfile"></input>
                   <input type="submit" class="btn btn-outline-dark" value="Logout" data-toggle="modal" data-target="#myModal"></input>
                   <input type="submit" class="btn btn-outline-dark" value="password" data-toggle="modal" data-target="#ChangePassword"></input>
+                  <input type="submit" class="btn btn-outline-dark" value="wallet" data-toggle="modal" data-target="#Wallet"></input>
+
 
 
                   <div class="modal" tabindex="-1" role="dialog" id="myModal">
@@ -87,6 +87,27 @@
                     </div>
                   </div>
 
+                  <!--wallet-->
+                  <div class="modal" tabindex="-1" role="dialog" id="Wallet">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title">Wallet Amount</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <p>Your Wallet Amount : ₹{{wallet.wallet_amount}}</p>
+                        </div>
+                        <div class="modal-footer">
+                          {% comment %} <input type="submit" class="btn btn-danger" value="Continue"></input> {% endcomment %}
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                      </form>
+                      </div>
+                    </div>
+                  </div>
 
 
                   <!--edit profile-->

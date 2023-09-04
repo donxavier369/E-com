@@ -3,27 +3,37 @@
 {% block head %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+
+<script>
+	function validateQuantity(input) {
+		console.log("validateQuantity.............",input)
+		var value = parseInt(input.value);
+		if (isNaN(value) || value < 0) {
+			input.value = 1; // Set to the minimum value
+		}
+	}
+</script>
 {% endblock head %}
 {% block body %} 
     
 
 
-{% comment %} <div class="hero-wrap hero-bread" style="background-image: url('{{ cart_item.product.images.url }}');">
+<div class="hero-wrap hero-bread" style="background-image: url('{% static 'images/bg_6.jpg' %}');">
 	<div class="container">
-        <div class="row no-gutters slider-text align-items-center justify-content-center">
-          <div class="col-md-9 ftco-animate text-center">
-          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Cart</span></p>
-            <h1 class="mb-0 bread">My Cart</h1>
-          </div>
-        </div>
-      </div>
-    </div> {% endcomment %}
+	  <div class="row no-gutters slider-text align-items-center justify-content-center">
+		<div class="col-md-9 ftco-animate text-center">
+			<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Cart</span></p>
+		  <h1 class="mb-0 bread">My Cart</h1>
+		</div>
+	  </div>
+	</div>
+  </div>
 {% if not cart_items %}
 <!--messages-->
 
 <h2 class="text-center">Your Shopping Cart Is Empty!</h2><br>
 <div class="text-center">
-  <a href= {% url 'shop' %} class="btn btn-black py-3 px-5 mb-5">Continue Shopping...</a>
+  <a href= {% url 'store' %} class="btn btn-black py-3 px-5 mb-5">Continue Shopping...</a>
 </div>
 
 {% else %}
@@ -47,7 +57,7 @@
                             {% for cart_item in cart_items  %}
 						    <tbody>
 						      <tr class="text-center">
-						        <td class="product-remove"><a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}"  onclick="return confirm('Are you sure you want to delete this item?')"><span class="ion-ios-close"></span></a></td>
+						        <td class="product-remove"><a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}"  onclick="return confirm('Are you sure you want to delete this item?')"><span class="fas fa-close"></span></a></td>
 						        
 						        <td class="image-prod"><div class="img" style="background-image:url('/media/{{ cart_item.variant.variant_image }}')" height="70" width="90"></div></td>
 						        
@@ -70,18 +80,29 @@
 										<p>out of stock</p>
 									{% else %}
 									<p>{{cart_item.id}}...{{cart_item.quantity}}</p>
-								 	 <div class="input-group text-center mb-3 " style="width: 150px;">
+								 	 {% comment %} <div class="input-group text-center mb-3 " style="width: 150px;">
 										<a onclick="changeQuantity('{{ cart_item.id }}', -1, this.parentNode)" class="input-group-text  btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center;justify-content: center;width: 25px;height: 53px;">-</a>
-										<input type="text" name="quantity" class="form-control text-center" value="{{ cart_item.quantity }}">
+										<input type="text" name="quantity" class="form-control text-center qty-text" value="{{ cart_item.quantity }}">
 										<a onclick="changeQuantity('{{ cart_item.id }}', 1, this.parentNode)" class="input-group-text  btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center;justify-content: center;width: 25px;height: 53px;">+</a>
-									</div> 
-	
+									</div>  {% endcomment %}
+
+									<div class="input-group text-center mb-3" style="width: 150px;">
+										<a onclick="updateQuantity('{{ cart_item.id }}', -1)" class="input-group-text btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center; justify-content: center; width: 25px; height: 53px;">-</a>
+										<input type="text" name="quantity" class="form-control text-center qty-text" value="{{ cart_item.quantity }}" onchange="validateQuantity(this)">
+										<a onclick="updateQuantity('{{ cart_item.id }}', 1)" class="input-group-text btn btn-primary increment-btn mx-2" style="display: flex; align-items: center; justify-content: center; width: 25px; height: 53px;">+</a>
+									</div>
+									
+						
+									
+									
+									{% comment %} <input type="text" name="quantity" class="form-control text-center" value="{{ cart_item.quantity }}"> {% endcomment %}
+
 								{% endif %} 
 								
 					            </td>
 						        
 						        <td class="total">
-									₹{{ cart_item.cart_price  }}
+									 ₹{{ cart_item.cart_price  }} 
 
 								  </td>
 						      </tr><!-- END TR-->
@@ -91,7 +112,7 @@
 							{% endfor %}
 						  </table>
 							<div class="align-item-center text-right">
-								<a href="{% url 'shop' %}" class="btn btn-black py-3 px-5 mb-5">Continue Shopping...</a>
+								<a href="{% url 'store' %}" class="btn btn-black py-3 px-5 mb-5">Continue Shopping...</a>
 							</div>
 					</div>
     			</div>
@@ -103,28 +124,32 @@
     					<h3>Cart Totals</h3>
     					<p class="d-flex">
     						<span>Subtotal</span>
-    						<span>₹{{total}}</span>
+    						<span class="total">₹{{total}}</span>
     					</p>
     					<p class="d-flex">
-    						<span>Delivery</span>
+    						<span>Delivery Charge</span>
     						<span>₹0.00</span>
     					</p>
 						<p class="d-flex">
     						<span>Tax</span>
-    						<span>₹{{tax}}</span>
+    						<span class="tax">₹{{tax}}</span>
+						 
     					</p>
     				
     					<hr>
     					<p class="d-flex total-price">
     						<span>Total</span>
-    						<span>₹{{grand_total}}</span>
+    						<span class="grand_total">₹{{grand_total}}</span>
     					</p>
+					
+
 						{% if grand_total == 0 %}
-						<p style="color: #df9595">Out Of Stock Add Anoter Item For Continue Shopping...</p>
+							<p style="color: #df9595">Out Of Stock Add Another Item To Continue Shopping...</p>
 						{% else %}
-						<p class="text-center"><a href="{% url 'checkout' %}" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+							<p class="text-center"><a href="{% url 'checkout' %}" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
 						{% endif %}
-						
+
+												
     				</div>
     				
     			</div>
@@ -140,7 +165,7 @@
 
   <!-- loader -->
   {% comment %} <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div> {% endcomment %}
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  {% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script> {% endcomment %}
 
 
   <script src="js/jquery.min.js"></script>
@@ -160,14 +185,121 @@
   <script src="js/google-map.js"></script>
   <script src="js/main.js"></script>
 
+{% csrf_token %}
+<script>
+    function updateQuantity(itemId, change) {
 
+        console.log(itemId, "kittyyyyyyyyyyyyyyyyy")
+        var csrfToken = $("input[name='csrfmiddlewaretoken']").val(); // Get the CSRF token from the input field
+
+        $.ajax({
+            type: "POST",
+            url: "update_quantity", // Replace with your backend endpoint to update quantity
+            data: {
+                csrfmiddlewaretoken: csrfToken, // Include the CSRF token in the data
+                item_id: itemId,
+                change: change
+            },
+            success: function (response) {
+                // Assuming the response contains the updated quantity value
+				var updatedPrice = response.updated_price;
+                var updatedQuantity = response.updated_quantity;
+				var tax = response.tax;
+				var grand_total = response.grand_total;
+                $(".qty-text").val(updatedQuantity); // Update the input field value
+				$(".total").html("₹" + updatedPrice); // Update the total price
+				$(".tax").html("₹" + tax);
+				$(".grand_total").html("₹" + grand_total);
+				console.log(tax,"taxxxxxxxxxx")
+				console.log(updatedPrice,"updatedddddddddddddd")
+				console.log(grand_total,"grand_totalllllllll")
+            },
+            error: function () {
+                console.log("Error updating quantity.");
+            }
+        });
+    }
+</script> 
+{% comment %} 
+<script>
+    function updateQuantity(itemId, change) {
+        console.log(itemId, "kittyyyyyyyyyyyyyyyyy");
+        var csrfToken = $("input[name='csrfmiddlewaretoken']").val();
+
+        $.ajax({
+            type: "POST",
+            url: "update_quantity", // Replace with your backend endpoint to update quantity
+            data: {
+                csrfmiddlewaretoken: csrfToken,
+                item_id: itemId,
+                change: change
+            },
+            success: function (response) {
+                if (response.grand_total === 0) {
+                    // Update the message for zero grand total
+                    $(".message-container").html("<p style='color: #df9595'>Out Of Stock Add Another Item To Continue Shopping...</p>");
+                } else {
+                    // Update the message and checkout link
+                    $(".message-container").html("<p class='text-center'><a href='{% url 'checkout' %}' class='btn btn-primary py-3 px-4'>Proceed to Checkout</a></p>");
+                }
+
+                var updatedPrice = response.updated_price;
+                var updatedQuantity = response.updated_quantity;
+                var tax = response.tax;
+                var grand_total = response.grand_total;
+                $(".qty-text").val(updatedQuantity);
+                $(".total").html("₹" + updatedPrice);
+                $(".tax").html("₹" + tax);
+                $(".grand_total").html("₹" + grand_total);
+                console.log(tax, "taxxxxxxxxxx");
+                console.log(updatedPrice, "updatedddddddddddddd");
+                console.log(grand_total, "grand_totalllllllll");
+            },
+            error: function () {
+                console.log("Error updating quantity.");
+            }
+        });
+    }
+</script> {% endcomment %}
+
+
+
+
+<script>
+	$(document).ready(function() {
+		console.log("decrementttttttttttttttttt")
+		$('.decrement-btn').click(function() {
+			var input = $(this).parent().next('input[type="text"]');
+			var value = parseInt(input.val());
+			if (value > 1) {
+				input.val(value - 1);
+			}
+		});
+
+		$('.increment-btn').click(function() {
+			console.log("incrementttttttttttttt")
+
+			var input = $(this).parent().prev('input[type="text"]');
+			var value = parseInt(input.val());
+			var max = parseInt(input.attr('max'));
+			if (value < max) {
+				input.val(value + 1);
+			}
+		});
+	});
+
+</script>
+
+
+
+{% comment %} 
 	<script>                               
-		function changeQuantity(itemId, change, parent) {
-		  console.log(itemId,"item id")
+		function changeQuantity(itemId, change, parent, event) {		  
+		  console.log(itemId,"item id helooooo")
 		  console.log(change,"change")
-		  console.log(parent,"parent")
+		  console.log(parent,"parentttttttttttt")
 			var quantityInput = parent.querySelector('.qty-text');
-			
+			console.log(quantityInput ,"glkadak;dj")
 			var quantity = parseInt(quantityInput.value);
 			console.log(quantity,"quantity")
 			var ma = parseInt(document.getElementById('mj-'+itemId).value);
@@ -175,7 +307,7 @@
 			console.log("total-------", ma);
 		  
 			if (!isNaN(quantity)) {
-			  console.log(change);
+			  console.log(change,"changeeeeeeeeeee");
 		  
 			  if (change === -1) {
 				clearErrorMessage(itemId);
@@ -197,6 +329,7 @@
 		  
 			  if (quantity >= 1) {
 				quantityInput.value = quantity;
+				console.log("if work")
 		  
 				// Prevent form submission
 				event.preventDefault();
@@ -207,6 +340,7 @@
 				console.log("error detected");
 			  }
 			}
+			console.log("0000000000000")
 		  }
 		  
 		  function displayErrorMessage(itemId, message) {
@@ -224,7 +358,7 @@
 		function  updateCartItem(itemId, quantity) {
 			console.log(itemId,"itemId")
 			//var url = "{% url 'update_cart_item' 0 %}".replace('0', itemId);
-			var url = "/update_cart_item/" + itemId + "/";  // Construct the URL with itemId
+			var url = "/update_cart_item" + itemId + "/";  // Construct the URL with itemId
 			var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 		  
 			$.ajax({
@@ -256,7 +390,7 @@
 			}); 
 		}
   
-	</script>
+	</script> {% endcomment %}
     
 
 </html>

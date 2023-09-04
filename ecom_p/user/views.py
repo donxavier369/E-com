@@ -21,7 +21,7 @@ import requests
 from .models import Profile
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.hashers import make_password
-from orders.models import Order
+from orders.models import Order,Wallet
 # Load environment variables from .env file in the current directory
 load_dotenv()
 
@@ -38,19 +38,25 @@ verify = client.verify.services(os.environ['TWILIO_VERIFY_SERVICE_SID'])
 
 
 
-def home(request):
-    if request.user.is_authenticated and request.user.is_superuser==False:
-        products = Product.objects.all().filter(is_available=True)
-        print(products)
-        context = {
-            'products': products,
+# def home(request):
+#     if request.user.is_authenticated and request.user.is_superuser==False:
+#         products = Product.objects.all().filter(is_available=True)
+#         print(products)
+#         context = {
+#             'products': products,
            
-        }
-        return render(request,'layouts/index.html',context)
-    else:
-        logout(request)
-        request.session.flush()
-        return render(request,'layouts/index.html')        
+#         }
+#         return render(request,'layouts/index.html',context)
+#     else:
+#         logout(request)
+#         request.session.flush()
+#         products = Product.objects.all().filter(is_available=True)
+#         print(products)
+#         context = {
+#             'products': products,
+           
+#         }
+#         return render(request,'layouts/index.html',context)        
 
 @never_cache
 def handlesignup(request):
@@ -75,7 +81,7 @@ def handlesignup(request):
 
         try:
             if phone:
-                print(phone)
+                print(phone,"phoneeeeeeeeeeeeeeeeeee")
                 send(phone)
                 # return redirect("signup_otp",phone=phone)
             else:
@@ -127,7 +133,7 @@ def handlelogin(request):
             print("888888888888888")
             if myuser.is_superuser:
                 login(request,myuser)
-                # messages.success(request,"Login Success")
+                messages.success(request,"Login Success")
                 return redirect("admin_page")
             else:
                 try:
@@ -164,8 +170,18 @@ def handlelogout(request):
 
 
 
+# def send(phone):
+#     print(phone,"successfully sended")
+#     verify.verifications.create(to=phone, channel='sms')
+from twilio.base.exceptions import TwilioRestException
+
 def send(phone):
-    verify.verifications.create(to=phone, channel='sms')
+    print(phone,"successfully got phone number")
+    try:
+        verify.verifications.create(to=phone, channel='sms')
+        print("OTP sent successfully to", phone)
+    except TwilioRestException as e:
+        print("Error sending OTP:", e)
 
 
 def check(phone, code):
@@ -208,10 +224,12 @@ def enter_mobile(request,id):
 
 def verify_phone(request):
     if request.method == 'POST':
-        phone = request.POST.get('phone')
+        # phone = request.POST.get('phone')
+        phone = "+917907700528"
         try:
-            user = CustomUser.objects.get(phone=phone)
+            # user = CustomUser.objects.get(phone=phone)
             send(phone)
+            print('phoneeeeeeeeeeeeeeeeeeeee',phone)
             # return redirect("signup_otp",phone=phone)
             return render(request,"register/otp_phone.html",{"id":user.id, "phone":user.phone},)
 
@@ -227,12 +245,18 @@ def verify_phone(request):
 # profile management
 
 @login_required(login_url='handlelogin')
-def user_profile(request):
+def user_profile(request, wallet = 0):
     bool = True
     user = CustomUser.objects.get(pk=request.user.pk)
+    try:
+        wallet = Wallet.objects.get(user=request.user)
+    except:
+        pass
+    print(wallet,"walllllllllllllll")
     context = {
         'user': user,
-        'show_footer': bool
+        'show_footer': bool,
+        'wallet':wallet,
     }
     return render(request, 'Profile/user_profile.html', context)
 
@@ -241,15 +265,16 @@ def edit_profile(request):
     if request.method == 'POST':
         name = request.POST.get("name")
         email = request.POST.get("email")
-        phone = '+91'+request.POST.get("phone")
-        print(name)
-        print(email)
+        phone = request.POST.get("phone")
+        print(name,"nameeeee")
+        print(email,"emaiiiiiiiiiiiiii")
         current_user = request.user
         user = CustomUser.objects.get(id=current_user.id)
-        user.name = name,
-        user.email = email,
-        user.phone = phone,
+        user.name = name
+        user.email = email
+        user.phone = phone
         user.save()
+ 
         return redirect('user_profile')
     return render(request, 'Profile/user_profile.html')
 
@@ -294,7 +319,7 @@ def add_address(request):
         else:
             profile.set_default = True
             profile.save()    
-
+        messages.success(request,"Your address has been added successfully")
         return redirect('address')
 
     return render(request,'Profile/address.html')
@@ -321,6 +346,7 @@ def edit_address(request,id):
         address.city = address_city
         print(address_city)
         address.save()
+        messages.success(request, "Your address has been successfully edited")
         return redirect('address')
 
     return render(request,'Profile/address.html')
@@ -329,6 +355,7 @@ def edit_address(request,id):
 def delete_address(request, id):
     if request.method == 'POST':
         del_address = Profile.objects.get(id=id, user=request.user)
+        print(del_address,"del addressssssssss")
         if del_address.set_default == True:
             del_address.delete()
             set_another_default = Profile.objects.filter(user=request.user)
@@ -338,7 +365,7 @@ def delete_address(request, id):
                 set_another_default[0].save()
         else:
             del_address.delete()
-           
+        messages.info(request, "Your selected address has been successfully deleted.")
         return redirect('address')
  
 
@@ -355,7 +382,7 @@ def set_default(request, id):
                 default_address.save()
         except Profile.DoesNotExist:
             pass
-      
+        messages.success(request, "Your selected address has been set as the default for your future product purchases.")
         return redirect('address')
     return render(request,'profile/address.html' )
 
@@ -446,7 +473,7 @@ def change_password_profile(request):
 
 def order_detail(request):
     bool = True
-    orders = Order.objects.filter(user=request.user)
+    orders = Order.objects.filter(user=request.user,)
     print(orders,"ooooooooooooooooo ")
 
 
@@ -457,30 +484,53 @@ def order_detail(request):
     }
     return render(request,"profile/order_detail.html",context)
 
-def order_detail_view(request,order_id):
+def order_detail_view(request,bulk_order_id, price=0):
+    print(bulk_order_id,"bulk KKKKKKKKKK")
     bool = True
-    orders = Order.objects.get(id=order_id)
-    product_id = orders.product.id
-    product = Product.objects.get(id=product_id)
+    orders = Order.objects.filter(bulk_order_id = bulk_order_id)
+    order = Order.objects.filter(bulk_order_id=bulk_order_id).first()
+    print(orders,"ordersssssssssssssss")
+    
+    for ord in orders:
+        price += int(ord.unit_amount)
    
     context = {
         'show_footer': bool,
-        'order':orders,
-        'product':product,
+        'orders':orders,
+        'order':order,
+        'price':price,
+       
     }
     return render(request,"profile/order_detail_view.html",context )
 
 def cancel_order(request,order_id):
-    current_order = Order.objects.get(id=order_id)
+    current_order = Order.objects.get(order_number=order_id)
     current_order.status = "Cancelled"  
-    current_order.save()  
+    current_order.save() 
+    cancel_order_price = int(current_order.unit_amount)
+    print(cancel_order_price,"11111111111111")
+    try:
+        wallet = Wallet.objects.filter(user=request.user).first()
+        print(wallet,"2222222222222")
+    except:
+        pass
+
+    if wallet is None:
+        wallet = Wallet.objects.create(user=request.user, wallet_amount = 0)
+        print(wallet,"333333333333")
+
+
+    wallet.wallet_amount += cancel_order_price 
+    print(wallet.wallet_amount,"44444444444444")
+    wallet.save()
+    bulk_order_id = current_order.bulk_order_id
     print(current_order.status,"cancelledddddddddddddddd")
-    return redirect(order_detail_view,order_id)
+    return redirect(order_detail_view,bulk_order_id)
 
 
 # wishlist
 
-
+@login_required(login_url='handlelogin')
 def wishlist(request):
     wishlists = Wishlist.objects.all()
     bool = True
@@ -494,7 +544,7 @@ def add_to_wishlist(request,variant_id):
     variant = get_object_or_404(Variant, id=variant_id)
     print(variant_id,"varianttttttttttttt")
     product = variant.product
-    wishlist_entry = Wishlist.objects.filter(user=request.user, product=product).first()
+    wishlist_entry = Wishlist.objects.filter(user=request.user, variant = variant).first()
     print("productttttt",product)
     if wishlist_entry:
         messages.info(request,"Product already in wishlist")
@@ -506,8 +556,8 @@ def add_to_wishlist(request,variant_id):
         
         )
         messages.info(request,"Product added to wishlist")
-        return redirect('wishlist')
-    return redirect('product_details',productid=product)
+        # return redirect('wishlist')
+    return redirect('product_details',productid=product.id)
 
 # def add_to_wishlist_ajax(request, productid):
 #     product = get_object_or_404(Product, id=productid)

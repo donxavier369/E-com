@@ -66,7 +66,7 @@ class Profile(models.Model):
     full_name = models.CharField(max_length=50)
     phone = models.CharField(max_length=15)
     email = models.EmailField(max_length=50)
-    address_line_1 = models.CharField(max_length=50)
+    address_line_1 = models.CharField()
     pincode = models.CharField(max_length=50)
     state = models.CharField(max_length=50)
     city = models.CharField(max_length=50)

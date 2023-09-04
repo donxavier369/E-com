@@ -1,4 +1,5 @@
 {% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <style>
 	.form-controls {
@@ -27,11 +28,11 @@
 	    		<div class="col-lg-12 d-block">
 		    		<div class="row d-flex">
 		    			<div class="col-md pr-4 d-flex topper align-items-center">
-					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
+					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="fa fa-phone2"></span></div>
 						    <span class="text">+ 1235 2355 98</span>
 					    </div>
 					    <div class="col-md pr-4 d-flex topper align-items-center">
-					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
+					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="fa fa-paper-plane"></span></div>
 						    <span class="text">youremail@email.com</span>
 					    </div>
 					    <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
@@ -44,7 +45,7 @@
     </div>
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
 	    <div class="container">
-	      <a class="navbar-brand" href="index.html">Winkel</a>
+	      <a class="navbar-brand" href="index.html">Fanzkart</a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="oi oi-menu"></span> Menu
 	      </button>
@@ -56,7 +57,7 @@
 	          <li class="nav-item dropdown active">
               <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Shop</a>
               <div class="dropdown-menu" aria-labelledby="dropdown04">
-              	<a class="dropdown-item" href={% url 'shop' %}>Shop</a>
+              	<a class="dropdown-item" href={% url 'store' %}>Shop</a>
                 {% comment %} <a class="dropdown-item" href='#'>Single Product</a> {% endcomment %}
                 <a class="dropdown-item" href="cart.html">Cart</a>
                 <a class="dropdown-item" href="checkout.html">Checkout</a>
@@ -70,9 +71,10 @@
 			  <li class="nav-item"><a href={% url 'handlelogin' %} class="nav-link">Login</a></li>
 			  {% endif %}
 
-	          <li class="nav-item cta cta-colored"><a href="{% url 'cart' %}" class="nav-link"><span class="icon-shopping_cart"></span>[{{cart_count}}]</a></li>
-			  <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-heart color-danger" aria-hidden="true"></span>[0]</a></li>
-			  <li class="nav-item cta cta-colored"><a href="{% url 'user_profile' %}" class="nav-link"><span class="icon-user color-danger" aria-hidden="true"></span></a></li>
+	          {% comment %} <li class="nav-item cta cta-colored"><a href="{% url 'cart' %}" class="nav-link"><span class="icon-shopping_cart"></span>[{{cart_count}}]</a></li> {% endcomment %}
+			  <li class="nav-item cta cta-colored"><a href="{% url 'cart' %}" class="nav-link"><span class="fa fa-shopping-cart"></span></a></li>
+			  <li class="nav-item cta cta-colored"><a href="{% url 'wishlist' %}" class="nav-link"><span class="fa fa-heart color-danger" aria-hidden="true"></span></a></li>
+			  <li class="nav-item cta cta-colored"><a href="{% url 'user_profile' %}" class="nav-link"><span class="fa fa-user color-danger" aria-hidden="true"></span></a></li>
 			  
 			  <li>
 				<form action="{% url 'search' %}" method="POST"> {% csrf_token %} <!-- Set the action attribute to your search results URL -->
