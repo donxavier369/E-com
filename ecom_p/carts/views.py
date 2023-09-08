@@ -11,6 +11,7 @@ from user.models import Profile
 from decimal import Decimal
 from django.db.models import Q
 from orders.models import Order
+from django.db.models import F
 # Create your views here.
 
 
@@ -155,7 +156,8 @@ def add_to_cart(request,product_id,variant=0):
                 cart = Cart.objects.create(cart_id = current_user, user = current_user)
             try:
                 cart_item = CartItem.objects.get(product=product, user=current_user, variant=variant, cart = cart)
-                cart_item.quantity += 1  
+                # cart_item.quantity += 1  
+                cart_item.quantity = F('quantity') + 1  # Increase the quantity by 1
                 cart_item.cart_price = product.product_price*cart_item.quantity  
                 print(cart_item.cart_price,"9999999999999999")
                 cart_item.save()
@@ -192,8 +194,52 @@ def add_to_cart(request,product_id,variant=0):
   
 
 
-def update_quantity(request):
-    print(update_quantity,"setttttttttttttttt")
+# def update_quantity(request):
+#     print(update_quantity,"setttttttttttttttt")
+#     if request.method == 'POST':
+#         item_id = request.POST.get('item_id')
+#         print(item_id,"itemmmmmmmmmmmmmm")
+#         change = int(request.POST.get('change'))
+#         print(change,"changeeeeeeeeeeeee")
+#         cart_item = CartItem.objects.get(id=item_id)
+#         product = cart_item.product
+#         variant = cart_item.variant
+#         # cart_item.quantity += change
+
+        
+
+#         if change == -1:
+#             if cart_item.quantity > 1:
+#                 cart_item.quantity += change
+#                 cart_item.cart_price -= product.product_price
+#             else:
+#                 pass
+
+            
+#         elif change == 1:
+#             if cart_item.variant.variant_stock > cart_item.quantity:
+#                 cart_item.quantity += change
+#                 cart_item.cart_price += product.product_price
+#             else:
+#                 pass
+#         else:
+#             pass
+#         cart_item.save()
+
+#         updated_price = cart_item.cart_price
+#         updated_quantity = cart_item.quantity
+
+#         tax = (2*updated_price)/100
+#         grand_total = updated_price + tax
+#         print(grand_total,"granddddddddd")
+#         return JsonResponse({'updated_quantity': updated_quantity, 'updated_price': updated_price, 'tax':tax, 'grand_total':grand_total})
+#     else:
+#         return JsonResponse({'error': 'Invalid request method.'})
+                
+
+
+
+def update_quantity(request, updated_price=0,new_updated_price=0):
     if request.method == 'POST':
         item_id = request.POST.get('item_id')
         print(item_id,"itemmmmmmmmmmmmmm")
@@ -204,7 +250,10 @@ def update_quantity(request):
         variant = cart_item.variant
         # cart_item.quantity += change
 
-        
+        # new_updated_price += cart_item.cart_price
+        # print(new_updated_price,"new quantityyyyyyyyyyyy")
+
+
 
         if change == -1:
             if cart_item.quantity > 1:
@@ -224,17 +273,31 @@ def update_quantity(request):
             pass
         cart_item.save()
 
-        updated_price = cart_item.cart_price
+        new_price = CartItem.objects.get(id=item_id)
+        new_updated_price = new_price.cart_price
+
+
+        current_user = request.user
+        if current_user.is_authenticated:
+            cart = Cart.objects.get(cart_id = current_user, user = current_user)
+        else:
+            cart = Cart.objects.get(cart_id=_cart_id(request)) 
+
+        cart_items = CartItem.objects.filter(cart = cart)
+        
+        for cart in cart_items:
+            updated_price += cart.cart_price
+
+        # updated_price = cart_item.cart_price
         updated_quantity = cart_item.quantity
 
         tax = (2*updated_price)/100
         grand_total = updated_price + tax
-
-        return JsonResponse({'updated_quantity': updated_quantity, 'updated_price': updated_price, 'tax':tax, 'grand_total':grand_total})
+        print(grand_total,"granddddddddddd")
+        return JsonResponse({'updated_quantity': updated_quantity, 'updated_price': new_updated_price, 'tax':tax, 'grand_total':grand_total})
     else:
         return JsonResponse({'error': 'Invalid request method.'})
                 
-
 
 def remove_cart_item(request, product_id, cart_item_id):
     product = get_object_or_404(Product, id=product_id)

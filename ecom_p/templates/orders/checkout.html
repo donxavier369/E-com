@@ -29,7 +29,6 @@
                 <a href="{% url 'change_address' %}" class="btn btn-primary" method="POST">Change</a>
                 {% csrf_token %}
             </div>
-                
                 <form action="{% url 'order_payment' coupon_id %}" class="billing-form" method="post">
                     {% csrf_token %}
                   

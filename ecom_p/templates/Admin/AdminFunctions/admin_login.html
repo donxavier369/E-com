@@ -2,55 +2,76 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AdminLogin</title>
+  <title>Admin Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.css">
-  
-  <link rel="stylesheet" href="{% static '/css/login.css'%}">
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <style>
+    body {
+      background-color: #f8f9fa; /* Add a background color */
+      display: flex;
+      justify-content: center; /* Center horizontally */
+      align-items: center; /* Center vertically */
+      height: 100vh; /* Full viewport height */
+    }
+    .container {
+      max-width: 400px; /* Adjust container width */
+      padding: 20px;
+      background-color: #fff; /* Add a white background */
+      border-radius: 8px; /* Add rounded corners */
+      box-shadow: 0 0 10px rgba(0,0,0,0.2); /* Add a subtle shadow */
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .btn-primary {
+      background-color: #007bff; /* Change button color */
+    }
+    .btn-primary:hover {
+      background-color: #0056b3; /* Change button color on hover */
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h2>AdminLogin</h2>
-    <form method="post" action="{% url 'admin_login'%}" onsubmit="return validateForm();">
+    <h2 class="text-center">Admin Login</h2>
+    <form method="post" action="{% url 'admin_login' %}" onsubmit="return validateForm();">
       {% csrf_token %}
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="text" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fas fa-envelope"></i> <!-- Add an email icon -->
+            </span>
+          </div>
+          <input type="text" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+        </div>
         <p id="email_error" style="display: none;"></p>
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" id="password" name="pass1" class="form-control" placeholder="Enter your password" required>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">
+              <i class="fas fa-lock"></i> <!-- Add a lock icon -->
+            </span>
+          </div>
+          <input type="password" id="password" name="pass1" class="form-control" placeholder="Enter your password" required>
+        </div>
         <p id="password_error" style="display: none;"></p>
       </div>
-      <div class="col text-right">
-        <div class="form-group">
-          <button type="submit" class="btn btn-primary">Login</button>
-        </div>
-        <div class="col text-right">
-
-          <div class="form-group">
-            Login with OTP 
-            <a href="{%url 'handlesignup'%}">Click here</a>
-          </div>
-          {% comment %} <div class="form-group">
-            Forgot Password? 
-            <a href="{%url 'handlesignup'%}">Change Password</a>
-          </div> {% endcomment %}
-        </div>
+      <div class="form-group text-center">
+        <button type="submit" class="btn btn-primary">Login</button>
       </div>
     </form>
   </div>
 
-{% comment %} <div style="z-index: -1000; position: absolute;">
-  {% for message in messages %}
-  <div class="hidden-alert message-{{message.tags}}" data-tags="{{ message.tags }}" data-message="{{ message }}">{{message}}</div>
-  {% comment %} <div class="hidden-alert message-{{message.tags}}" data-tags="success" data-message="This is a success message" data-button-url="{%url 'handlelogin'%}">please login</div> {% endcomment %}
-  {% comment %} {% endfor %}
-</div> {% endcomment %} 
+
+
+
+
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>

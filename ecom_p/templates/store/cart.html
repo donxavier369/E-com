@@ -88,7 +88,7 @@
 
 									<div class="input-group text-center mb-3" style="width: 150px;">
 										<a onclick="updateQuantity('{{ cart_item.id }}', -1)" class="input-group-text btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center; justify-content: center; width: 25px; height: 53px;">-</a>
-										<input type="text" name="quantity" class="form-control text-center qty-text" value="{{ cart_item.quantity }}" onchange="validateQuantity(this)">
+										<input type="text" name="quantity" class="form-control text-center" id="{{cart_item.id}}" value="{{ cart_item.quantity }}" onchange="validateQuantity(this)">
 										<a onclick="updateQuantity('{{ cart_item.id }}', 1)" class="input-group-text btn btn-primary increment-btn mx-2" style="display: flex; align-items: center; justify-content: center; width: 25px; height: 53px;">+</a>
 									</div>
 									
@@ -101,7 +101,9 @@
 								
 					            </td>
 						        
-						        <td class="total">
+						        {% comment %} <td class="total">
+									 ₹{{ cart_item.cart_price  }} ooooooooooo {% endcomment %}
+								<td class="{{cart_item.id}}">
 									 ₹{{ cart_item.cart_price  }} 
 
 								  </td>
@@ -188,7 +190,6 @@
 {% csrf_token %}
 <script>
     function updateQuantity(itemId, change) {
-
         console.log(itemId, "kittyyyyyyyyyyyyyyyyy")
         var csrfToken = $("input[name='csrfmiddlewaretoken']").val(); // Get the CSRF token from the input field
 
@@ -206,10 +207,13 @@
                 var updatedQuantity = response.updated_quantity;
 				var tax = response.tax;
 				var grand_total = response.grand_total;
-                $(".qty-text").val(updatedQuantity); // Update the input field value
-				$(".total").html("₹" + updatedPrice); // Update the total price
+                $(`#${itemId}`).val(updatedQuantity); // Update the input field value
+				//$(".qty-text").val(updatedQuantity); // Update the input field value 
+
+				$(`.${itemId}`).html("₹" + updatedPrice); // Update the total price
 				$(".tax").html("₹" + tax);
 				$(".grand_total").html("₹" + grand_total);
+				console.log(updatedQuantity,"quantity")
 				console.log(tax,"taxxxxxxxxxx")
 				console.log(updatedPrice,"updatedddddddddddddd")
 				console.log(grand_total,"grand_totalllllllll")
@@ -220,6 +224,34 @@
         });
     }
 </script> 
+
+<script>
+	$(document).ready(function() {
+		console.log("decrementttttttttttttttttt")
+		$('.decrement-btn').click(function() {
+			var input = $(this).parent().next('input[type="text"]');
+			var value = parseInt(input.val());
+			if (value > 1) {
+				input.val(value - 1);
+			}
+		});
+
+		$('.increment-btn').click(function() {
+			console.log("incrementttttttttttttt")
+
+			var input = $(this).parent().prev('input[type="text"]');
+			var value = parseInt(input.val());
+			var max = parseInt(input.attr('max'));
+			if (value < max) {
+				input.val(value + 1);
+			}
+		});
+	});
+
+</script>
+
+
+
 {% comment %} 
 <script>
     function updateQuantity(itemId, change) {
@@ -261,36 +293,6 @@
         });
     }
 </script> {% endcomment %}
-
-
-
-
-<script>
-	$(document).ready(function() {
-		console.log("decrementttttttttttttttttt")
-		$('.decrement-btn').click(function() {
-			var input = $(this).parent().next('input[type="text"]');
-			var value = parseInt(input.val());
-			if (value > 1) {
-				input.val(value - 1);
-			}
-		});
-
-		$('.increment-btn').click(function() {
-			console.log("incrementttttttttttttt")
-
-			var input = $(this).parent().prev('input[type="text"]');
-			var value = parseInt(input.val());
-			var max = parseInt(input.attr('max'));
-			if (value < max) {
-				input.val(value + 1);
-			}
-		});
-	});
-
-</script>
-
-
 
 {% comment %} 
 	<script>                               

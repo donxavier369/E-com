@@ -36,7 +36,7 @@ class CartItem(models.Model):
 
 class Coupon(models.Model):
     code = models.CharField(max_length=50, unique=True)
-    discount_price = models.DecimalField(max_digits=5, decimal_places=2)
+    discount_price = models.IntegerField()
     is_active = models.BooleanField(default=True)
     start_date = models.DateField(default = True)
     end_date = models.DateField(default=0)

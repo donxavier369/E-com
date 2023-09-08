@@ -5,23 +5,36 @@
 
 
 <div class="container">
-    <h4 class="mb-4">Sales Report</h4>
-    <button class="btn btn-primary" id="pdfButton">Export as PDF</button>
-    <button class="btn btn-success" id="excelButton">Export as Excel</button>
+    <div class="row">
+        <div class="col-md-8">
+            <a href="{% url 'sales_report' %}"><h2 class="mb-4" style="color:#292fa2">Sales Report</h2></a>
+            <button class="btn btn-primary" id="pdfButton">Export as PDF</button>
+            <button class="btn btn-success" id="excelButton">Export as Excel</button>
+            <p class="mt-2">Total entities: {{ sales_report|length }}</p>
 
-    <div class="row mb-3">
-       
-        {% comment %} <div class="col-md-6">
-            <div class="input-group">
-                <input type="text" class="form-control" id="searchInput" placeholder="Search Order ID">
-                <button class="btn btn-primary" id="searchButton">Search</button>
-                <button class="btn btn-secondary" id="clearButton">Clear</button>
-            </div>
-        </div> {% endcomment %}
-        <div class="col-md-6">
-            <p class="text-end">Total entities: {{ sales_report|length }}</p>
+        </div>
+        <div class="col-md-4">
+            <form action="{% url 'sales_report' %}" method="post">{% csrf_token %}
+                <div class="form-group align-items-center">
+                    <p class="mb-1 mt-2" style="margin-left: 130px; color:#241aaa">ENTER DATE RANGE</p>
+                    <div class="form-group">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" class="form-control" id="start_date" name="start_date" aria-describedby="emailHelp" placeholder="Enter email">
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="end_date">End Date</label>
+                        <input type="date" class="form-control" id="end_date" name="end_date" placeholder="Password">
+                    </div>
+                    
+
+                <button type="submit" class="btn btn-primary mt-2" style="margin-left: 270px">Submit</button>
+            </form>
         </div>
     </div>
+
+</div>
+
+    
     <div class="table-responsive">
         <table class="table table-striped" id="salesTable">
             <thead>

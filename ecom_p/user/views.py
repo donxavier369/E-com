@@ -14,7 +14,6 @@ from twilio.base.exceptions import TwilioRestException
 from dotenv import load_dotenv
 import os
 from twilio.rest import Client
-from twilio.base.exceptions import TwilioRestException
 # from carts.views import _cart_id,CartItem
 from carts.models import Cart, CartItem
 import requests
@@ -26,7 +25,7 @@ from orders.models import Order,Wallet
 load_dotenv()
 
 # Get Twilio phone number from the environment
-twilio_phone_number = os.environ.get('TWILIO_PHONE_NUMBER')
+# twilio_phone_number = os.environ.get('TWILIO_PHONE_NUMBER')
 
 # Create a Twilio client
 client = Client(os.environ['TWILIO_ACCOUNT_SID'], os.environ['TWILIO_AUTH_TOKEN'])
@@ -37,26 +36,7 @@ verify = client.verify.services(os.environ['TWILIO_VERIFY_SERVICE_SID'])
 
 
 
-
-# def home(request):
-#     if request.user.is_authenticated and request.user.is_superuser==False:
-#         products = Product.objects.all().filter(is_available=True)
-#         print(products)
-#         context = {
-#             'products': products,
-           
-#         }
-#         return render(request,'layouts/index.html',context)
-#     else:
-#         logout(request)
-#         request.session.flush()
-#         products = Product.objects.all().filter(is_available=True)
-#         print(products)
-#         context = {
-#             'products': products,
-           
-#         }
-#         return render(request,'layouts/index.html',context)        
+    
 
 @never_cache
 def handlesignup(request):
@@ -133,7 +113,7 @@ def handlelogin(request):
             print("888888888888888")
             if myuser.is_superuser:
                 login(request,myuser)
-                messages.success(request,"Login Success")
+                # messages.success(request,"Login Success")
                 return redirect("admin_page")
             else:
                 try:
@@ -165,23 +145,20 @@ def handlelogin(request):
 
 def handlelogout(request):
     logout(request)
-    # messages.info(request,"Logout Success!")
-    return redirect('home') 
+    products = Product.objects.filter(new_arrival=True)
+    print(products)
+    context = {
+        'products':products
+    }
+    
+    return render(request,'layouts/index.html',context)
 
 
-
-# def send(phone):
-#     print(phone,"successfully sended")
-#     verify.verifications.create(to=phone, channel='sms')
-from twilio.base.exceptions import TwilioRestException
 
 def send(phone):
-    print(phone,"successfully got phone number")
-    try:
-        verify.verifications.create(to=phone, channel='sms')
-        print("OTP sent successfully to", phone)
-    except TwilioRestException as e:
-        print("Error sending OTP:", e)
+    print(phone,"successfully sended")
+    verify.verifications.create(to=phone, channel='sms')
+
 
 
 def check(phone, code):
@@ -224,10 +201,10 @@ def enter_mobile(request,id):
 
 def verify_phone(request):
     if request.method == 'POST':
-        # phone = request.POST.get('phone')
-        phone = "+917907700528"
+        phone = request.POST.get('phone')
+        
         try:
-            # user = CustomUser.objects.get(phone=phone)
+            user = CustomUser.objects.get(phone=phone)
             send(phone)
             print('phoneeeeeeeeeeeeeeeeeeeee',phone)
             # return redirect("signup_otp",phone=phone)
@@ -367,6 +344,7 @@ def delete_address(request, id):
             del_address.delete()
         messages.info(request, "Your selected address has been successfully deleted.")
         return redirect('address')
+    return redirect('address')
  
 
 def set_default(request, id):
@@ -462,7 +440,7 @@ def change_password_profile(request):
         current_user.password = make_password(password)
         current_user.save()
         messages.success(request,"password changes successfully")
-        # return redirect('user_profile')
+        return redirect('user_profile')
 
     return render(request, 'Profile/user_profile.html')
 
@@ -540,6 +518,7 @@ def wishlist(request):
     }
     return render(request,"profile/wishlist.html",context)
 
+@login_required(login_url='handlelogin')
 def add_to_wishlist(request,variant_id):
     variant = get_object_or_404(Variant, id=variant_id)
     print(variant_id,"varianttttttttttttt")

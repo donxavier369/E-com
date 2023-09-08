@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
+
+SECRET_KEY = config('SECRET_KEY')
+RAZORPAY_KEY_ID = config('RAZORPAY_KEY_ID')
+RAZORPAY_KEY_SECRET = config('RAZORPAY_KEY_SECRET')
+
+
+
 
 
 
@@ -24,19 +32,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 
 
 
-# SECRET_KEY = os.environ.get('SECRET_KEY')
-# print(SECRET_KEY)
-# RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID')
-# RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET')
-# print(RAZORPAY_KEY_ID)
-
-SECRET_KEY = 'django-insecure-mx_ng(%1p6qs5pv0ez_uvqyi6)w!v(=hux2vf+c3vxhcrbd&9k'
-RAZORPAY_KEY_ID = 'rzp_test_9je4KOl73YzFoD'
-RAZORPAY_KEY_SECRET = 'YXu3VPE3JySNyWvh8yuiY7Oa'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -85,7 +83,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 # 'category.context_processors.menu_links',
-                # 'carts.context_processors.counter',
+                'carts.context_processors.counter',
             ],
         },
     },

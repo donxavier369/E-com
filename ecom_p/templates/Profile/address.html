@@ -16,39 +16,33 @@
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
   <!-- Default theme -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
-  <title>Document</title>
+  <title>Address</title>
 </head>
 <body>
-  <div class="card">
-    <div class="card-header">
-      <h4 class="mt-2">Manage Your Address</h4>
-      <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addProductModal">Add New Address</button>
-    </div>
-    <div class="card-body">
-      <!-- Your table code here -->
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Email</th>
-            <th scope="col">Address</th>
-            <th scope="col">Pincode</th>
-            <th scope="col">State</th>
-            <th scope="col">City</th>
-          </tr>
-        </thead>
+  <div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh; padding: 50px;">
+    <div class="card col-md-10">
+      <div class="card-header">
+        <h4 class="mt-2">Manage Your Address</h4>
+        <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addProductModal">Add New Address</button>
+      </div>
+      <div class="card-body">
+        <!-- Your table code here -->
+        <table class="table table-striped">
+          <thead>
+            <tr class="align-middle">
+              <th scope="col">Address</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
         <tbody>
           {% for address in addresses %}
           <tr>
-            <td>{{ address.full_name }}</td>
-            <td>{{ address.phone }}</td>
-            <td>{{ address.email }}</td>
-            <td>{{ address.address_line_1 }}</td>
-            <td>{{ address.pincode }}</td>
-            <td>{{ address.state }}</td>
-            <td>{{ address.city }}</td>
-  
+            <td>
+            <p><strong>Name:</strong> {{ address.full_name }}</p>
+            <p><strong>Phone:</strong> {{ address.phone }}</p>
+            <p><strong>Email:</strong> {{ address.email }}</p>
+            <p><strong>Address:</strong> {{ address.address_line_1 }}, {{ address.city }}, {{ address.state }}, {{ address.pincode }}</p>
+          </td>
            
   
             <td>
@@ -120,53 +114,54 @@
   
   
            <!--Delete user address-->
-            <input type="submit" class="btn btn-outline-danger" value="Delete" data-toggle="modal" data-target="#myModal{{ address.id }}"></input>
+           <a href="#" class="btn btn-outline-danger mt-0" data-bs-toggle="modal" data-bs-target="#deleteaddressModal{{ address.id }}">Delete</a>
   
-            <div class="modal" tabindex="-1" role="dialog" id="myModal{{ address.id }}">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title">Delete Address</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <form action="{% url 'delete_address' address.id %}" method="POST">{% csrf_token %}
-                  <div class="modal-body">
-                    <p>Are you shure you want to delete this address?</p>
-                  </div>
-                  <div class="modal-footer">
-                    <input type="submit" class="btn btn-danger" value="Delete"></input>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  </div>
-                </form>
+           <div class="modal fade" id="deleteaddressModal{{ address.id }}" tabindex="-1" aria-labelledby="deleteaddressModalLabel{{ address.id }}" aria-hidden="true">
+             <div class="modal-dialog">
+               <div class="modal-content">
+                 <div class="modal-header">
+                   <h5 class="modal-title" id="deleteaddressModalLabel{{ address.id }}">Delete Address</h5>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                 </div>
+                <div class="modal-body">
+                   <form action="{% url 'delete_address' address.id%}" method="POST" enctype="multipart/form-data">
+                     {% csrf_token %}
+                     
+                      <p>Are you sure you want to delete this address?</p>
+
                 </div>
-              </div>
-            </div>
+                   <div class="modal-footer">
+                     <button type="submit" class="btn btn-danger">Delete</button>
+                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                   </div>
+                 </form>
+               </div>
+             </div>
+           </div>
+ 
    
           {% if address.set_default == False %}
             <!--default user address-->
-            <input type="submit" class="btn btn-outline-info" value="Set_default" data-toggle="modal" data-target="#default"></input>
+            <a href="#" class="btn btn-outline-primary mt-0" data-bs-toggle="modal" data-bs-target="#defaultaddressModal{{ address.id }}">Set_default</a>
   
-            <div class="modal" tabindex="-1" role="dialog" id="default">
-              <div class="modal-dialog" role="document">
+            <div class="modal fade" id="defaultaddressModal{{ address.id }}" tabindex="-1" aria-labelledby="defaultaddressModalLabel{{ address.id }}" aria-hidden="true">
+              <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title">Set default</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
+                    <h5 class="modal-title" id="defaultaddressModalLabel{{ address.id }}">Set Default Address</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
+                 <div class="modal-body">
                   <form action="{% url 'set_default' address.id %}" method="POST">{% csrf_token %}
-                  <div class="modal-body">
-                    <p>This address will use to your product parchasing! {{ address.id }} </p>
-                    <input type="input" class="btn btn-info" value="{{ address.id }}"></input>
-                  </div>
-                  <div class="modal-footer">
-                    <input type="submit" class="btn btn-info" value="Set"></input>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  </div>
-                </form>
+
+                      <p>This address will use to your product parchasing! {{ address.id }} </p>
+
+                 </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">Set_default</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -178,19 +173,7 @@
     </div>
   </div>
   
-  
-  
-  <!-- Add Product Modal -->
-  <!-- Button to Trigger the Modal -->
-  
-  
-  <!-- Modal -->
-  
-  
-  
-  
-  
-  
+
   <!-- Add user address -->
   <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -263,4 +246,8 @@
       </script>
 </body>
 </html>
+
+
+
+
 

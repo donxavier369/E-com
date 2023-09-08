@@ -20,28 +20,26 @@
 
       </div>
 
-<section class="ftco-section bg-light">
-    <div class="container">
-        <div class="row">
-            
-            <div class="col-md-4 col-lg-2 sidebar">
-                <div class="sidebar-box-2">
-                    <h2 class="heading mb-4"><a href="{% url 'store' %}">Categories</a></h2>
-                    <ul>
-                        <li><a href="{% url 'store' %}">All products</a></li>
-
-                        {% for category in categories %}
-                        <li><a href="{% url 'categories' category.id %}">{{ category.category_name  }}</a></li>
-                        {% endfor %}
-                    </ul>
+      <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-md-4 col-lg-2 sidebar" style="height:100%">
+                    <div class="sidebar-box-2">
+                        <h2 class="heading mb-4"><a href="{% url 'store' %}">Categories</a></h2>
+                        <ul>
+                            <li><a href="{% url 'store' %}">All products</a></li>
+    
+                            {% for category in categories %}
+                            <li><a href="{% url 'categories' category.id %}">{{ category.category_name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
-            </div>
-
-            {% for product in products %}
-                <div class="col-sm col-md-6 col-lg ftco-animate">
+    
+                {% for product in products %}
+                <div class="col-sm col-md-6 col-lg-3 ftco-animate">
                     <div class="product">
-                   
-                    
                         <a href="{% url 'product_details' product.id %}" class="img-prod"><img class="img-fluid" src="{{ product.images.url }}" alt="Colorlib Template">
                             {% comment %} <span class="status">30%</span> {% endcomment %}
                             <div class="overlay"></div>
@@ -52,19 +50,17 @@
                                 <div class="pricing">
                                     <p class="price"><span class="mr-2 price-dc"></span><span class="price-sale">₹{{ product.product_price }}</span></p>
                                 </div>
-
                             </div>
                             <p class="bottom-area d-flex px-3">
-                                {% comment %} <a href="{% url 'add_to_wishlist' product.id  %}" class="add-to-cart text-center py-2 mr-1"><span>Wishlist <i class="ion-ios-heart ml-1"></i></span></a> {% endcomment %}
-                                {% comment %} <button class="add-to-wishlist" data-product-id="{{ product.id }}">Add to Wishlist</button> {% endcomment %}
                                 <a href="{% url 'product_details' product.id %}" class="buy-now text-center py-2">View Product<span><i class="fas fa-eye ml-1"></i></span></a>
                             </p>
                         </div>
                     </div> 
                 </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
-    </div>
+    
     <div class="col text-center">
         <div class="block-27 mb-2 mt-5">
             {% if products.has_other_pages %}

@@ -1,43 +1,16 @@
 {% extends 'Admin/adminlayouts/main.html' %}
 {% load static %}
+{% block head %}
 
+ <title>Order Category Graph</title>
+    <!-- Include necessary CSS/JS libraries for charting (e.g., Chart.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Add any custom styles here */
+    </style>
+{% endblock head %}
 {% block body %} 
- {% comment %} <button class="btn btn-primary float-end mt-2 mb-0" data-bs-toggle="modal" data-bs-target="#addProductModal">Date Filter</button>
-
-<!-- Add Coupon Modal -->
-<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addProductModalLabel">Enter Date</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Add form fields here -->
-                <form id="filterForm">
-                    {% csrf_token %}
-
-                    <div class="form-group">
-                        <label for="start_date">Start Date</label>
-                        <input type="date" class="form-control" id="start_date" name="start_date" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="end_date">End Date</label>
-                        <input type="date" class="form-control" id="end_date" name="end_date" required>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Filter</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> {% endcomment %}
-
-{% comment %} <canvas id="myChart"></canvas> {% endcomment %}
+{% comment %}  
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -147,7 +120,121 @@
                 }
             }
         });
+    </script> {% endcomment %}
+
+
+
+<head>
+    <title>Order Category Graph</title>
+    <!-- Include necessary CSS/JS libraries for charting (e.g., Chart.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Add any custom styles here */
+    </style>
+</head>
+<body>
+    <h1 class="text-center mt-4">Order Category Graph</h1>
+
+    <form class="text-center mb-4" method="get">
+        <label class="me-2">Choose Interval:</label>
+        <input type="radio" name="interval" value="monthly" class="me-1" {% if interval == 'monthly' %}checked{% endif %}> Monthly
+        <input type="radio" name="interval" value="yearly" class="me-1" {% if interval == 'yearly' %}checked{% endif %}> Yearly
+        <input type="radio" name="interval" value="weekly" class="me-1" {% if interval == 'weekly' %}checked{% endif %}> Weekly
+        <button type="submit" class="btn btn-primary">Apply</button>
+    </form>
+    
+    <!-- Include a placeholder for the chart -->
+    <div class="container">
+        <div class="row">
+            <!-- Include a placeholder for the bar chart -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Bar Chart</h2>
+                        <canvas id="orderCategoryChart" width="100" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Include a placeholder for the pie chart -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Pie Chart</h2>
+                        <canvas id="orderCategoryPieChart" width="100" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <!-- Rest of your JavaScript code for generating the charts -->
+    <script>
+        // JavaScript code to generate the chart using data_dict
+        // You can use libraries like Chart.js to create the chart
+        var dataFromDjango = JSON.parse('{{ data_dict_json|safe }}');
+
+var months = Object.keys(dataFromDjango);
+var categories = Array.from(new Set(Object.values(dataFromDjango).flatMap(Object.keys)));
+
+var data = {
+    labels: months,
+    datasets: categories.map(function(category) {
+        return {
+            label: category,
+            data: months.map(function(month) {
+                return dataFromDjango[month][category] || 0;
+            }),
+            borderWidth: 1
+        };
+    })
+};
+
+var ctx = document.getElementById('orderCategoryChart').getContext('2d');
+var chart = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+ // JavaScript code to generate the pie chart using data_dict_json
+ var pieChartData = {
+    labels: categories,
+    datasets: [{
+        data: categories.map(function(category) {
+            return months.reduce(function(sum, month) {
+                return sum + (dataFromDjango[month][category] || 0);
+            }, 0);
+        }),
+        backgroundColor: categories.map(function(category) {
+            return getRandomColor();
+        })
+    }]
+};
+
+var ctxPie = document.getElementById('orderCategoryPieChart').getContext('2d');
+var pieChart = new Chart(ctxPie, {
+    type: 'pie',
+    data: pieChartData
+});
+
+// Function to generate random colors for pie chart
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
     </script>
+
+
 
 
 {% endblock body %} 

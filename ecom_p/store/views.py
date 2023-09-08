@@ -15,13 +15,20 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 # Create your views here.
 
 def home(request):
-    products = Product.objects.filter(new_arrival=True)
-    print(products)
-    context = {
-        'products':products
-    }
-    
-    return render(request,'layouts/index.html',context)
+    if request.user is None or (request.user.is_authenticated and request.user.is_superuser == False):
+        products = Product.objects.filter(new_arrival=True)
+        new_products = []
+        for product in products:
+            if product.category.is_available == True:
+                new_products.append(product)
+        print(products)
+        context = {
+            'products':new_products
+        }
+        
+        return render(request,'layouts/index.html',context)
+    else:
+        return redirect('handlelogout')
 
 def contact(request):
     return render(request,'contact.html')
@@ -79,8 +86,12 @@ def product_details(request, productid):
 def store(request):
     
     products = Product.objects.filter(is_available=True)
+    store_products = []
+    for product in products:
+        if product.category.is_available == True:
+            store_products.append(product)
     categories = Category.objects.filter(is_available=True)
-    paginator = Paginator(products, 2)
+    paginator = Paginator(store_products, 7)
     page = request.GET.get('page')
     paged_products = paginator.get_page(page)
     print(products)

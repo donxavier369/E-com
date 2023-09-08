@@ -13,6 +13,9 @@ from django.shortcuts import get_object_or_404
 from orders.models import Order
 from carts.models import Coupon
 from django.db.models import Sum
+from django.utils import timezone
+import json
+from datetime import datetime
 # from store.models import Variation
 # Create your views here.
 
@@ -20,6 +23,8 @@ from django.db.models import Sum
 
 
 def manageuser(request):
+    if not request.user.is_authenticated or request.user.is_superuser==False:
+        return redirect('admin_login')
     if request.user.is_authenticated and request.path != reverse('manageuser'):
         return redirect('manageuser')
 
@@ -47,7 +52,7 @@ def user_unblock(request,id):
     return redirect("manageuser")
 
 def admin_login(request):
-    if request.user.is_authenticated and  request.user.is_superuser==True:
+    if request.user.is_authenticated and request.user.is_superuser:
         return redirect('admin_page')
     if request.method=="POST":
         email=request.POST.get("email")
@@ -56,7 +61,7 @@ def admin_login(request):
         if myuser is not None:
             if myuser.is_superuser:
                 login(request,myuser)
-                messages.success(request,"Login Success!")
+                # messages.success(request,"Login Success!")
                 return redirect('admin_page')
             elif myuser is not myuser.is_superuser:
                 messages.error(request,"You are not an Admin")
@@ -78,20 +83,72 @@ def admin_logout(request):
 #     else:
 #         return render(request, "adm/admin_login.html")
 
-@login_required(login_url='admin_signin')
-def admin_page(request):
-    status_order_totals = Order.objects.values('status').annotate(total_amount=Sum('order_total'))
 
+# def admin_page(request):
+#     if request.user.is_authenticated and request.user.is_superuser==True:
+#         status_order_totals = Order.objects.values('status').annotate(total_amount=Sum('order_total'))
+
+#         context = {
+#             'status_order_totals': status_order_totals,
+#         }
+    
+#         return render(request,"Admin/AdminFunctions/adminindex.html",context)
+#     else:
+#         return render(request,"Admin/AdminFunctions/admin_login.html")
+@login_required(login_url='admin_login')
+def admin_page(request, status_order_totals=0):
+    
+    if request.user.is_authenticated and request.user.is_superuser==True:
+        status_order_totals = Order.objects.values('status').annotate(total_amount=Sum('order_total'))
+    else:
+        return redirect('admin_login')
+
+    orders = Order.objects.all()
+    print(orders,"kkkkkkkkkkkkkkkkk")
+
+    data_dict = {}  # Dictionary to store counts per category per interval
+
+    interval = request.GET.get('interval', 'monthly')  # Get the selected interval (default: monthly)
+    current_datetime = timezone.now()
+
+    for order in orders:
+        if interval == 'monthly':
+            time_period = order.created_at.strftime('%b %Y')  # Monthly interval
+        elif interval == 'yearly':
+            time_period = order.created_at.strftime('%Y')  # Yearly interval
+        elif interval == 'weekly':
+            time_period = f"Week {current_datetime.strftime('%U')}, {current_datetime.year}"  # Weekly interval
+        else:
+            # Default to monthly if interval is not recognized
+            time_period = order.created_at.strftime('%b %Y')
+        
+        category = order.product.category.category_name
+        
+        if time_period not in data_dict:
+            data_dict[time_period] = {}
+        
+        if category not in data_dict[time_period]:
+            data_dict[time_period][category] = 0
+        
+        data_dict[time_period][category] += 1
+
+    # Convert data_dict to JSON format
+    data_dict_json = json.dumps(data_dict)
     context = {
+        'data_dict_json' : data_dict_json,
         'status_order_totals': status_order_totals,
     }
-   
-    return render(request,"Admin/AdminFunctions/adminindex.html",context)
+    
+    return render(request, 'Admin/AdminFunctions/adminindex.html',context)
+
 
 
 # product management
-
+@login_required(login_url='admin_login')
 def product(request):
+        if not request.user.is_authenticated or request.user.is_superuser==False:
+            return redirect('admin_login')
+
         products = Product.objects.all()
         categories = Category.objects.filter(is_available=True)
         product_count = products.count()
@@ -141,7 +198,7 @@ def add_product(request):
     brands = Brand.objects.all()
     return render(request, 'Admin/AdminFunctions/product.html', {'categories': categories, 'brands': brands})
 
-    
+@login_required(login_url='admin_login')
 def edit_product(request, id):
     product = get_object_or_404(Product, id=id)
 
@@ -176,9 +233,7 @@ def edit_product(request, id):
         return redirect('product')
 
     return render(request, 'admin/product_list.html', {'product': product})
-def product_add(request):
 
-    return render(request,"Admin/AdminFunctions/product.html")
 
 def product_block(request,id):
     block = Product.objects.filter(id=id).update(is_available=False)
@@ -191,8 +246,10 @@ def product_unblock(request,id):
 
 
 #category management
-
+@login_required(login_url='admin_login')
 def category(request):
+    if not request.user.is_authenticated or request.user.is_superuser==False:
+        return redirect('admin_login')
     categories = Category.objects.all()
     return render(request,"Admin/AdminFunctions/category.html",{'categories': categories})
 
@@ -245,8 +302,10 @@ def edit_category(request, id):
 
 
 # order management
-
+@login_required(login_url='admin_login')
 def manage_order(request):
+    if not request.user.is_authenticated or request.user.is_superuser==False:
+        return redirect('admin_login')
     orders = Order.objects.all()
     statuses = Order.STATUS
     
@@ -266,8 +325,10 @@ def manage_orderstatus(request, id):
     return render(request, "Admin/AdminFunctions/order.html")
 
 # variant management
-
+@login_required(login_url='admin_login')
 def variant(request,id):
+    if not request.user.is_authenticated or request.user.is_superuser==False:
+        return redirect('admin_login')
     if request.method == 'POST':
         variant_colour = request.POST.get('variant_colour')
         variant_stock =request.POST.get('variant_stock')
@@ -324,8 +385,10 @@ def delete_variant(request, id):
 
 
 # coupon
-
+@login_required(login_url='admin_login')
 def coupon(request):
+    if not request.user.is_authenticated or request.user.is_superuser==False:
+        return redirect('admin_login')
     coupons = Coupon.objects.all()
     return render(request,"Admin/AdminFunctions/coupon.html",{'coupons':coupons})
 
@@ -371,8 +434,10 @@ def coupon_unblock(request, coupon_id):
 
 
 # brand management
-
+@login_required(login_url='admin_login')
 def add_brand(request):
+    if not request.user.is_authenticated or request.user.is_superuser==False:
+        return redirect('admin_login')
     if request.method == 'POST':
         brand_name = request.POST.get('brand_name')
         brand = Brand.objects.create(brand_name = brand_name)
@@ -392,13 +457,32 @@ def brand_unblock(request, brand_id):
     brand.save()
     return redirect('product')
 
-
 def sales_report(request):
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return redirect('admin_login')
+    
     sales_report = Order.objects.all().order_by('id')
+
+    if request.method == 'POST':
+        start_date = request.POST.get('start_date')
+        end_date = request.POST.get('end_date')
+
+        if start_date and end_date:
+            # Convert the date strings to datetime objects
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+
+        
+            # Filter orders based on the created_date field
+            sales_report = sales_report.filter(created_at__range=(start_date, end_date))
+        else:
+            sales_report = Order.objects.all().order_by('id')
+
+
     context = {
-        'sales_report' : sales_report
+        'sales_report': sales_report
     }
-    return render(request,"Admin/AdminFunctions/sales_report.html",context)
+    return render(request, "Admin/AdminFunctions/sales_report.html", context)
 
 
 
