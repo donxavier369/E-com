@@ -397,7 +397,7 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
                 request,
                 "orders/payment.html",
                 {
-                    "callback_url": "http://127.0.0.1:8000/orders/callback/?current_order={}&current_user={}".format(current_order, current_user),
+                    "callback_url": "http://www.fanzkart.shop/orders/callback/?current_order={}&current_user={}".format(current_order, current_user),
 
                     "razorpay_key": RAZORPAY_KEY_ID,
                     "order": order,
