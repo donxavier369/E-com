@@ -7,6 +7,13 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.min.css">
   <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+  	<!-- aleartyfy js-->
+	<!-- CSS -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+	<!-- Default theme -->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
+
   <style>
     body {
       background-color: #f8f9fa; /* Add a background color */
@@ -71,7 +78,15 @@
 
 
 
+    <!-- aleartyfy js -->
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <script>
+      alertify.set('notifier','position', 'top-right');
 
+      {% for msg in messages %}
+          alertify.success('{{ msg }}');
+      {% endfor %}
+    </script>
 
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>

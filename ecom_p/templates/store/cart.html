@@ -79,12 +79,8 @@
 									{% if cart_item.variant.variant_stock == 0 %}
 										<p>out of stock</p>
 									{% else %}
-									<p>{{cart_item.id}}...{{cart_item.quantity}}</p>
-								 	 {% comment %} <div class="input-group text-center mb-3 " style="width: 150px;">
-										<a onclick="changeQuantity('{{ cart_item.id }}', -1, this.parentNode)" class="input-group-text  btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center;justify-content: center;width: 25px;height: 53px;">-</a>
-										<input type="text" name="quantity" class="form-control text-center qty-text" value="{{ cart_item.quantity }}">
-										<a onclick="changeQuantity('{{ cart_item.id }}', 1, this.parentNode)" class="input-group-text  btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center;justify-content: center;width: 25px;height: 53px;">+</a>
-									</div>  {% endcomment %}
+									{% comment %} <p>{{cart_item.id}}...{{cart_item.quantity}}</p> {% endcomment %}
+
 
 									<div class="input-group text-center mb-3" style="width: 150px;">
 										<a onclick="updateQuantity('{{ cart_item.id }}', -1)" class="input-group-text btn btn-primary decrement-btn mx-2" style="display: flex; align-items: center; justify-content: center; width: 25px; height: 53px;">-</a>
@@ -95,14 +91,12 @@
 						
 									
 									
-									{% comment %} <input type="text" name="quantity" class="form-control text-center" value="{{ cart_item.quantity }}"> {% endcomment %}
 
 								{% endif %} 
 								
 					            </td>
 						        
-						        {% comment %} <td class="total">
-									 ₹{{ cart_item.cart_price  }} ooooooooooo {% endcomment %}
+						        
 								<td class="{{cart_item.id}}">
 									 ₹{{ cart_item.cart_price  }} 
 
@@ -250,151 +244,5 @@
 
 </script>
 
-
-
-{% comment %} 
-<script>
-    function updateQuantity(itemId, change) {
-        console.log(itemId, "kittyyyyyyyyyyyyyyyyy");
-        var csrfToken = $("input[name='csrfmiddlewaretoken']").val();
-
-        $.ajax({
-            type: "POST",
-            url: "update_quantity", // Replace with your backend endpoint to update quantity
-            data: {
-                csrfmiddlewaretoken: csrfToken,
-                item_id: itemId,
-                change: change
-            },
-            success: function (response) {
-                if (response.grand_total === 0) {
-                    // Update the message for zero grand total
-                    $(".message-container").html("<p style='color: #df9595'>Out Of Stock Add Another Item To Continue Shopping...</p>");
-                } else {
-                    // Update the message and checkout link
-                    $(".message-container").html("<p class='text-center'><a href='{% url 'checkout' %}' class='btn btn-primary py-3 px-4'>Proceed to Checkout</a></p>");
-                }
-
-                var updatedPrice = response.updated_price;
-                var updatedQuantity = response.updated_quantity;
-                var tax = response.tax;
-                var grand_total = response.grand_total;
-                $(".qty-text").val(updatedQuantity);
-                $(".total").html("₹" + updatedPrice);
-                $(".tax").html("₹" + tax);
-                $(".grand_total").html("₹" + grand_total);
-                console.log(tax, "taxxxxxxxxxx");
-                console.log(updatedPrice, "updatedddddddddddddd");
-                console.log(grand_total, "grand_totalllllllll");
-            },
-            error: function () {
-                console.log("Error updating quantity.");
-            }
-        });
-    }
-</script> {% endcomment %}
-
-{% comment %} 
-	<script>                               
-		function changeQuantity(itemId, change, parent, event) {		  
-		  console.log(itemId,"item id helooooo")
-		  console.log(change,"change")
-		  console.log(parent,"parentttttttttttt")
-			var quantityInput = parent.querySelector('.qty-text');
-			console.log(quantityInput ,"glkadak;dj")
-			var quantity = parseInt(quantityInput.value);
-			console.log(quantity,"quantity")
-			var ma = parseInt(document.getElementById('mj-'+itemId).value);
-			var err = document.getElementById('error-message-'+itemId).textContent;
-			console.log("total-------", ma);
-		  
-			if (!isNaN(quantity)) {
-			  console.log(change,"changeeeeeeeeeee");
-		  
-			  if (change === -1) {
-				clearErrorMessage(itemId);
-				if (quantity === 2 && err !== "") {
-				  quantity = 1;
-				 
-				} else if (quantity > 1) {
-				  quantity += change;
-				}
-			  } else {
-				if (quantity < ma) {
-				  quantity += change;
-				} else {
-				  displayErrorMessage(itemId, "Quantity exceeds ");
-				}
-			  }
-		  
-			  console.log("negative", quantity);
-		  
-			  if (quantity >= 1) {
-				quantityInput.value = quantity;
-				console.log("if work")
-		  
-				// Prevent form submission
-				event.preventDefault();
-		  
-				// Send AJAX request to update the cart item
-				updateCartItem(itemId, quantity);
-			  } else {
-				console.log("error detected");
-			  }
-			}
-			console.log("0000000000000")
-		  }
-		  
-		  function displayErrorMessage(itemId, message) {
-			console.log("display error");
-			var errorMessage = document.getElementById('error-message-' + itemId);
-			errorMessage.textContent = message;
-		  }
-		  
-		  function clearErrorMessage(itemId) {
-			var errorMessage = document.getElementById('error-message-' + itemId);
-			errorMessage.textContent = "";
-		  }
-		  
-		
-		function  updateCartItem(itemId, quantity) {
-			console.log(itemId,"itemId")
-			//var url = "{% url 'update_cart_item' 0 %}".replace('0', itemId);
-			var url = "/update_cart_item" + itemId + "/";  // Construct the URL with itemId
-			var csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-		  
-			$.ajax({
-				url: url,
-				method: 'POST',
-				headers: {
-					'X-CSRFToken': csrftoken
-				},
-				data: {
-					
-					id: itemId,
-					quantity: quantity
-				},
-				success:function(response) {
-					if (response) {
-						// Update the subtotal value
-						console.log("subtotal",response)
-						$('#subtotal-' + itemId).text(response.subtotal);
-						$('#total-price').text(response.price)
-						$('#total-quty').text(response.quantity)
-					} else {
-						// Display error message if necessary
-						console.log("errror",response.error);
-					}
-				},
-				error: function(xhr, status, error) {
-					console.log(error);
-				}
-			}); 
-		}
-  
-	</script> {% endcomment %}
-    
-
-</html>
 
 {% endblock body %}

@@ -64,7 +64,7 @@ def banner(request):
 
 def product_details(request, productid):
     single_product = Product.objects.get(id=productid)
-    variation = Variant.objects.filter(product=productid)
+    variation = Variant.objects.filter(product=productid, is_available = True)
 
     wishlist = Wishlist.objects.all()
     print(variation,"9999909990990990909")

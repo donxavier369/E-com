@@ -41,7 +41,7 @@ def user_block(requset,id):
     d = CustomUser.objects.get(id=id)
     d.is_active = False
     d.save()
-    messages.error(requset,"Blcked Successfully")
+    messages.error(requset,"Blocked Successfully")
     return redirect("manageuser")
 
 def user_unblock(request,id):
@@ -77,24 +77,7 @@ def admin_logout(request):
     return redirect('admin_login')
 
 
-# def admin_page(request):
-#     if request.user.is_authenticated and request.user.is_superuser==True:
-#         return render(request,"Admin/AdminFunctions/adminindex.html")
-#     else:
-#         return render(request, "adm/admin_login.html")
 
-
-# def admin_page(request):
-#     if request.user.is_authenticated and request.user.is_superuser==True:
-#         status_order_totals = Order.objects.values('status').annotate(total_amount=Sum('order_total'))
-
-#         context = {
-#             'status_order_totals': status_order_totals,
-#         }
-    
-#         return render(request,"Admin/AdminFunctions/adminindex.html",context)
-#     else:
-#         return render(request,"Admin/AdminFunctions/admin_login.html")
 @login_required(login_url='admin_login')
 def admin_page(request, status_order_totals=0):
     

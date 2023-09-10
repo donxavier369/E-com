@@ -239,6 +239,7 @@ def add_to_cart(request,product_id,variant=0):
 
 
 
+
 def update_quantity(request, updated_price=0,new_updated_price=0):
     if request.method == 'POST':
         item_id = request.POST.get('item_id')

@@ -460,7 +460,7 @@ def order_detail(request):
         'orders':orders,
 
     }
-    return render(request,"profile/order_detail.html",context)
+    return render(request,"Profile/order_detail.html",context)
 
 def order_detail_view(request,bulk_order_id, price=0):
     print(bulk_order_id,"bulk KKKKKKKKKK")
@@ -479,7 +479,7 @@ def order_detail_view(request,bulk_order_id, price=0):
         'price':price,
        
     }
-    return render(request,"profile/order_detail_view.html",context )
+    return render(request,"Profile/order_detail_view.html",context )
 
 def cancel_order(request,order_id):
     current_order = Order.objects.get(order_number=order_id)
@@ -516,7 +516,7 @@ def wishlist(request):
         'wishlists':wishlists,
         'show_footer': bool,
     }
-    return render(request,"profile/wishlist.html",context)
+    return render(request,"Profile/wishlist.html",context)
 
 @login_required(login_url='handlelogin')
 def add_to_wishlist(request,variant_id):
