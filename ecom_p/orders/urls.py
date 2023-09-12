@@ -17,5 +17,6 @@ urlpatterns = [
     path("order_payment/<int:coupon_id>/", views.order_payment, name="order_payment"),
     path("callback/", views.callback, name="callback"),
     path("order_summery/<str:bulk_order_id>/", views.order_summery, name='order_summery'),
+    path("order_failed/", views.order_failed, name="order_failed"),
 
 ]

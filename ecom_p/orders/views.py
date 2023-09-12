@@ -397,7 +397,10 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
                 request,
                 "orders/payment.html",
                 {
+                    # "callback_url": "http://localhost:8000/orders/callback/?current_order={}&current_user={}".format(current_order, current_user),
+
                     "callback_url": "https://"+"www.fanzkart.shop"+"/orders/callback/?current_order={}&current_user={}".format(current_order, current_user),
+                    
 
                     "razorpay_key": RAZORPAY_KEY_ID,
                     "order": order,
@@ -448,7 +451,8 @@ def callback(request):
             order.save()
             current_order.delete()
             print("failed")
-            return render(request, "orders/order_failed.html")
+            return redirect('order_failed')
+
     else:
         payment_id = json.loads(request.POST.get("error[metadata]")).get("payment_id")
         provider_order_id = json.loads(request.POST.get("error[metadata]")).get(
@@ -460,7 +464,7 @@ def callback(request):
         order.save()
         current_order.delete()
         print("else failed")
-        return render(request, "orders/order_failed.html")
+        return redirect('order_failed')
 
 
 @never_cache
@@ -486,4 +490,7 @@ def order_summery(request, bulk_order_id):
     # return render(request, "orders/sample.html",context)
 
 
+def order_failed(request):
+    return render(request, "orders/order_failed.html")
 
+    
