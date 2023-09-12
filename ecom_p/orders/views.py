@@ -37,9 +37,14 @@ from django.template.loader import render_to_string
 
 
 def change_address(request):
-    addresses = Profile.objects.filter(user=request.user)
+    try:
+        addresses = Profile.objects.filter(user=request.user)
+        address = Profile.objects.filter(user=request.user).first()
+    except:
+        pass
     context = {
-        'addresses':addresses
+        'addresses':addresses,
+        'address':address,
     }
     return render(request,'orders/checkout_address.html',context)
 
