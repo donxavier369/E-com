@@ -79,7 +79,7 @@
 								<select name="variant" id="variant-select" class="form-control" required>
 									<option value="">Select a Variant</option>
 									{% for variant in variation %}
-										<option value="{{ variant.id }}">{{ variant.variant_colour | capfirst }}{{ variant.id }}</option>
+										<option value="{{ variant.id }}">{{ variant.variant_colour | capfirst }}</option>
 									{% endfor %}
 								</select>
 							</div>
@@ -250,37 +250,4 @@
 
 
 
-   			{% comment %} <div class="col-lg-6 mb-5 ftco-animate">
-
-    				<a href="images/menu-2.jpg" class="image-popup"><img src="/media/{{ single_product.images }}" id="product-image" class="img-fluid" alt="Colorlib Template"></a>
-    			</div>
-				 {% endcomment %}
-
-
-
-
-				 
-				{% comment %} 
-				<div class="col-lg-6 mb-5 ftco-animate"> 
-					<a href="images/menu-2.jpg" class="zoom" onmousemove="zoom(event)" onmouseout="resetZoom(event)">
-						<img src="/media/{{ single_product.images }}" id="product-image" class="img-fluid" alt="Colorlib Template">
-					</a>
-				</div>
-				<script>
-					function zoom(event) {
-					  var zoomer = event.currentTarget;
-					  var offsetX = event.offsetX ? event.offsetX : event.touches[0].pageX;
-					  var offsetY = event.offsetY ? event.offsetY : event.touches[0].pageY;
-					  var x = (offsetX / zoomer.offsetWidth) * 100;
-					  var y = (offsetY / zoomer.offsetHeight) * 100;
-					  zoomer.querySelector('img').style.transform = 'scale(1.3)';
-					  zoomer.querySelector('img').style.transformOrigin = x + '% ' + y + '%';
-					}
-				  
-					function resetZoom(event) {
-					  var zoomer = event.currentTarget;
-					  zoomer.querySelector('img').style.transform = 'none';
-				    }
-				  </script> 
-			
-			  <script> {% endcomment %}
+   		
