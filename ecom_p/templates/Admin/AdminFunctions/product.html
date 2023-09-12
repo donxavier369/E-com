@@ -157,7 +157,7 @@
         <tr>
           <th scope="col">Name</th>
           <th scope="col">Category</th>
-          <th scope="col">NewArrival</th>
+          <th scope="col">Price</th>
           <th scope="col">Brand</th>
           <th scope="col">Description</th>
           <th scope="col">Variant</th>
@@ -171,7 +171,7 @@
           <td>{{ product.product_name }}</td>
 
           <td>{{ product.category.category_name }}</td>
-          <td>{{ product.new_arrival }}</td>
+          <td>{{ product.product_price }}</td>
           <td>{{ product.brand }}</td>
           <td>{{ product.description }}</td>
           <h1 hidden>{{ product.id }}</h1>
@@ -330,6 +330,15 @@
               {% endfor %}
             </select>
           </div>
+          
+          <div class="form-group">
+            <label for="product_new_arrival">New Arrival</label>
+            <select class="form-control" id="product_new_arrival" name="product_new_arrival" required>
+              <option value="1">Yes</option>
+              <option value="0">No</option>
+            </select> 
+          </div>
+
           <div class="form-group">
             <label for="editProductDescription{{ product.id }}" class="form-label">Product Description</label>
             <textarea class="form-control" id="editProductDescription{{ product.id }}" name="product_description" rows="4" required>{{ product.description }}</textarea>

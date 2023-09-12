@@ -128,6 +128,7 @@
                             {% comment %} <form action="{% url 'edit_address' address.id %}" method="POST" enctype="multipart/form-data"> {% endcomment %}
                               {% csrf_token %}
                               <input type="hidden" name="address_id" value="{{ user.id }}">
+                              <p>Kindly login again after updating your phone number.</p>
                               <div class="form-group">
                                 <label for="editaddressName{{ user.id }}" class="form-label">Name</label>
                                 <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="name" value="{{ user.name }}" style="margin-bottom:10px;" required>
@@ -136,12 +137,12 @@
               
                               <div class="form-group">
                                 <label for="editaddressName{{ user.id }}" class="form-label">Email</label>
-                                <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="email" value="{{ user.email }}" style="margin-bottom:10px;" required>
+                                <input type="email" class="form-control" id="editaddressName{{ user.id }}" name="email" value="{{ user.email }}" style="margin-bottom:10px;" required>
                               </div>
     
                               <div class="form-group">
                                 <label for="editaddressName{{ user.id }}" class="form-label">Phone</label>
-                                <input type="text" class="form-control" id="editaddressName{{ user.id }}" name="phone" value="{{ user.phone }}" style="margin-bottom:10px;" required>
+                                <input type="number" class="form-control" id="editaddressName{{ user.id }}" name="phone" value="{{ user.phone }}" style="margin-bottom:10px;" required>
                               </div>
                               
     

@@ -164,6 +164,8 @@ def add_product(request):
         category = get_object_or_404(Category, id=category_id)
         brand = get_object_or_404(Brand, id=brand_id)
 
+        print(new_arrival,"newwwwwwwwwarrivalllll")
+        
         product = Product(
             product_name=product_name,
             category=category,
@@ -187,11 +189,14 @@ def edit_product(request, id):
 
     if request.method == 'POST':
         product_name = request.POST.get('product_name')
-        brand_id = request.POST.get('brand')  # Use 'brand' instead of 'product_brand'
-        category_id = request.POST.get('category')  # Use 'category' instead of 'product_category'
+        brand_id = request.POST.get('brand')  
+        category_id = request.POST.get('category') 
+        new_arrival = request.POST.get('product_new_arrival')
         product_price = request.POST.get('product_price')
         product_stock = request.POST.get('product_stock')
         product_description = request.POST.get('product_description')
+
+        print(new_arrival,"newwwwwwwwwarrivalllll")
 
         # Retrieve the updated 'images' field value
         product_thumbnail = request.FILES.get('product_images')
@@ -201,6 +206,10 @@ def edit_product(request, id):
         product.product_name = product_name
         product.brand = get_object_or_404(Brand, id=brand_id)
         product.category = get_object_or_404(Category, id=category_id)
+        if new_arrival == '1':
+            product.new_arrival = True
+        else:
+            product.new_arrival = False
         product.product_price = product_price
         product.stock = product_stock
         product.description = product_description

@@ -247,9 +247,16 @@ def edit_profile(request):
         print(email,"emaiiiiiiiiiiiiii")
         current_user = request.user
         user = CustomUser.objects.get(id=current_user.id)
+        if "+91" not in phone:
+            phone = "+91"+phone
+        if user.phone != phone:
+            user.phone = phone
+            user.is_verified = False
+            logout(request)
+        else:
+            user.phone = phone
         user.name = name
         user.email = email
-        user.phone = phone
         user.save()
  
         return redirect('user_profile')
