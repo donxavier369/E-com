@@ -198,7 +198,7 @@ def filter_products_by_price(request):
     products = Product.objects.filter(product_price__gte=price_min, product_price__lte=price_max).order_by('id')
 
     # Pagination
-    paginator = Paginator(products, 2)  # Set the number of products per page (e.g., 2 products per page)
+    paginator = Paginator(products, 7)  # Set the number of products per page (e.g., 2 products per page)
     page_number = request.GET.get('page')
     products = paginator.get_page(page_number)
 
