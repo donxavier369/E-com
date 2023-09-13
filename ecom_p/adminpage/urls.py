@@ -37,7 +37,6 @@ urlpatterns = [
     # coupon managemnt
     path('coupon', views.coupon, name="coupon"),
     path('add_coupon',views.add_coupon, name="add_coupon"),
-    path('edit_coupon/<int:coupon_id>/', views.edit_coupon, name="edit_coupon"),
     path('coupon_block/<int:coupon_id>/', views.coupon_block, name="coupon_block"),
     path('coupon_unblock/<int:coupon_id>/', views.coupon_unblock, name="coupon_unblock"),
 

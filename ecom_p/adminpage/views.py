@@ -406,7 +406,13 @@ def add_coupon(request):
 
     return render(request, "Admin/AdminFunctions/coupon.html")
 
-def edit_coupon(request, coupon_id):
+
+
+
+
+
+
+
     print(coupon_id,"couponnnnnnnnnn")
     return redirect('coupon')
 

@@ -101,11 +101,11 @@
 
 
                     <!-- Actions column with flexbox utility classes -->
-                     <td class="d-flex align-items-center justify-content-center">
+                     {% comment %} <td class="d-flex align-items-center justify-content-center">
             
                         <a href="#" class="btn btn-outline-dark mt-2" data-bs-toggle="modal" data-bs-target="#editProductModal{{ coupon.id }}">Edit</a>
 
-                    </td> 
+                    </td>  {% endcomment %}
                     <td>
                     {% if coupon.is_active %}
                     <a href="{% url 'coupon_block' coupon.id %}" class="btn btn-outline-danger mx-1 mt-2 px-3">Block</a>
@@ -126,7 +126,7 @@
 
 
 
-{% for coupon in coupons %}
+{% comment %} {% for coupon in coupons %}
 <!-- Edit Product Modal -->
 <div class="modal fade" id="editProductModal{{ coupon.id }}" tabindex="-1" aria-labelledby="editProductModalLabel{{ coupon.id }}" aria-hidden="true">
   <div class="modal-dialog">
@@ -152,12 +152,12 @@
 
           <div class="form-group">
             <label for="editProductName{{ coupon.id }}" class="form-label">Start Date</label>
-            <input type="text" class="form-control datepicker" id="editProductName{{ coupon.id }}" name="start_date" value="{{ coupon.start_date }}" style="margin-bottom: 10px;" required>
+            <input type="date" class="form-control datepicker" id="editProductName{{ coupon.id }}" name="start_date" value="{{ coupon.start_date }}" style="margin-bottom: 10px;" required>
           </div>
 
           <div class="form-group">
             <label for="editProductName{{ coupon.id }}" class="form-label">End Date</label>
-            <input type="text" class="form-control datepicker" id="editProductName{{ coupon.id }}" name="end_date" value="{{ coupon.end_date }}" style="margin-bottom: 10px;" required>
+            <input type="date" class="form-control datepicker" id="editProductName{{ coupon.id }}" name="end_date" value="{{ coupon.end_date }}" style="margin-bottom: 10px;" required>
           </div>
         
           <div class="form-group">
@@ -174,7 +174,7 @@
             <textarea class="form-control" id="editProductDescription{{ category.id }}" name="category_description" rows="4" required>{{ category.description }}</textarea>
           </div> {% endcomment %}
 
-        </div>
+        {% comment %} </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Save Changes</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -183,7 +183,7 @@
     </div>
   </div>
 </div>
-{% endfor %}
+{% endfor %}  {% endcomment %}
 
 
 
