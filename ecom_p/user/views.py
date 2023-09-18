@@ -375,9 +375,15 @@ def set_default(request, id):
 # password management
 
 def forgot_password(request):
-    
+    customuser = CustomUser.objects.all()
     if request.method == 'POST':
         phone = '+91'+request.POST.get("phone")
+        list = []
+        for user in customuser:
+            list.append(user)
+        if phone not in list:
+            messages.success(request, "It seems you're not yet a user. Feel free to sign up to get started!")
+            return redirect('forgot_password')
 
         try:
             if phone:
@@ -458,7 +464,7 @@ def change_password_profile(request):
 
 def order_detail(request):
     bool = True
-    orders = Order.objects.filter(user=request.user,)
+    orders = Order.objects.filter(user=request.user).order_by('-id')
     print(orders,"ooooooooooooooooo ")
 
 

@@ -298,7 +298,7 @@ def edit_category(request, id):
 def manage_order(request):
     if not request.user.is_authenticated or request.user.is_superuser==False:
         return redirect('admin_login')
-    orders = Order.objects.all()
+    orders = Order.objects.all().order_by('-id')
     statuses = Order.STATUS
     
     context = {
@@ -413,8 +413,6 @@ def add_coupon(request):
 
 
 
-    print(coupon_id,"couponnnnnnnnnn")
-    return redirect('coupon')
 
 
 def coupon_block(request, coupon_id):

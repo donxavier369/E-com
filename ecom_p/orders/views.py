@@ -158,7 +158,10 @@ def use_address(request, id):
 def generate_bunch_order_id():
     return str(uuid.uuid4())
 
-def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=0, quantity=0):
+def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=0, quantity=0, wallet=0):
+
+
+
     print(coupon_id,"couponnnnnnnnnnnnnnnnnnnnnnnnnnid")
     try:
         applied_coupon = Coupon.objects.get(id=coupon_id)
@@ -185,8 +188,11 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
 
     try:
         wallet = Wallet.objects.get(user=request.user)
+        print(wallet,"jkkkkkwallettttttttttt")
     except:
-        pass
+        messages.info(request,"Insufficiant Wallet Amount")
+        return redirect('checkout')
+        
 
     if request.method == 'POST':
         # Get the billing information from the form data
