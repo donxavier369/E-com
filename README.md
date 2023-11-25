@@ -6,7 +6,7 @@ This project is full-fledged e-commerce platform designed for selling fans. It e
 
 FEATURES
 
-User Side
+## User Side
 
 > User Authentication : User can register, login and manage their accounts.
 
@@ -23,7 +23,7 @@ User Side
 > For a detail view Click
 
 
-Admin Side
+## Admin Side
 
 > Dashboard : A comprehensive dashboard provides an overview of store performance, sales data, and user statistices.
 
@@ -36,4 +36,19 @@ Admin Side
 > Category Management : Admin can create, edit and manage product categories to organize the product catelog effectively.
 
 > Variant Management : Admin can mange product variants.
+
+> For a detail view Click
+
+
+## Technology Stack
+
+> Frontend : HTML, CSS, JS, Bootstrap
+
+> Backend : Dango
+
+> Database : postgreSQL
+
+
+## Installation and Setup
+
 
