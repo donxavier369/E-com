@@ -20,7 +20,7 @@ FEATURES
 
 > UserProfile Page :  User can view and edit their persional information, manage their orders and track their wishlist.
 
-> For a detail view Click
+
 
 
 ## Admin Side
@@ -37,7 +37,7 @@ FEATURES
 
 > Variant Management : Admin can mange product variants.
 
-> For a detail view Click
+
 
 
 ## Technology Stack
@@ -79,44 +79,54 @@ FEATURES
 
             .\env\Scripts\activate
 
-      3. Navigate to requirement.txt file then type (for install depnedencies)
+   3. Navigate to requirement.txt file then type (for install depnedencies)
 
              pip install -requirements.txt
 
-      4. Set up  DJANGO SECRET_KEY , Razorpay(RAZORPAY_KEY_ID) and Database(RAZORPAY_KEY_SECRET)
+3. Set up  DJANGO SECRET_KEY , Razorpay(RAZORPAY_KEY_ID) and Database(RAZORPAY_KEY_SECRET)
 
-         > In settings.py file import DJANGO SECRET_KEY , Razorpay(RAZORPAY_KEY_ID) and Database(RAZORPAY_KEY_SECRET) using config
+      > In settings.py file import DJANGO SECRET_KEY , Razorpay(RAZORPAY_KEY_ID) and Database(RAZORPAY_KEY_SECRET) using config
 
-         > create .env file in the project diractory, in this project => in this project ...\...\E-com
+      > create .env file in the project diractory, in this project => in this project ...\...\E-com
 
-         > whith in the .env file add,
+      > whith in the .env file add,
 
-              TWILIO_VERIFY_SERVICE_SID = Add your TWILIO_VERIFY_SERVICE_SID
-              TWILIO_ACCOUNT_SID = Add your TWILIO_ACCOUNT_SID
-              TWILIO_AUTH_TOKEN = Add your TWILIO_AUTH_TOKEN
-            
-            
-              SECRET_KEY = 'django-insecure-mx_ng(%1p6qs5pv0ez_uvqyi6)w!v(=hux2vf+c3vxhcrbd&9k'
-              
-              RAZORPAY_KEY_ID = 'Add your AZORPAY_KEY_ID'
-              RAZORPAY_KEY_SECRET = 'Add your AZORPAY_KEY_SECRET'
-              
-              
-              DATABASE_NAME = Add your database name
-              DATABASE_USER = Add database user 
-              DATABASE_PASSWORD = Add database password
+           TWILIO_VERIFY_SERVICE_SID = Add your TWILIO_VERIFY_SERVICE_SID
+           TWILIO_ACCOUNT_SID = Add your TWILIO_ACCOUNT_SID
+           TWILIO_AUTH_TOKEN = Add your TWILIO_AUTH_TOKEN
+         
+         
+           SECRET_KEY = 'django-insecure-mx_ng(%1p6qs5pv0ez_uvqyi6)w!v(=hux2vf+c3vxhcrbd&9k'
+           
+           RAZORPAY_KEY_ID = 'Add your AZORPAY_KEY_ID'
+           RAZORPAY_KEY_SECRET = 'Add your AZORPAY_KEY_SECRET'
+           
+           
+           DATABASE_NAME = Add your database name
+           DATABASE_USER = Add database user 
+           DATABASE_PASSWORD = Add database password
 
 
-   5. Perform migration and makemigration
+4. Perform migration and makemigration
   
-            python manage.py makemigrations
+         python manage.py makemigrations
 
-            python manage.py migrate
+         python manage.py migrate
 
 
-   6. Start the development server
+5. Start the development server
 
-          python manage.py runserver
+        python manage.py runserver
+
+
+## Usage
+
+Detail view for User Side click 
+
+Detail view for Admin Side click 
+
+
+
       
          
 
