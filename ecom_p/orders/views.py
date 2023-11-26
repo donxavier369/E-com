@@ -408,9 +408,9 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
                 request,
                 "orders/payment.html",
                 {
-                    # "callback_url": "http://localhost:8000/orders/callback/?current_order={}&current_user={}".format(current_order, current_user),
+                    "callback_url": "http://localhost:8000/orders/callback/?current_order={}&current_user={}".format(current_order, current_user),
 
-                    "callback_url": "https://"+"www.fanzkart.shop"+"/orders/callback/?current_order={}&current_user={}".format(current_order, current_user),
+                    # "callback_url": "https://"+"www.fanzkart.shop"+"/orders/callback/?current_order={}&current_user={}".format(current_order, current_user),
                     
 
                     "razorpay_key": RAZORPAY_KEY_ID,
@@ -447,7 +447,6 @@ def callback(request):
         if verify_signature(request.POST):
             order.status = PaymentStatus.SUCCESS
             order.save()
-            print("successsssssssssssssssss")
             current_order.update(payment_status = "Paid")
             print(current_order,"statusssssssssssss")
             # cart_items.delete()
