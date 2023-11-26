@@ -51,4 +51,73 @@ FEATURES
 
 ## Installation and Setup
 
+1. Clone the project repository from GitHub.
+
+   Open the project forlder in the text editor (create a new folder and open it in the VS CODE)
+
+   Open new terminal, then type
+
+       git clone https://github.com/donxavier369/E-com.git
+
+2. Install required dependencies
+
+   1. create vertual env
+
+    Navigete to project direactory( in this project ...\...\E-com)
+
+    Run the following command to create vertual enviornment( replace env with your desired vertual enviornment name):
+
+         python -m venv env
+
+    2. Activate the vertual enviornment
+
+       On Unix or MacOS:
+
+           source  env/bin/activate
+
+       On Windows:
+
+            .\env\Scripts\activate
+
+      3. Navigate to requirement.txt file then type (for install depnedencies)
+
+             pip install -requirements.txt
+
+      4. Set up  DJANGO SECRET_KEY , Razorpay(RAZORPAY_KEY_ID) and Database(RAZORPAY_KEY_SECRET)
+
+         > In settings.py file import DJANGO SECRET_KEY , Razorpay(RAZORPAY_KEY_ID) and Database(RAZORPAY_KEY_SECRET) using config
+
+         > create .env file in the project diractory, in this project => in this project ...\...\E-com
+
+         > whith in the .env file add,
+
+              TWILIO_VERIFY_SERVICE_SID = Add your TWILIO_VERIFY_SERVICE_SID
+              TWILIO_ACCOUNT_SID = Add your TWILIO_ACCOUNT_SID
+              TWILIO_AUTH_TOKEN = Add your TWILIO_AUTH_TOKEN
+            
+            
+              SECRET_KEY = 'django-insecure-mx_ng(%1p6qs5pv0ez_uvqyi6)w!v(=hux2vf+c3vxhcrbd&9k'
+              
+              RAZORPAY_KEY_ID = 'Add your AZORPAY_KEY_ID'
+              RAZORPAY_KEY_SECRET = 'Add your AZORPAY_KEY_SECRET'
+              
+              
+              DATABASE_NAME = Add your database name
+              DATABASE_USER = Add database user 
+              DATABASE_PASSWORD = Add database password
+
+
+   5. Perform migration and makemigration
+  
+            python manage.py makemigrations
+
+            python manage.py migrate
+
+
+   6. Start the development server
+
+          python manage.py runserver
+      
+         
+
 
