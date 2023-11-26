@@ -409,7 +409,8 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
                 "orders/payment.html",
                 {
                     "callback_url": "http://localhost:8000/orders/callback/?current_order={}&current_user={}".format(current_order, current_user),
-
+                    
+                    # for production enviornment
                     # "callback_url": "https://"+"www.fanzkart.shop"+"/orders/callback/?current_order={}&current_user={}".format(current_order, current_user),
                     
 
