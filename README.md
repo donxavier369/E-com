@@ -44,7 +44,7 @@ FEATURES
 
 > Frontend : HTML, CSS, JS, Bootstrap
 
-> Backend : Dango
+> Backend : Django
 
 > Database : postgreSQL
 
