@@ -43,11 +43,7 @@
                 <div class="modal-body">
 
 
-                  {% comment %} {% if product.is_available %}
-                  <a href="{% url 'product_block' product.id %}" class="btn btn-outline-danger mx-1 mt-2 px-3">Block</a>
-                {% else %}
-                  <a href="{% url 'product_unblock' product.id %}" class="btn btn-outline-success mx-1 mt-2">Unblock</a>
-                {% endif %} {% endcomment %}
+                  
                 {% for brand in brands %}
                 <div class="brand-container">
                   <span class="brand-name">{{ brand }}</span>
@@ -283,7 +279,6 @@
           <td class="align-middle"><img src="/media/{{ product.images}}" alt="{{ product.images}}" width="70px" height="70px"></td>
 
           <td>
-          {% comment %} <button class="btn btn-outline-warning mx-1 mt-3 " data-bs-toggle="modal" data-bs-target="#addVariantModal{{ product.id }}">Variant</button> {% endcomment %}
 
            <a href="#" class="btn btn-outline-dark mx-1 mt-3 px-4" data-bs-toggle="modal" data-bs-target="#editProductModal{{ product.id }}">Edit</a>
   
