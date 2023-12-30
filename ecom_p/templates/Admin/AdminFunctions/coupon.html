@@ -100,12 +100,7 @@
                     <td>{{ coupon.min_price}} - {{coupon.max_price}}</td>
 
 
-                    <!-- Actions column with flexbox utility classes -->
-                     {% comment %} <td class="d-flex align-items-center justify-content-center">
-            
-                        <a href="#" class="btn btn-outline-dark mt-2" data-bs-toggle="modal" data-bs-target="#editProductModal{{ coupon.id }}">Edit</a>
-
-                    </td>  {% endcomment %}
+                    
                     <td>
                     {% if coupon.is_active %}
                     <a href="{% url 'coupon_block' coupon.id %}" class="btn btn-outline-danger mx-1 mt-2 px-3">Block</a>

@@ -36,7 +36,6 @@
           <td>{{ order.unit_amount}}</td>
 
 
-          {% comment %} <a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProductModal" onclick="editProductModal({{ product.id }})">Edit</a> {% endcomment %}
           {% if order.status == "Cancelled" %}
           <td><p  class="mt-4"style = "color: #ee5959">Cancelled</p></td>
           {% else %}
