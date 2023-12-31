@@ -21,7 +21,6 @@
     <div class="card col-md-10">
     <div class="card-header">
       <h4 class="mt-2">Choose Your Address</h4>
-      {% comment %} <button action class="btn btn-primary float-end ms-1" >Continue..</button> {% endcomment %}
       {% if address %}
       <a href="{% url 'checkout' %}" class="btn btn-primary float-end ms-1" >Continue..</a>
       {% endif %}
@@ -46,8 +45,7 @@
               <p><strong>Address:</strong> {{ address.address_line_1 }}, {{ address.city }}, {{ address.state }}, {{ address.pincode }}</p>
             </td>
             <td>
-            {% comment %} <a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProductModal{{ address.id }}">Edit</a> {% endcomment %}
-            {% comment %} <a href="#" class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProductModal{{ product.id }}">Edit</a> {% endcomment %}
+            
             <a href="#" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#editaddressModal{{ address.id }}">Edit</a>
   
             
@@ -149,11 +147,7 @@
   
   
 
-  <!-- Add Product Modal -->
-  <!-- Button to Trigger the Modal -->
-  
-  
-  <!-- Modal -->
+
   
   
   
