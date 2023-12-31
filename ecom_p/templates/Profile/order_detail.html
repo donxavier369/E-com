@@ -1,53 +1,47 @@
-{% extends 'layouts/main.html' %}
-{% load static %}
-{% block head %}
+{% extends 'layouts/main.html' %} {% load static %} {% block head %}
 <style>
   #selectedColumn {
     width: 90%; /* Set the table width to 90% of the screen */
     margin: 0 auto; /* Center the table horizontally */
-    margin-top: 7rem;  
+    margin-top: 7rem;
   }
 </style>
-{% endblock head %}
-{% block body %}
+{% endblock head %} {% block body %}
 
-<table id="selectedColumn" class="table table-hover table-bordered table-sm " cellspacing="0" width="100%">
-    <thead>
-      <tr>
-        <th class="th-sm">Order Number
-        </th>
-        <th class="th-sm">Total Amount
-        </th>
-        <th class="th-sm">Order Date
-        </th>
-        
-        <th class="th-sm">Action
-        </th>
-        {% comment %} <th class="th-sm">Salary
-        </th> {% endcomment %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for order in orders %}
-        <tr>
-          {% ifchanged order.bulk_order_id %}
-            <td>{{ order.bulk_order_id }}</td>
-            <td>₹{{ order.total_amount }}</td>
-            <td>{{ order.created_at }}</td>
-            
-            <td>
-              <a href="{% url 'order_detail_view' order.bulk_order_id %}" class="btn btn-black py-3 px-3 mb-3">View</a>
-            </td>
-          {% else %}
-            
-          {% endifchanged %}
-        </tr>
-      {% endfor %}
-    </tbody>
-    
-   
+<table
+  id="selectedColumn"
+  class="table table-hover table-bordered table-sm"
+  cellspacing="0"
+  width="100%"
+>
+  <thead>
+    <tr>
+      <th class="th-sm">Order Number</th>
+      <th class="th-sm">Total Amount</th>
+      <th class="th-sm">Order Date</th>
 
+      <th class="th-sm">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+    <tr>
+      {% ifchanged order.bulk_order_id %}
+      <td>{{ order.bulk_order_id }}</td>
+      <td>₹{{ order.total_amount }}</td>
+      <td>{{ order.created_at }}</td>
 
-  </table>
+      <td>
+        <a
+          href="{% url 'order_detail_view' order.bulk_order_id %}"
+          class="btn btn-black py-3 px-3 mb-3"
+          >View</a
+        >
+      </td>
+      {% else %} {% endifchanged %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
 {% endblock body %}

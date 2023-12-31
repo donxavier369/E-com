@@ -68,12 +68,7 @@
 								<td><h6><a href="{% url 'product_details' wishlist.variant.product.id %}">{{ wishlist.product.product_name}}</a></h6></td>
 						        <td class="product-name">
 									<p class="text-muted-small">
-										{% comment %} {% if cart_item.variations.all %}
-											{% for item in cart_item.variations.all %}
-												{{ item.variation_category | capfirst }} : {{ item.variation_value | capfirst }}
-											{% endfor %}
-										{% endif %}
-									</p> {% endcomment %}
+										
 						        	<p>{{ wishlist.product.description }}</p>
 						        </td>
 						        
@@ -82,11 +77,7 @@
 								<td></td>
 								<td><a href="{% url 'wishlist_to_cart' wishlist.product.id wishlist.variant.id %}" class="btn btn-black py-2 px-5 mb-4 ml-2">Add to Cart</a></td>
 
-								{% comment %} <td><a href="{% url 'add_to_cart' wishlist.variant.id%}" class="btn btn-black py-2 px-5 mb-4 ml-2">Add to Cart</a></td> {% endcomment %}
-
-						      
-								  {% comment %} <td>{{ 10|add:5}}</td> {% endcomment %}
-						      </tr><!-- END TR-->
+						      </tr>
 
 
 						    </tbody>
