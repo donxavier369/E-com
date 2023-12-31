@@ -9,7 +9,7 @@
 		console.log("validateQuantity.............",input)
 		var value = parseInt(input.value);
 		if (isNaN(value) || value < 0) {
-			input.value = 1; // Set to the minimum value
+			input.value = 1;
 		}
 	}
 </script>
@@ -79,7 +79,6 @@
 									{% if cart_item.variant.variant_stock == 0 %}
 										<p>out of stock</p>
 									{% else %}
-									{% comment %} <p>{{cart_item.id}}...{{cart_item.quantity}}</p> {% endcomment %}
 
 
 									<div class="input-group text-center mb-3" style="width: 150px;">
@@ -159,10 +158,7 @@
     
   
 
-  <!-- loader -->
-  {% comment %} <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div> {% endcomment %}
-  {% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script> {% endcomment %}
-
+  
 
   <script src="js/jquery.min.js"></script>
   <script src="js/jquery-migrate-3.0.1.min.js"></script>
@@ -202,7 +198,6 @@
 				var tax = response.tax;
 				var grand_total = response.grand_total;
                 $(`#${itemId}`).val(updatedQuantity); // Update the input field value
-				//$(".qty-text").val(updatedQuantity); // Update the input field value 
 
 				$(`.${itemId}`).html("₹" + updatedPrice); // Update the total price
 				$(".tax").html("₹" + tax);

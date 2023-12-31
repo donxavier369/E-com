@@ -46,11 +46,7 @@
     		<div class="row">
 
  
-				 {% comment %} <div class="col-lg-6 mb-5 ftco-animate"> 
-
-    				<a href="images/menu-2.jpg" class="zoom" onmousemove="zoom(event)" onmouseout="resetZoom(event)"><img src="/media/{{ single_product.images }}" id="product-image" class="img-fluid" alt="Colorlib Template"></a>
-    			
-				</div> {% endcomment %}
+				
 
 				<div class="col-lg-6 mb-5">
 					<div class="image-zoom-container">
@@ -196,8 +192,7 @@
 			  var selectedVariantId = $(this).val();
 			  console.log(selectedVariantId)
 			$('#cid').text(selectedVariantId)
-			  // Perform an AJAX request to fetch the details of the selected variant
-			  // Replace the URL with the actual endpoint that returns the variant details
+			 
 
 
 
@@ -230,7 +225,7 @@
 		
 				  // Update the image source and price text
 				  $('#product-image').attr('src', productImage);
-				  $('#variant-stock').text(variantStock + '  pieces available'); // Make sure to include the text "pieces available"
+				  $('#variant-stock').text(variantStock + '  pieces available'); 
 					},
 					error: function(xhr, status, error) {
 					  // Handle error response if needed
