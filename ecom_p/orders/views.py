@@ -127,13 +127,11 @@ def edit_checkout_address(request,id):
     return render(request,'orders/checkout_address.html')
 
 def use_address(request, id):
-    print("111111111111111111111111111")
-
     if request.method == 'POST':
         address = Profile.objects.get(user=request.user,id=id)
         address.set_default = True
         address.save()
-        print(address,"111111111111111111111111111")
+        print(address,"address")
         
         try:
             defaults_to_reset = Profile.objects.filter(set_default=True).exclude(user=request.user, id=id)
@@ -162,7 +160,7 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
 
 
 
-    print(coupon_id,"couponnnnnnnnnnnnnnnnnnnnnnnnnnid")
+    print(coupon_id,"coupon_id")
     try:
         applied_coupon = Coupon.objects.get(id=coupon_id)
         coupon_amout = applied_coupon.discount_price
@@ -188,7 +186,7 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
 
     try:
         wallet = Wallet.objects.get(user=request.user)
-        print(wallet,"jkkkkkwallettttttttttt")
+        print(wallet,"user_wallet")
     except:
         messages.info(request,"Insufficiant Wallet Amount")
         return redirect('checkout')
@@ -204,7 +202,7 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
         state = request.POST.get('state')
         city = request.POST.get('city')
         payment_type = request.POST.get('payment')
-        print(payment_type,"typeeeeeeeeeeeeeeeeeee")
+        print(payment_type,"payment_type")
 
         bulk_order_id = generate_bunch_order_id()
         print(bulk_order_id)
@@ -213,8 +211,7 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
             if grand_total <= wallet.wallet_amount:
                 for cart in cart_items:
                     if cart.variant.variant_stock > 0:
-                        print(cart,"cartttttttttttttttt",cart.quantity)
-                        print("timessssssss")
+                        print(cart,"cart_details",cart.quantity)
                         coupon = applied_coupon if applied_coupon else None  # Set coupon to applied_coupon if it exists, otherwise None
                         data = Order(
                         user = current_user,
@@ -266,9 +263,7 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
                     "orders":orders,
                     "user":order_user,
                 }
-                # cart_items.delete()
-                # return render(request, "orders/order_summery.html",context)
-                # return render(request,"Profile/address.html")
+                
                 return redirect('order_summery', bulk_order_id=bulk_order_id)
 
                 
@@ -327,15 +322,13 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
                     data.save()
             orders = Order.objects.filter(bulk_order_id = bulk_order_id)
             order_user = request.user
-            print(orders,"111111111111111")
+            print(orders,"orders")
             context = {
                 "orders":orders,
                 "user":order_user,
             }
             print("context",context)
-            # cart_items.delete()
-            # return render(request, "orders/order_summery.html")
-            # return render(request, "orders/sample.html",context)
+      
             return redirect('order_summery', bulk_order_id=bulk_order_id)
 
 
@@ -360,7 +353,6 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
            # Store all the billing information inside Order table
             for cart in cart_items:
                 if cart.variant.variant_stock > 0:
-                    print("razorpay timessssssssss")
                     data = Order(
                     user = current_user,
                     full_name = full_name,
@@ -402,7 +394,7 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
 
             current_order = bulk_order_id
             current_user = request.user
-            print(current_user,"current_userrrrrrrrrr",current_order)
+            print(current_user,"current_user",current_order)
 
             return render(
                 request,
@@ -428,11 +420,10 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
 def callback(request):
     current_user = request.GET.get("current_user")
     bulk_order_id = request.GET.get("current_order")
-    print("current_orderrrrrrrrrrrr",current_user)
+    print("current_order",current_user)
     current_order = Order.objects.filter(bulk_order_id = bulk_order_id)
 
     def verify_signature(response_data):
-        print("verify_signatureeeeeeeeeeee")
         client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
         return client.utility.verify_payment_signature(response_data)
     print(request,"request")
@@ -449,11 +440,8 @@ def callback(request):
             order.status = PaymentStatus.SUCCESS
             order.save()
             current_order.update(payment_status = "Paid")
-            print(current_order,"statusssssssssssss")
-            # cart_items.delete()
-            # return render(request, "orders/order_summery.html", context={"status": order.status})
+            print(current_order,"status")
             return redirect('order_summery', bulk_order_id=bulk_order_id)
-            # return render(request, "orders/sample.html")
 
 
         
@@ -480,25 +468,27 @@ def callback(request):
 
 @never_cache
 def order_summery(request, bulk_order_id):
-    print(bulk_order_id,"lkjjjjjjjjjjjlkjjllkjljljlsk;jf;alfj;lashdflsjgkl;sjdfl;jas")
-    cart_items = CartItem.objects.filter(user=request.user, is_active = True)
-    for cart in cart_items:
-        if cart.variant.variant_stock > 0:
-            cart.delete()
-        else:
-            pass 
+    print(bulk_order_id,"bulk order id")
+    cart_items = ""
+    try:
+        cart_items = CartItem.objects.filter(user=request.user, is_active = True)
+    except:
+        pass
+    if cart_items:
+        for cart in cart_items:
+            if cart.variant.variant_stock > 0:
+                cart.delete()
+            else:
+                pass 
     orders = Order.objects.filter(bulk_order_id = bulk_order_id)
     print(bulk_order_id,"got it bulk order id")
     order_user = request.user
-    # coupon_amount = orders.coupon.discount_price
-    # total_amount = orders.total_amount+coupon_amount
+
     context = {
     "orders":orders,
     "user":order_user,
-    # "total_amount":total_amount,
     }
     return render(request, "orders/order_summery.html",context)
-    # return render(request, "orders/sample.html",context)
 
 
 def order_failed(request):
