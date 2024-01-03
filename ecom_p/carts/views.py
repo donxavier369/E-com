@@ -29,7 +29,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
     for variant in variants:
         if variant.variant_stock < 1:
             list.append(variant.id)
-    print(list,"out of stock")
+    print(list)
     try:
         tax = 0
         grand_total = 0
@@ -37,9 +37,9 @@ def cart(request, total=0, quantity=0, cart_items=None):
             cart_items = CartItem.objects.filter(user=request.user)
         else:   
             cart = Cart.objects.get(cart_id=_cart_id(request))
-            print(cart,'222222222222222222')                             
+            print("cart:",cart)                             
             cart_items = CartItem.objects.filter(cart=cart)
-            print(cart_items,"1111111111111111111")
+            print("cart_item:",cart_items)
         for cart_item in cart_items:
             total += (cart_item.product.product_price * cart_item.quantity)
             quantity += cart_item.quantity
@@ -65,9 +65,7 @@ def cart(request, total=0, quantity=0, cart_items=None):
 # views.py
 
 def wishlist_to_cart(request, product_id, variant_id):
-    print(variant_id,"varianttttttttttttt in wishlis")
-    # request.session['wishlist_variant_id'] = variant_id
-    # return redirect('add_to_cart', product_id=product_id)
+    print("variant_id",variant_id)
     variant = Variant.objects.get(id=variant_id)
     cart = CartItem.objects.create
     current_user = request.user
@@ -89,7 +87,7 @@ def wishlist_to_cart(request, product_id, variant_id):
             cart_item = CartItem.objects.get(product=product, user=current_user, variant=variant, cart = cart)
             cart_item.quantity += 1  
             cart_item.cart_price = product.product_price*cart_item.quantity  
-            print(cart_item.cart_price,"9999999999999999")
+            print("cart_item_price",cart_item.cart_price)
             cart_item.save()
             messages.success(request,"The item is already in your cart, and the quantity of the cart item has been increased")
 
@@ -117,11 +115,10 @@ def wishlist_to_cart(request, product_id, variant_id):
     
 
 def add_to_cart(request,product_id,variant=0):
-    print(product_id,"product_idddddddddddddd")
+    print("product_id",product_id)
     variant_id_from_session = request.session.get('wishlist_variant_id')
     product = Product.objects.get(id=product_id)
     variant_id = request.POST.get('variant')  
-    # quantity = int(request.POST.get('quantity'))  
     action = request.POST.get('action')
     current_user = request.user
     if variant_id:
@@ -134,11 +131,10 @@ def add_to_cart(request,product_id,variant=0):
             variant = Variant.objects.get(id=variant_id_from_session)
         except Variant.DoesNotExist:
             pass
-    print(variant,"variant in cartttttttttttttttt")
+    print("variant",variant)
     
 
     if action == 'Add to Cart' or action == None:
-        print("add to carttttttttttt")
         if action == None:
             wishlist = Wishlist.objects.get(variant=variant)
             wishlist.delete()
@@ -159,7 +155,7 @@ def add_to_cart(request,product_id,variant=0):
                 # cart_item.quantity += 1  
                 cart_item.quantity = F('quantity') + 1  # Increase the quantity by 1
                 cart_item.cart_price = product.product_price*cart_item.quantity  
-                print(cart_item.cart_price,"9999999999999999")
+                print("cart_item_price:",cart_item.cart_price)
                 cart_item.save()
                 messages.success(request,"The item is already in your cart, and the quantity of the cart item has been increased")
 
@@ -200,9 +196,7 @@ def add_to_cart(request,product_id,variant=0):
 def update_quantity(request, updated_price=0,new_updated_price=0):
     if request.method == 'POST':
         item_id = request.POST.get('item_id')
-        print(item_id,"itemmmmmmmmmmmmmm")
         change = int(request.POST.get('change'))
-        print(change,"changeeeeeeeeeeeee")
         cart_item = CartItem.objects.get(id=item_id)
         product = cart_item.product
         variant = cart_item.variant
@@ -248,7 +242,7 @@ def update_quantity(request, updated_price=0,new_updated_price=0):
 
         tax = (2*updated_price)/100
         grand_total = updated_price + tax
-        print(grand_total,"granddddddddddd")
+        print("grand_total:",grand_total)
         return JsonResponse({'updated_quantity': updated_quantity, 'updated_price': new_updated_price, 'tax':tax, 'grand_total':grand_total})
     else:
         return JsonResponse({'error': 'Invalid request method.'})
@@ -283,9 +277,7 @@ def checkout(request,total=0, quantity=0, coupon_amount=0, coupon_id = 0, cart_i
                 cart_items = CartItem.objects.filter(user=request.user, is_active=True)
             else:   
                 cart = Cart.objects.get(cart_id=_cart_id(request))
-                print(cart,'222222222222222222')
                 cart_items = CartItem.objects.filter(cart=cart, is_active=True)
-                print(cart_items,"1111111111111111111")
             for cart_item in cart_items:
                 total += (Decimal(cart_item.product.product_price) * cart_item.quantity)
                 quantity += cart_item.quantity
@@ -307,13 +299,11 @@ def checkout(request,total=0, quantity=0, coupon_amount=0, coupon_id = 0, cart_i
         total_address = Profile.objects.filter(user=request.user).count()
 
         if request.method == 'POST':
-            print("haiiiiiiiiiiiii")
             couponcode = request.POST.get('CouponCode')
             print(couponcode, "its coupon code")
 
             try:
                 exist_coupon = Coupon.objects.get(code=couponcode)
-                print(exist_coupon,"exitttttttttttt")
                 
                 # Check if the coupon is active
                 if not exist_coupon.is_active:
@@ -334,9 +324,7 @@ def checkout(request,total=0, quantity=0, coupon_amount=0, coupon_id = 0, cart_i
                     grand_total = grand_total - exist_coupon.discount_price
                     coupon_amount = exist_coupon.discount_price
                     messages.success(request,"coupon applied successfulley")
-                    print(coupon_amount,"settttttttttttttt")
                     coupon_id = exist_coupon.id
-                    print(coupon_id,"carttttttttttcouponid")
 
             
             except Coupon.DoesNotExist:
@@ -376,7 +364,6 @@ def checkout(request,total=0, quantity=0, coupon_amount=0, coupon_id = 0, cart_i
             'coupon_id': coupon_id,
             'coupons' : unused_coupons,
         }
-        print(context,"''''''''''''''''''''")
     return render(request, 'orders/checkout.html', context)
 
 
