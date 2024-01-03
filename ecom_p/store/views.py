@@ -133,9 +133,8 @@ def get_variant_details(request):
 def get_variant_stock_status(request):
     if request.method == 'GET' and request.is_ajax():
         variant_id = request.GET.get('variantId')
-        variant = get_object_or_404(Variant, id=variant_id)  # Replace with your model's field names
-        print(variant,"vvvvvvvvvvvv")
-        stock_status = variant.variant_stock > 0  # Adjust this condition based on your model's stock field
+        variant = get_object_or_404(Variant, id=variant_id) 
+        stock_status = variant.variant_stock > 0  
         return JsonResponse({'stock_status': stock_status})
     return JsonResponse({}, status=400)
 
@@ -144,14 +143,12 @@ def get_variant_stock_status(request):
 def search(request):
     if request.method == "POST":
         keyword = request.POST.get('keyword')
-        print(keyword,"keyyyyyyyyyey")
         products = Product.objects.filter(
             Q(description__icontains=keyword)
         )
         # paginator = Paginator(variant, 6)
         # page_number = request.GET.get('page')
         # variants = paginator.get_page(page_number)
-        print(products,"vvvvvvvvvvvv")
         context = {
             "products": products,
             "keyword": keyword,
@@ -162,7 +159,6 @@ def search(request):
 
 
 def filter_products_by_price(request):
-    # Initialize the context dictionary
     context = {}
 
     if request.method == 'POST':

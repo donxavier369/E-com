@@ -61,9 +61,8 @@ def handlesignup(request):
 
         try:
             if phone:
-                print(phone,"phoneeeeeeeeeeeeeeeeeee")
+                print("phone_number:",phone)
                 send(phone)
-                # return redirect("signup_otp",phone=phone)
             else:
                 return HttpResponse("Check your internet connection!")
         except:
@@ -108,9 +107,7 @@ def handlelogin(request):
             messages.error(request,"Invalid Credentials")
             return redirect("handlelogin") 
         myuser = authenticate(username=email, password=password)
-        print(myuser,"haiiiiiiii")
         if myuser:
-            print("888888888888888")
             if myuser.is_superuser:
                 login(request,myuser)
                 # messages.success(request,"Login Success")
@@ -156,13 +153,12 @@ def handlelogout(request):
 
 
 def send(phone):
-    print(phone,"successfully sended")
+    print("otp successfully sented:",phone)
     verify.verifications.create(to=phone, channel='sms')
 
 
 
 def check(phone, code):
-    print(phone,'checkkkkkkkkkkkkkkkkk')
     try:
         result = verify.verification_checks.create(to=phone, code=code)
         print('yes')
@@ -175,7 +171,6 @@ def check(phone, code):
 
 
 def otpverification(request,id,phone):
-    print(phone,"111111111111111111")
     if request.method == 'POST':
         code = request.POST.get('code')
         if check(phone,code):
@@ -204,8 +199,7 @@ def verify_phone(request):
         try:
             user = CustomUser.objects.get(phone=phone)
             send(phone)
-            print('phoneeeeeeeeeeeeeeeeeeeee',phone)
-            # return redirect("signup_otp",phone=phone)
+            print('phone number:',phone)
             return render(request,"register/otp_phone.html",{"id":user.id, "phone":user.phone},)
 
         except CustomUser.DoesNotExist:
@@ -224,7 +218,6 @@ def user_profile(request, wallet = 0):
         wallet = Wallet.objects.get(user=request.user)
     except:
         pass
-    print(wallet,"walllllllllllllll")
     context = {
         'user': user,
         'show_footer': bool,
@@ -238,8 +231,7 @@ def edit_profile(request):
         name = request.POST.get("name")
         email = request.POST.get("email")
         phone = request.POST.get("phone")
-        print(name,"nameeeee")
-        print(email,"emaiiiiiiiiiiiiii")
+
         current_user = request.user
         user = CustomUser.objects.get(id=current_user.id)
         if "+91" not in phone:
@@ -436,7 +428,6 @@ def change_password(request,phone):
 def change_password_profile(request):
     if request.method == 'POST':
         password = request.POST.get('new_password')
-        print(password,"22222222222")
         user = request.user
         current_user = CustomUser.objects.get(id = user.id)
         current_password = current_user.password
@@ -460,8 +451,6 @@ def change_password_profile(request):
 def order_detail(request):
     bool = True
     orders = Order.objects.filter(user=request.user).order_by('-id')
-    print(orders,"ooooooooooooooooo ")
-
 
     context = {
         'show_footer': bool,
@@ -471,11 +460,9 @@ def order_detail(request):
     return render(request,"Profile/order_detail.html",context)
 
 def order_detail_view(request,bulk_order_id, price=0):
-    print(bulk_order_id,"bulk KKKKKKKKKK")
     bool = True
     orders = Order.objects.filter(bulk_order_id = bulk_order_id)
     order = Order.objects.filter(bulk_order_id=bulk_order_id).first()
-    print(orders,"ordersssssssssssssss")
     
     for ord in orders:
         price += int(ord.unit_amount)
@@ -494,23 +481,20 @@ def cancel_order(request,order_id):
     current_order.status = "Cancelled"  
     current_order.save() 
     cancel_order_price = int(current_order.unit_amount)
-    print(cancel_order_price,"11111111111111")
     try:
         wallet = Wallet.objects.filter(user=request.user).first()
-        print(wallet,"2222222222222")
     except:
         pass
 
     if wallet is None:
         wallet = Wallet.objects.create(user=request.user, wallet_amount = 0)
-        print(wallet,"333333333333")
 
 
     wallet.wallet_amount += cancel_order_price 
-    print(wallet.wallet_amount,"44444444444444")
+    print("wallet_amount:",wallet.wallet_amount)
     wallet.save()
     bulk_order_id = current_order.bulk_order_id
-    print(current_order.status,"cancelledddddddddddddddd")
+    print("order_status:",current_order.status)
     return redirect(order_detail_view,bulk_order_id)
 
 
@@ -529,10 +513,8 @@ def wishlist(request):
 @login_required(login_url='handlelogin')
 def add_to_wishlist(request,variant_id):
     variant = get_object_or_404(Variant, id=variant_id)
-    print(variant_id,"varianttttttttttttt")
     product = variant.product
     wishlist_entry = Wishlist.objects.filter(user=request.user, variant = variant).first()
-    print("productttttt",product)
     if wishlist_entry:
         messages.info(request,"Product already in wishlist")
     else:
@@ -543,7 +525,6 @@ def add_to_wishlist(request,variant_id):
         
         )
         messages.info(request,"Product added to wishlist")
-        # return redirect('wishlist')
     return redirect('product_details',productid=product.id)
 
 
