@@ -35,9 +35,6 @@ def contact(request):
 
 
 
-# def payment(request):
-#     return render(request, 'payment.html')
-
 def about(request):
     return render(request,"about.html")
 
@@ -54,12 +51,6 @@ def banner(request):
 
 
 
-# def shop(request):
-#     products = Product.objects.filter(is_available=True)
-#     context = {
-#         'products': products,
-#     }
-#     return render(request, 'store/shop.html', context)
 
 
 def product_details(request, productid):
@@ -209,7 +200,5 @@ def filter_products_by_price(request):
     # Add the selected price filter to the context with default values
     context['selected_price_filter'] = {'min': price_min, 'max': price_max}
 
-    # Add any other data you want to pass to the template
-    # ...
 
     return render(request, 'store/shop.html', context)
