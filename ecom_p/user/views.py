@@ -171,8 +171,6 @@ def check(phone, code):
         return False
     return result.status == 'approved'
 
-# def signup_otp(request):
-#     return render(request,"register/otp_phone.html")
 
 
 
@@ -214,9 +212,6 @@ def verify_phone(request):
             return HttpResponse("Please enter a valid phone number")
     return render(request, "register/enter_mobile.html")
 
-
-# def verify_otp(request):
-#     return render(request,"register/verify_otp.html")
 
 
 # profile management
@@ -551,21 +546,6 @@ def add_to_wishlist(request,variant_id):
         # return redirect('wishlist')
     return redirect('product_details',productid=product.id)
 
-# def add_to_wishlist_ajax(request, productid):
-#     product = get_object_or_404(Product, id=productid)
-    
-#     wishlist_entry = Wishlist.objects.filter(user=request.user, product=product).first()
-    
-#     if wishlist_entry:
-#         response_data = {'message': 'already_in_wishlist'}
-#     else:
-#         Wishlist.objects.create(
-#             product=product,
-#             user=request.user,
-#         )
-#         response_data = {'message': 'added_to_wishlist'}
-    
-#     return JsonResponse(response_data)
 
 def remove_wishlist_item(request, product_id, wishlist_id):
     product = get_object_or_404(Product, id=product_id)
