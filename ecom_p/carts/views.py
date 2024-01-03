@@ -194,49 +194,6 @@ def add_to_cart(request,product_id,variant=0):
   
 
 
-# def update_quantity(request):
-#     print(update_quantity,"setttttttttttttttt")
-#     if request.method == 'POST':
-#         item_id = request.POST.get('item_id')
-#         print(item_id,"itemmmmmmmmmmmmmm")
-#         change = int(request.POST.get('change'))
-#         print(change,"changeeeeeeeeeeeee")
-#         cart_item = CartItem.objects.get(id=item_id)
-#         product = cart_item.product
-#         variant = cart_item.variant
-#         # cart_item.quantity += change
-
-        
-
-#         if change == -1:
-#             if cart_item.quantity > 1:
-#                 cart_item.quantity += change
-#                 cart_item.cart_price -= product.product_price
-#             else:
-#                 pass
-
-            
-#         elif change == 1:
-#             if cart_item.variant.variant_stock > cart_item.quantity:
-#                 cart_item.quantity += change
-#                 cart_item.cart_price += product.product_price
-#             else:
-#                 pass
-#         else:
-#             pass
-#         cart_item.save()
-
-#         updated_price = cart_item.cart_price
-#         updated_quantity = cart_item.quantity
-
-#         tax = (2*updated_price)/100
-#         grand_total = updated_price + tax
-#         print(grand_total,"granddddddddd")
-#         return JsonResponse({'updated_quantity': updated_quantity, 'updated_price': updated_price, 'tax':tax, 'grand_total':grand_total})
-#     else:
-#         return JsonResponse({'error': 'Invalid request method.'})
-                
-
 
 
 
@@ -249,10 +206,7 @@ def update_quantity(request, updated_price=0,new_updated_price=0):
         cart_item = CartItem.objects.get(id=item_id)
         product = cart_item.product
         variant = cart_item.variant
-        # cart_item.quantity += change
-
-        # new_updated_price += cart_item.cart_price
-        # print(new_updated_price,"new quantityyyyyyyyyyyy")
+        
 
 
 
@@ -343,7 +297,7 @@ def checkout(request,total=0, quantity=0, coupon_amount=0, coupon_id = 0, cart_i
             tax = (Decimal('0.02') * total)
             grand_total = total + tax    
         except ObjectDoesNotExist:
-            pass # just ignore
+            pass
         try:
             address = Profile.objects.get(user=request.user, set_default=True)
         except:
