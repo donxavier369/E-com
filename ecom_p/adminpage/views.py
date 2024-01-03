@@ -87,7 +87,6 @@ def admin_page(request, status_order_totals=0):
         return redirect('admin_login')
 
     orders = Order.objects.all()
-    print(orders,"kkkkkkkkkkkkkkkkk")
 
     data_dict = {}  # Dictionary to store counts per category per interval
 
@@ -163,8 +162,6 @@ def add_product(request):
         product_price = request.POST.get('product_price')
         category = get_object_or_404(Category, id=category_id)
         brand = get_object_or_404(Brand, id=brand_id)
-
-        print(new_arrival,"newwwwwwwwwarrivalllll")
         
         product = Product(
             product_name=product_name,
@@ -196,11 +193,10 @@ def edit_product(request, id):
         product_stock = request.POST.get('product_stock')
         product_description = request.POST.get('product_description')
 
-        print(new_arrival,"newwwwwwwwwarrivalllll")
 
         # Retrieve the updated 'images' field value
         product_thumbnail = request.FILES.get('product_images')
-        print(product_thumbnail,"thumbbbbbbbbbbbbbbbbbb",product_price)
+        print(f"product_thumbnail:{product_thumbnail},product_price:{product_price}")
 
         # Update other product details
         product.product_name = product_name
@@ -326,7 +322,6 @@ def variant(request,id):
         variant_stock =request.POST.get('variant_stock')
         is_available = request.POST.get('variant_is_available')
         variant_image = request.FILES.get('variant_image')
-        # variant_mrp = request.POST.get('variant_price')
         
        
         product = get_object_or_404(Product, id=id)
@@ -336,7 +331,6 @@ def variant(request,id):
             variant_stock = variant_stock,
             is_available = is_available,
             variant_image = variant_image,
-            # variant_price = variant_mrp,
            
         )
         return redirect('product')
@@ -351,7 +345,6 @@ def variant_details(request,id):
         variant_stock =request.POST.get('variant_stock')
         is_available = request.POST.get('variant_is_available')
         variant_image = request.FILES.get('variant_image')
-        # variant_mrp = request.POST.get('variant_price')
 
         variant.variant_colour = variant_colour
         variant.variant_stock = variant_stock
@@ -422,7 +415,7 @@ def coupon_block(request, coupon_id):
     return redirect('coupon')
 
 def coupon_unblock(request, coupon_id):
-    print("haioiiiiiiiiiiiiiiiiiiiiiiiiii",coupon_id)
+    print("coupon_id:",coupon_id)
     coupon = Coupon.objects.get(id=coupon_id)
     coupon.is_active = True
     coupon.save()
