@@ -186,7 +186,7 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
 
     try:
         wallet = Wallet.objects.get(user=request.user)
-        print(wallet,"user_wallet")
+        print("user_wallet:",wallet)
     except:
         messages.info(request,"Insufficiant Wallet Amount")
         return redirect('checkout')
@@ -258,7 +258,7 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
                 order_user = request.user
                 wallet.wallet_amount -= grand_total
                 wallet.save()
-                print(orders,"111111111111111")
+                
                 context = {
                     "orders":orders,
                     "user":order_user,
@@ -276,8 +276,6 @@ def order_payment(request, coupon_id, coupon_amout = 0, applied_coupon=0, total=
             for cart in cart_items:
                 
                 if cart.variant.variant_stock > 0:
-                    print(cart,"cartttttttttttttttt",cart.quantity)
-                    print("timessssssss")
                     coupon = applied_coupon if applied_coupon else None  # Set coupon to applied_coupon if it exists, otherwise None
                     data = Order(
                     user = current_user,
